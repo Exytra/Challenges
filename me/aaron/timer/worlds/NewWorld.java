@@ -1,0 +1,51 @@
+package me.aaron.timer.worlds;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
+
+public class NewWorld {
+    String name = "default";
+
+    public void nameWorld(String name) {
+        this.name = name;
+    }
+
+    WorldCreator wc = new WorldCreator(name);
+    WorldCreator def = new WorldCreator("default");
+    WorldCreator nether = new WorldCreator("default_nether");
+    WorldCreator end = new WorldCreator("default_the_end");
+    public void setWc(WorldCreator wc, Player p) {
+        this.wc = wc;
+        wc.createWorld();
+        Location spawn = Bukkit.getWorld(name).getSpawnLocation();
+        p.teleport(spawn);
+    }
+
+    public void tpall(WorldCreator wc) {
+        this.wc = wc;
+        wc.createWorld();
+        Location spawn = Bukkit.getWorld(name).getSpawnLocation();
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            pl.teleport(spawn);
+        }
+    }
+
+    public void reset(WorldCreator wc, WorldCreator nether, WorldCreator end) {
+        this.def = wc;
+        this.nether = nether;
+        this.end = end;
+        def.createWorld();
+        nether.createWorld();
+        end.createWorld();
+        Location spawn = Bukkit.getWorld("default").getSpawnLocation();
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            pl.teleport(spawn);
+        }
+    }
+
+    public void getWorld(Player p) {
+        p.sendMessage("§8[§6World§8] §fDu befindest dich in der Welt §9" + p.getWorld().getName());
+    }
+}
