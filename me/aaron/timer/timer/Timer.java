@@ -2,6 +2,7 @@ package me.aaron.timer.timer;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.utils.Config;
+import me.aaron.timer.utils.Settings;
 import me.aaron.timer.utils.SettingsItems.ItemState;
 import me.aaron.timer.utils.SettingsItems.ItemType;
 import me.aaron.timer.utils.SettingsModes;
@@ -35,6 +36,9 @@ public class Timer {
         SettingsModes.timer.put(ItemType.RESUME, ItemState.ENABLED);
         state = TimerState.RUNNING;
         timerSchedular = Bukkit.getScheduler().scheduleSyncRepeatingTask(JavaPlugin.getPlugin(Main.class), () -> {
+            if (SettingsModes.settings.get(ItemType.TIMER) == ItemState.ENABLED) {
+                sendTimer(getCurrentTime());
+            }
             if(Main.started) {
                 Main.started = false;
                 pause(false);
@@ -54,17 +58,14 @@ public class Timer {
                     }
                     SettingsModes.timer.put(ItemType.REVERSE, ItemState.DISABLED);
                 } else {
-                    if(SettingsModes.timer.get(ItemType.REVERSE) == ItemState.ENABLED) {
-                        setCurrentTime(getCurrentTime() - 1);
-                    } else {
-                        setCurrentTime(getCurrentTime() + 1);
-                    }
+                        if (SettingsModes.timer.get(ItemType.REVERSE) == ItemState.ENABLED) {
+                            setCurrentTime(getCurrentTime() - 1);
+                        } else {
+                            setCurrentTime(getCurrentTime() + 1);
+                        }
                 }
             }
-            if (SettingsModes.settings.get(ItemType.TIMER) == ItemState.ENABLED) {
-                sendTimer(getCurrentTime());
-            }
-        }, 20, 20);
+        }, 0, 20);
     }
 
     public static void resume(boolean SendStateMessage) {
@@ -121,9 +122,17 @@ public class Timer {
         int seconds = time % 60;
         int minutes = time / 60 % 60;
         int hours = time / 3600 % 24;
-        int days = time / 86400;
+        int days = time / 86400 % 7;
+        int weeks = time / 604800;
 
         StringBuilder timerTime = new StringBuilder(format);
+        if (weeks != 0) {
+            if (weeks != 1) {
+                timerTime.append(weeks).append(" Wochen, ");
+            } else {
+                timerTime.append(weeks).append(" Woche, ");
+            }
+        }
         if (days != 0) {
             if (days != 1) {
                 timerTime.append(days).append(" Tage, ");

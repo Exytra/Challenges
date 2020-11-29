@@ -5,6 +5,7 @@ import com.google.common.io.ByteStreams;
 import me.aaron.timer.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -46,5 +47,15 @@ public class Utils {
 
     public static void sendWrongArgs(Player p) {
         p.sendMessage("§8[§cError§8] §cDie von dir eingegebenen Argumente sind falsch.");
+    }
+
+    public static double getBossBarProgress(int max, int current, boolean reverse) {
+        int left = max - current;
+        double bossbarfactor = 1.0 / max;
+        if (reverse) {
+            return left * bossbarfactor;
+        } else {
+            return current * bossbarfactor;
+        }
     }
 }

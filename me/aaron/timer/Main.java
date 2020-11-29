@@ -2,6 +2,7 @@ package me.aaron.timer;
 //import me.aaron.timer.commands.BetterTimerCommand;
 import me.aaron.timer.TabCompletes.*;
 import me.aaron.timer.challenges.ForceBlock;
+import me.aaron.timer.challenges.ForceMob;
 import me.aaron.timer.challenges.Trafficlight;
 import me.aaron.timer.commands.*;
 import me.aaron.timer.dorfspawn.Dorfspawn;
@@ -37,6 +38,9 @@ import java.util.Comparator;
 
 
 public final class Main extends JavaPlugin {
+    //todo:
+    //timeout-command
+
     public Trafficlight trafficlight;
     Config config = new Config();
 
@@ -109,6 +113,11 @@ public final class Main extends JavaPlugin {
             forceBlock.start();
         }
 
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)  == SettingsItems.ItemState.ENABLED) {
+            ForceMob forceMob = new ForceMob(getInstance());
+            forceMob.start();
+        }
+
     }
 
     @Override
@@ -138,6 +147,7 @@ public final class Main extends JavaPlugin {
         pm.registerEvents(new FoodListener(), this);
         pm.registerEvents(new AdvancementsListener(), this);
         pm.registerEvents(new DamageByEntityListener(), this);
+        pm.registerEvents(new ForceMob(getInstance()), this);
     }
 
     private void commandRegistration() {

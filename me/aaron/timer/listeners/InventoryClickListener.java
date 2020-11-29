@@ -2,6 +2,7 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.ForceBlock;
+import me.aaron.timer.challenges.ForceMob;
 import me.aaron.timer.challenges.Trafficlight;
 import me.aaron.timer.timer.Timer;
 import me.aaron.timer.utils.Settings;
@@ -237,6 +238,41 @@ public class InventoryClickListener implements Listener {
                             SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.DISABLED);
                             e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEBLOCK, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK)));
                             Utils.sendChange("§6Force-Block", "§7wurde §cdeaktiviert");
+                        }
+                        break;
+                    case 20:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
+                            Utils.sendChange("§6Bedrock-Wand", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
+                            Utils.sendChange("§6Bedrock-Wand", "§7wurde §cdeaktiviert");
+                        }
+                        break;
+                    case 21:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
+                            Utils.sendChange("§6Der Boden ist Lava", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
+                            Utils.sendChange("§6Der Boden ist Lava", "§7wurde §cdeaktiviert");
+                        }
+                        break;
+                    case 22:
+                        ForceMob forceMob = new ForceMob(Main.getInstance());
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
+                            Utils.sendChange("§6Force-Mob", "§7wurde §aaktiviert");
+                            forceMob.start();
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
+                            Utils.sendChange("§6Force-Mob", "§7wurde §cdeaktiviert");
                         }
                         break;
 

@@ -458,6 +458,55 @@ public class SettingsItems {
                 itemLore.add("§8[§2Aktiv§8]");
             }
             itemLore.add(" ");
+        } else if (type == ItemType.BEDROCKWALL) {
+            itemStack.setType(Material.BEDROCK);
+            itemMeta.setDisplayName("§6Bedrock-Wand");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Eine §a10 Sekunden §7verzögerte");
+            itemLore.add("§7Bedrock-Wand verfolgt alle Spieler.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.THEFLOORISLAVA) {
+            itemStack.setType(Material.LAVA_BUCKET);
+            itemMeta.setDisplayName("§6Der Boden ist Lava");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Blöcke auf denen die Spieler stehen");
+            itemLore.add("§7werden erst mit Magmablöcken und dann");
+            itemLore.add("§7mit Lava ersetzt.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.FORCEMOB) {
+            itemStack.setType(Material.ZOMBIE_HEAD);
+            itemMeta.setDisplayName("§6Force-Mob");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler müssen in einer bestimmten");
+            itemLore.add("§7Zeit ein Mob vorgegebenes Mob töten.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -513,10 +562,17 @@ public class SettingsItems {
         ONEBLOCKONEHEART,
         DAMAGEMIRROR,
         FORCEBLOCK,
+        BEDROCKWALL,
+        THEFLOORISLAVA,
+        FORCEMOB,
+        FORCEITEM,
+        FORCEBIOM,
+        FORCEHEIGHT,
+        ANVILCRUSHER,
     }
 
     public enum ItemState {
         DISABLED,
-        ENABLED;
+        ENABLED
     }
 }

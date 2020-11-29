@@ -23,7 +23,6 @@ public class ForceBlock {
     private int neededtime;
     private int currenttime;
     private Material forcedBlock;
-    private double bossbarfactor = 1;
     private int lefttime;
     String BlockNameWithDash;
     String BlockName;
@@ -58,8 +57,7 @@ public class ForceBlock {
                             currenttime++;
                         } else {
                             lefttime = neededtime - currenttime;
-                            bossbarfactor = 1.0 / neededtime;
-                            bossBar.setProgress(lefttime * bossbarfactor);
+                            bossBar.setProgress(Utils.getBossBarProgress(neededtime, currenttime, true));
                             bossBar.setTitle("§7Stehe in " + Timer.ConvertTimerTime(lefttime, "§9") + "§7 auf §a" + BlockName);
                             bossBar.setColor(BarColor.BLUE);
                             currenttime ++;
@@ -81,20 +79,20 @@ public class ForceBlock {
                                 if (!(pl.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == forcedBlock) && !(pl.getLocation().getBlock().getType() == forcedBlock)) {
                                     pl.setHealth(0);
                                     for (Player pls : Bukkit.getOnlinePlayers()) {
-                                        pl.sendMessage("§7§m                                                 ");
-                                        pl.sendMessage(" ");
-                                        pl.sendMessage(Main.getPrefix("Force-Block", "Der Spieler §6§l" + pl.getName() + "§7 stand auf §a" + pl.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().name().replace("_", " ")));
-                                        pl.sendMessage(" ");
-                                        pl.sendMessage("§7§m                                                 ");
+                                        pls.sendMessage("§7§m                                                 ");
+                                        pls.sendMessage(" ");
+                                        pls.sendMessage(Main.getPrefix("Force-Block", "Der Spieler §6§l" + pl.getName() + "§7 stand auf §a" + pl.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().name().replace("_", " ")));
+                                        pls.sendMessage(" ");
+                                        pls.sendMessage("§7§m                                                 ");
                                     }
                                 } else {
                                     checkedPlayers ++;
                                 }
                                 if (checkedPlayers == Bukkit.getOnlinePlayers().size()) {
                                     for (Player pls : Bukkit.getOnlinePlayers()) {
-                                        pl.sendMessage(" ");
-                                        pl.sendMessage(Main.getPrefix("Force-Block", "§9Alle Spieler §7standen auf §a" + BlockName));
-                                        pl.sendMessage(" ");
+                                        pls.sendMessage(" ");
+                                        pls.sendMessage(Main.getPrefix("Force-Block", "§9Alle Spieler §7standen auf §a" + BlockName));
+                                        pls.sendMessage(" ");
                                     }
                                 }
                                 forcedBlock = null;

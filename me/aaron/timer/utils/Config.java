@@ -1,5 +1,6 @@
 package me.aaron.timer.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -33,7 +34,7 @@ public class Config {
     public static boolean contains(String path) {
         return config.contains(path);
     }
-    public void set(String path, Object value) throws IOException {
+    public static void set(String path, Object value) throws IOException {
         config.set(path, value);
         config.save(file);
     }
@@ -73,7 +74,7 @@ public class Config {
         return file;
     }
 
-    public static void saveConfig() {
+    public static boolean saveConfig() {
         try {
             config.set("timer.currenttime", SettingsModes.currentTime);
             config.set("timer.reverse", SettingsModes.timer.get(SettingsItems.ItemType.REVERSE).name());
@@ -91,7 +92,7 @@ public class Config {
             config.set("settings.showcoordsondeath", SettingsModes.settings.get(SettingsItems.ItemType.SHOWCOORDSONDEAETH).name());
             config.set("settings.resetconfirm", SettingsModes.settings.get(SettingsItems.ItemType.RESETCONFIRM).name());
             config.set("settings.hardcore", SettingsModes.settings.get(SettingsItems.ItemType.HARDCORE).name());
-            config.set("settings.bungeecord", SettingsModes.scoreboard.get(SettingsItems.ItemType.BUNGEECORD).name());
+            config.set("settings.bungeecord", SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD).name());
             config.set("scoreboard.tabhp", SettingsModes.scoreboard.get(SettingsItems.ItemType.TABHP).name());
             config.set("gamerule.natrualregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.NATURALREGENERATION).name());
             config.set("gamerule.otherregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.OTHERREGENERATION).name());
@@ -99,7 +100,6 @@ public class Config {
             config.set("gamerule.keepinventory", SettingsModes.gamerule.get(SettingsItems.ItemType.KEEP_INVENTORY).name());
             config.set("challenge.wither", SettingsModes.challenge.get(SettingsItems.ItemType.WITHER).name());
             config.set("challenge.enderdragon", SettingsModes.challenge.get(SettingsItems.ItemType.ENDER_DRAGON).name());
-            //config.set("positions.list", pos.positions);
 
             //challenges
             config.set("challenge.flyondamage", SettingsModes.challenge.get(SettingsItems.ItemType.FLYONDAMAGE).name());
@@ -110,14 +110,19 @@ public class Config {
             config.set("challenge.oneblockoneheart", SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART).name());
             config.set("challenge.damagemirror", SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR).name());
             config.set("challenge.forceblock", SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK).name());
+            config.set("challenge.bedrockwall", SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL).name());
+            config.set("challenge.thefloorislava", SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA).name());
+            config.set("challenge.forcemob", SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB).name());
             config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return true;
+        } catch (Exception e) {
             resetConfig();
+            Bukkit.broadcastMessage("LOLOLOLOLOL");
+            return false;
         }
     }
 
-    public static void loadConfig() {
+    public static boolean loadConfig() {
         if (Config.file.exists()) {
             try {
                 SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.valueOf(Config.getString("timer.reverse")));
@@ -155,6 +160,9 @@ public class Config {
                 SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.valueOf(Config.getString("challenge.oneblockoneheart")));
                 SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.valueOf(Config.getString("challenge.damagemirror")));
                 SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.valueOf(Config.getString("challenge.forceblock")));
+                SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.valueOf(Config.getString("challenge.bedrockwall")));
+                SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.valueOf(Config.getString("challenge.thefloorislava")));
+                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.valueOf(Config.getString("challenge.forcemob")));
             } catch (Exception e) {
                 resetConfig();
                 loadConfig();
@@ -162,9 +170,10 @@ public class Config {
         } else {
             resetConfig();
         }
+        return true;
     }
 
-    public static void resetConfig() {
+    public static boolean resetConfig() {
         config.set("timer.currenttime", 0);
         config.set("timer.reverse", "DISABLED");
         config.set("timer.starttime", 0);
@@ -200,6 +209,9 @@ public class Config {
         config.set("challenge.oneblockoneheart", "DISABLED");
         config.set("challenge.damagemirror", "DISABLED");
         config.set("challenge.forceblock", "DISABLED");
+        config.set("challenge.bedrockwall", "DISABLED");
+        config.set("challenge.thefloorislava", "DISABLED");
+        config.set("challenge.forcemob", "DISABLED");
 
         try {
             config.save(file);
@@ -208,5 +220,6 @@ public class Config {
         }
 
         loadConfig();
+        return true;
     }
 }
