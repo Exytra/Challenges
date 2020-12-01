@@ -1,5 +1,7 @@
 package me.aaron.timer.utils;
 
+import javafx.geometry.Pos;
+import me.aaron.timer.pos.Position;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -100,6 +102,7 @@ public class Config {
             config.set("gamerule.keepinventory", SettingsModes.gamerule.get(SettingsItems.ItemType.KEEP_INVENTORY).name());
             config.set("challenge.wither", SettingsModes.challenge.get(SettingsItems.ItemType.WITHER).name());
             config.set("challenge.enderdragon", SettingsModes.challenge.get(SettingsItems.ItemType.ENDER_DRAGON).name());
+            config.set("positions.list", Position.positionlist.toArray());
 
             //challenges
             config.set("challenge.flyondamage", SettingsModes.challenge.get(SettingsItems.ItemType.FLYONDAMAGE).name());
@@ -149,6 +152,9 @@ public class Config {
                 SettingsModes.gamerule.put(SettingsItems.ItemType.KEEP_INVENTORY, SettingsItems.ItemState.valueOf(Config.getString("gamerule.keepinventory")));
                 SettingsModes.challenge.put(SettingsItems.ItemType.WITHER, SettingsItems.ItemState.valueOf(Config.getString("challenge.wither")));
                 SettingsModes.challenge.put(SettingsItems.ItemType.ENDER_DRAGON, SettingsItems.ItemState.valueOf(Config.getString("challenge.enderdragon")));
+                if (contains("positions.list")) {
+                    Position.positionlist = getArrayList("positions.list");
+                }
                 //pos.positions.append(Config.getString("positions.list"));
 
                 //challenges
@@ -198,6 +204,7 @@ public class Config {
         config.set("gamerule.keepinventory", "DISABLED");
         config.set("challenge.wither", "DISABLED");
         config.set("challenge.enderdragon", "ENABLED");
+        config.set("positions.list", null);
         //config.set("positions.list", null);
 
         //challenges

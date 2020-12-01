@@ -20,20 +20,14 @@ public class PositionCommand implements CommandExecutor {
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("share")) {
                 pos.share(p);
-            } /*else if (args[0].equalsIgnoreCase("list")) {
-
-            }*/ else {
+            } else {
                 pos.pos(args[0], p);
             }
-
         } else if (args.length == 0) {
-            /*if (!pos.positions.toString().equalsIgnoreCase("")) {
-                p.sendMessage(Main.getPrefix("Position", "Verfügbare Positionen: §e" + pos.positions));
-            } else {
-                p.sendMessage(Main.getPrefix("Position", "Es sind §ckeine Positionen §7gespeichert."));
-                p.sendMessage(pos.positions + "");
-            }*/
+            pos.list(p);
             return false;
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
+            pos.remove(args[1], p);
         } else {
             p.sendMessage(Main.getPrefix("Position", "Dein Name darf §ckein Leerzeichen §7enthalten."));
         }

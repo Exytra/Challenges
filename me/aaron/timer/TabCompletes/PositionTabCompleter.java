@@ -19,6 +19,8 @@ public class PositionTabCompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if(args.length == 1) {
             addList("share");
+            addList("list");
+            addList("remove");
 
             return positions;
         }
