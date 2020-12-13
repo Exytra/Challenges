@@ -14,7 +14,7 @@ public class KickListener implements Listener {
     public void onKick(PlayerKickEvent e) {
         Player p = e.getPlayer();
         e.setLeaveMessage("8[§6Kick§8] §9§l" + p.getName() + "§7wurde gekickt");
-        if (SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD) == SettingsItems.ItemState.ENABLED) {
+        if (SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD) == SettingsItems.ItemState.ENABLED && !e.getReason().contains("gebannt")) {
             e.setCancelled(true);
             Utils.SendToServer(p, "hub");
         }

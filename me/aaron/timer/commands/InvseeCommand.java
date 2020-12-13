@@ -19,14 +19,17 @@ public class InvseeCommand implements CommandExecutor {
         Player s = (Player) sender;
         if (s.hasPermission("challenges.invsee")) {
             if (args.length == 1) {
-                Player p = Bukkit.getPlayer(args[0]);
-                String pname = p.getName();
-                invsee.invsee(p, s);
+                try {
+                    Player p = Bukkit.getPlayerExact(args[0]);
+                    invsee.invsee(p, s);
+                } catch (Exception e) {
+                    s.sendMessage(Main.getPrefix("InvSee", "Der Spieler §9" + args[0] + " §7konnte §cnicht gefunden §7werden."));
+                }
             } else {
                 s.sendMessage(Main.getPrefix("InvSee", "/invsee §9<Player Name>"));
             }
         } else {
-            s.sendMessage(Main.getPrefix("InvSee", "Du hast hierfür §ckeine Berechtigung"));
+            s.sendMessage(Main.getPrefix("InvSee", "Du hast hierfür §ckeine Berechtigung."));
         }
 
 

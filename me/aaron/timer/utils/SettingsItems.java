@@ -446,7 +446,7 @@ public class SettingsItems {
             itemLore.add("§7zum Server §a\"Hub\" §7weitergeleitet.");
             itemLore.add(" ");
             itemLore.add("§7Funktioniert wenn ein BungeeCord-Netzwerk");
-            itemLore.add("§7mit einem Server §a\"Hub\" §7 existiert");
+            itemLore.add("§7mit einem Server §a\"Hub\" §7existiert");
             itemLore.add(" ");
             itemLore.add("§8[§9Klick§8] §7An / Aus");
             itemLore.add(" ");
@@ -507,6 +507,27 @@ public class SettingsItems {
                 itemLore.add("§8[§2Aktiv§8]");
             }
             itemLore.add(" ");
+        } else if (type == ItemType.BACKUP) {
+            itemMeta.setDisplayName("§6Backup");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7In den angegebenen Intervallen wird ein");
+            itemLore.add("§7Backup von allen Welt-Ordnern gemacht.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Links-Klick§8] §7+ 1");
+            itemLore.add("§8[§9Rechts-Klick§8] §7- 1");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemStack.setType(Material.RED_DYE);
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemStack.setType(Material.LIME_DYE);
+                itemLore.add("§8[§2Aktiv§8]");
+                itemLore.add(" ");
+                itemLore.add("§7Alle §6§l" + SettingsModes.ints.get(ItemType.BACKUP) + " Stunden");
+                itemStack.setAmount((SettingsModes.ints.get(ItemType.BACKUP) == 0) ? 1 : SettingsModes.ints.get(ItemType.BACKUP));
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -536,6 +557,7 @@ public class SettingsItems {
         HARDCORE,
         CANCELLDAMAGE,
         BUNGEECORD,
+        BACKUP,
 
         // timer
         RESUME,
@@ -569,6 +591,12 @@ public class SettingsItems {
         FORCEBIOM,
         FORCEHEIGHT,
         ANVILCRUSHER,
+        BIOMTIMER,
+        RANDOM_DROPS,
+        RANDOM_MOB_SPAWNS,
+        RANDOM_CRAFTIG,
+        RANDOM_WORLD,
+        
     }
 
     public enum ItemState {

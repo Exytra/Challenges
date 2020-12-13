@@ -9,9 +9,7 @@ import me.aaron.timer.dorfspawn.Dorfspawn;
 import me.aaron.timer.listeners.*;
 import me.aaron.timer.pos.Position;
 import me.aaron.timer.refresh.Reload;
-import me.aaron.timer.timer.Timer;
-import me.aaron.timer.utils.SettingsItems;
-import me.aaron.timer.utils.SettingsModes;
+import me.aaron.timer.utils.*;
 import me.aaron.timer.commands.ResetCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -26,7 +24,6 @@ import me.aaron.timer.Backpack.BackpackCommand;
 import me.aaron.timer.commands.PositionCommand;
 import me.aaron.timer.commands.InvseeCommand;
 import me.aaron.timer.commands.HealCommand;
-import me.aaron.timer.utils.Config;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -34,12 +31,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
-//import me.aaron.timer.timer.timer;
+
+import static me.aaron.timer.utils.Permissions.ranks;
 
 
 public final class Main extends JavaPlugin {
     //todo:
-    //timeout-command
+    //tempban-command
 
     public Trafficlight trafficlight;
     Config config = new Config();
@@ -118,11 +116,26 @@ public final class Main extends JavaPlugin {
             forceMob.start();
         }
 
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            Permissions.setRank(pl, Permissions.Rank.valueOf(Config.getString("permissions." + pl.getUniqueId())));
+        }
+
+        if (SettingsModes.settings.get(SettingsItems.ItemType.BACKUP) == SettingsItems.ItemState.ENABLED) {
+            Backup backup = new Backup();
+            backup.start();
+        }
     }
 
     @Override
     public void onDisable() {
         Config.saveConfig();
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            try {
+                Config.set("permissions." + pl.getUniqueId(), ranks.get(pl).name());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -140,7 +153,6 @@ public final class Main extends JavaPlugin {
         pm.registerEvents(new TriggerListener(), this);
         pm.registerEvents(new EntityDeathListener(), this);
         pm.registerEvents(new KickListener(), this);
-        //pm.registerEvents(new InteractListener(), this);
         pm.registerEvents(new DamageRemover(), this);
         pm.registerEvents(new HealListener(), this);
         pm.registerEvents(new MoveListener(), this);
@@ -148,6 +160,8 @@ public final class Main extends JavaPlugin {
         pm.registerEvents(new AdvancementsListener(), this);
         pm.registerEvents(new DamageByEntityListener(), this);
         pm.registerEvents(new ForceMob(getInstance()), this);
+        pm.registerEvents(new GamemodeChangeListener(), this);
+        pm.registerEvents(new PreLoginListener(), this);
     }
 
     private void commandRegistration() {
@@ -176,6 +190,14 @@ public final class Main extends JavaPlugin {
         this.getCommand("l").setExecutor(new HubCommand());
         this.getCommand("dorf").setExecutor(new Dorfspawn());
         this.getCommand("save").setExecutor(new SaveCommand());
+        this.getCommand("rank").setExecutor(new RankCommand());
+        this.getCommand("ban").setExecutor(new BanCommand());
+        this.getCommand("pardon").setExecutor(new UnbanCommand());
+        this.getCommand("unban").setExecutor(new UnbanCommand());
+        this.getCommand("tempban").setExecutor(new TempBanCommand());
+        this.getCommand("timeout").setExecutor(new TempBanCommand());
+        this.getCommand("stilletreppe").setExecutor(new TempBanCommand());
+        this.getCommand("backup").setExecutor(new BackupCommand());
     }
 
     private void TabCompleterRegistration() {
@@ -186,10 +208,11 @@ public final class Main extends JavaPlugin {
         this.getCommand("gamemode").setTabCompleter(new GmTabCompleter());
         this.getCommand("position").setTabCompleter(new PositionTabCompleter());
         this.getCommand("pos").setTabCompleter(new PositionTabCompleter());
+        this.getCommand("rank").setTabCompleter(new RankTabCompleter());
     }
 
     public void copy(File sourceLocation, File targetLocation) throws IOException {
-        if(sourceLocation.isDirectory()) {
+        if (sourceLocation.isDirectory()) {
             copyDirectory(sourceLocation, targetLocation);
         } else {
             copyFile(sourceLocation, targetLocation);
@@ -197,7 +220,7 @@ public final class Main extends JavaPlugin {
     }
 
     private void copyDirectory(File source, File target) throws IOException {
-        if(!target.exists()) {
+        if (!target.exists()) {
             target.mkdir();
         }
 

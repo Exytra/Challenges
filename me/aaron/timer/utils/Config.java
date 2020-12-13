@@ -1,9 +1,11 @@
 package me.aaron.timer.utils;
 
 import javafx.geometry.Pos;
+import me.aaron.timer.Main;
 import me.aaron.timer.pos.Position;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +97,8 @@ public class Config {
             config.set("settings.resetconfirm", SettingsModes.settings.get(SettingsItems.ItemType.RESETCONFIRM).name());
             config.set("settings.hardcore", SettingsModes.settings.get(SettingsItems.ItemType.HARDCORE).name());
             config.set("settings.bungeecord", SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD).name());
+            config.set("settings.backup", SettingsModes.ints.get(SettingsItems.ItemType.BACKUP));
+            config.set("settings.backuptimer", Backup.timertime);
             config.set("scoreboard.tabhp", SettingsModes.scoreboard.get(SettingsItems.ItemType.TABHP).name());
             config.set("gamerule.natrualregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.NATURALREGENERATION).name());
             config.set("gamerule.otherregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.OTHERREGENERATION).name());
@@ -145,6 +149,9 @@ public class Config {
                 SettingsModes.settings.put(SettingsItems.ItemType.RESETCONFIRM, SettingsItems.ItemState.valueOf(Config.getString("settings.resetconfirm")));
                 SettingsModes.settings.put(SettingsItems.ItemType.HARDCORE, SettingsItems.ItemState.valueOf(Config.getString("settings.hardcore")));
                 SettingsModes.settings.put(SettingsItems.ItemType.BUNGEECORD, SettingsItems.ItemState.valueOf(Config.getString("settings.bungeecord")));
+                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, Config.getInt("settings.backup"));
+                SettingsModes.settings.put(SettingsItems.ItemType.BACKUP, (Config.getInt("settings.backup") == 0) ? SettingsItems.ItemState.DISABLED : SettingsItems.ItemState.ENABLED);
+                Backup.timertime = Config.getInt("settings.backuptimer");
                 SettingsModes.scoreboard.put(SettingsItems.ItemType.TABHP, SettingsItems.ItemState.valueOf(Config.getString("scoreboard.tabhp")));
                 SettingsModes.gamerule.put(SettingsItems.ItemType.NATURALREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.natrualregeneration")));
                 SettingsModes.gamerule.put(SettingsItems.ItemType.OTHERREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.otherregeneration")));
@@ -197,6 +204,8 @@ public class Config {
         config.set("settings.resetconfirm", "DISABLED");
         config.set("settings.hardcore", "DISABLED");
         config.set("settings.bungeecord", "DISABLED");
+        config.set("settings.backup", 0);
+        config.set("settings.backuptimer", 0);
         config.set("scoreboard.tabhp", "ENABLED");
         config.set("gamerule.natrualregeneration", "ENABLED");
         config.set("gamerule.otherregeneration", "ENABLED");

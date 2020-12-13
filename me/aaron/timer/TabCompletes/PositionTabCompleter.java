@@ -12,9 +12,6 @@ import java.util.List;
 public class PositionTabCompleter implements TabCompleter {
     //public ArrayList<String> savedposs = new ArrayList<>();
     List<String> positions = new ArrayList<>();
-
-
-    Config config = new Config();
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if(args.length == 1) {

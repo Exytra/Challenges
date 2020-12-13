@@ -1,6 +1,6 @@
 package me.aaron.timer.listeners;
 
-import me.aaron.timer.timer.Timer;
+import me.aaron.timer.utils.Timer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;

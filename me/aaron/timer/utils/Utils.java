@@ -3,14 +3,21 @@ package me.aaron.timer.utils;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.aaron.timer.Main;
+import net.dv8tion.jda.api.JDA;
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.server.v1_16_R3.NBTTagList;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.boss.BossBar;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Random;
 
 public class Utils {
@@ -57,5 +64,56 @@ public class Utils {
         } else {
             return current * bossbarfactor;
         }
+    }
+
+    public static ItemStack getHead(String id) {
+        net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(new ItemStack(Material.PLAYER_HEAD, 1));
+        NBTTagCompound tag;
+        if (item.hasTag()) {
+            tag = item.getTag();
+        } else {
+            tag = new NBTTagCompound();
+        }
+        NBTTagCompound skullOwner = new NBTTagCompound();
+        NBTTagCompound properties = new NBTTagCompound();
+        NBTTagList textures = new NBTTagList();
+        NBTTagCompound texture = new NBTTagCompound();
+
+        texture.setString("Value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19");
+        textures.add(texture);
+        properties.set("textures", textures);
+        skullOwner.set("Properties", properties);
+        tag.set("SkullOwner", skullOwner);
+
+        item.setTag(tag);
+        return CraftItemStack.asBukkitCopy(item);
+    }
+
+    public static String firstLatterCapitalized(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+    }
+
+    public static int TimeToTicks(int hours, int minutes, int seconds) {
+        int time = hours * 3600;
+        time += minutes * 60;
+        time += seconds;
+
+        return time * 20;
+    }
+
+    public static Date convertLocalDateToDate(LocalDateTime date) {
+        return Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date calculateUnban(long timeInSeconds) {
+        LocalDateTime dateTime = LocalDateTime.now().plusSeconds(timeInSeconds);
+        return convertLocalDateToDate(dateTime);
+    }
+
+    public static void setNewRankPrefix(Player p, Permissions.Rank rank) {
+        p.setDisplayName(Permissions.getPrefix(rank) + "§f" + p.getName());
+        p.setCustomName(Permissions.getPrefix(rank) + "§f" + p.getName());
+        p.setCustomNameVisible(true);
+        p.setPlayerListName(Permissions.getPrefix(rank) + "§f" + p.getName());
     }
 }

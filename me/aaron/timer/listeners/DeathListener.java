@@ -1,6 +1,6 @@
 package me.aaron.timer.listeners;
 
-import me.aaron.timer.timer.Timer;
+import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
 import org.bukkit.Bukkit;

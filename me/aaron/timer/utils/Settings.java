@@ -1,6 +1,5 @@
 package me.aaron.timer.utils;
 
-import me.aaron.timer.timer.Timer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -100,12 +99,14 @@ public class Settings {
         inv.setItem(3, TABHP());
         inv.setItem(4, Hardcore());
         inv.setItem(5, BUNGEECORD());
+        inv.setItem(6, Backup());
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.ENDER_DRAGON, SettingsModes.challenge.get(SettingsItems.ItemType.ENDER_DRAGON)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.WITHER, SettingsModes.challenge.get(SettingsItems.ItemType.WITHER)));
         inv.setItem(12, SettingsItems.getMenuItem(SettingsItems.ItemType.TABHP, SettingsModes.scoreboard.get(SettingsItems.ItemType.TABHP)));
         inv.setItem(13, SettingsItems.getMenuItem(SettingsItems.ItemType.HARDCORE, SettingsModes.settings.get(SettingsItems.ItemType.HARDCORE)));
         inv.setItem(14, SettingsItems.getMenuItem(SettingsItems.ItemType.BUNGEECORD, SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD)));
+        inv.setItem(15, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
 
         inv.setItem(18, Back());
 
@@ -115,37 +116,25 @@ public class Settings {
     public static Inventory TimerMenu() {
 
 
-        Inventory inv = Bukkit.createInventory(null, 18, "Timer Einstellungen");
+        Inventory inv = Bukkit.createInventory(null, 54, "Timer Einstellungen");
         inv = Utils.fillWithGlass(inv);
 
-        inv.setItem(1, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
-        inv.setItem(2, TimerChangeTime());
-        inv.setItem(3, SettingsItems.getMenuItem(SettingsItems.ItemType.REVERSE, SettingsModes.timer.get(SettingsItems.ItemType.REVERSE)));
-        inv.setItem(4, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
+        inv.setItem(11, ButtonPlus("hours"));
+        inv.setItem(20, Clock("hours"));
+        inv.setItem(29, ButtonMinus("hours"));
+        inv.setItem(13, ButtonPlus("min"));
+        inv.setItem(22, Clock("min"));
+        inv.setItem(31, ButtonMinus("min"));
+        inv.setItem(15, ButtonPlus("sec"));
+        inv.setItem(24, Clock("sec"));
+        inv.setItem(33, ButtonMinus("sec"));
+        inv.setItem(47, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
+        inv.setItem(49, SettingsItems.getMenuItem(SettingsItems.ItemType.REVERSE, SettingsModes.timer.get(SettingsItems.ItemType.REVERSE)));
+        inv.setItem(51, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
 
-        inv.setItem(9, Back());
+        inv.setItem(45, Back());
 
         return inv;
-    }
-
-    public static ItemStack TimerChangeTime() {
-        ItemStack CurrentTimeLogo = new ItemStack(Material.BEACON);
-        ItemMeta itemMeta = CurrentTimeLogo.getItemMeta();
-        ArrayList<String> itemLore = new ArrayList<>();
-
-        itemMeta.setDisplayName("§6Aktuelle Zeit");
-        itemLore.add(" ");
-        itemLore.add("§9Zeit: §7" + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6"));
-        itemLore.add(" ");
-        itemLore.add("§8[§9Links-Klick§8] §7+ 1 Minute");
-        itemLore.add("§8[§9Rechts-Klick§8] §7- 1 Minute");
-        itemLore.add("§8[§9Shift-Links-Klick§8] §7+ 1 Stunde");
-        itemLore.add("§8[§9Shift-Rechts-Klick§8] §7- 1 Stunde");
-        itemLore.add(" ");
-        itemMeta.setLore(itemLore);
-        CurrentTimeLogo.setItemMeta(itemMeta);
-
-        return CurrentTimeLogo;
     }
 
     public static ItemStack TABHP() {
@@ -160,6 +149,109 @@ public class Settings {
         itemLore.add("§7an, wenn man TAB drückt");
         itemLore.add(" ");
         itemLore.add("§8[§9Klick§8] §7An / Aus");
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Clock(String type) {
+        ItemStack itemStack = new ItemStack(Material.CLOCK);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        if (type.equals("sec")) {
+            itemMeta.setDisplayName("§6Sekunden");
+        } else if (type.equals("min")) {
+            itemMeta.setDisplayName("§6Minuten");
+        } else if (type.equals("hours")) {
+            itemMeta.setDisplayName("§6Stunden");
+        }
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Ändert die Zeit des Timers.");
+        itemLore.add(" ");
+        itemLore.add("§7Momentan: " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6§l"));
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack ButtonPlus(String type) {
+        ItemStack itemStack = new ItemStack(Material.OAK_BUTTON);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        if (type.equals("sec")) {
+            itemMeta.setDisplayName("§6Sekunden");
+        } else if (type.equals("min")) {
+            itemMeta.setDisplayName("§6Minuten");
+        } else if (type.equals("hours")) {
+            itemMeta.setDisplayName("§6Stunden");
+        }
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Ändert die Zeit des Timers.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7+ 1");
+        itemLore.add("§8[§9Shift-Klick§8] §7+ 10");
+        itemLore.add(" ");
+        itemLore.add("§7Momentan: " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6§l"));
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack ButtonMinus(String type) {
+        ItemStack itemStack = new ItemStack(Material.OAK_BUTTON);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        if (type.equals("sec")) {
+            itemMeta.setDisplayName("§6Sekunden");
+        } else if (type.equals("min")) {
+            itemMeta.setDisplayName("§6Minuten");
+        } else if (type.equals("hours")) {
+            itemMeta.setDisplayName("§6Stunden");
+        }
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Ändert die Zeit des Timers.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7- 1");
+        itemLore.add("§8[§9Shift-Klick§8] §7- 10");
+        itemLore.add(" ");
+        itemLore.add("§7Momentan: " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6§l"));
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+
+    public static ItemStack Backup() {
+        ItemStack itemStack = new ItemStack(Material.ELYTRA);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§6Backup");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7In den angegebenen Intervallen wird ein");
+        itemLore.add("§7Backup von allen Welt-Ordnern gemacht.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Links-Klick§8] §7+ 1");
+        itemLore.add("§8[§9Rechts-Klick§8] §7- 1");
         itemLore.add(" ");
 
         itemMeta.setLore(itemLore);

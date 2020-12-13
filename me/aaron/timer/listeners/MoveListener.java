@@ -2,7 +2,7 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.Trafficlight;
-import me.aaron.timer.timer.Timer;
+import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
 import org.bukkit.Bukkit;
@@ -15,8 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.util.concurrent.TimeUnit;
 
 public class MoveListener implements Listener {
     @EventHandler

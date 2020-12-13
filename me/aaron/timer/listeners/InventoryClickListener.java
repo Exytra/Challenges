@@ -4,7 +4,7 @@ import me.aaron.timer.Main;
 import me.aaron.timer.challenges.ForceBlock;
 import me.aaron.timer.challenges.ForceMob;
 import me.aaron.timer.challenges.Trafficlight;
-import me.aaron.timer.timer.Timer;
+import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.Settings;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
@@ -455,6 +455,47 @@ public class InventoryClickListener implements Listener {
                             Utils.sendChange("§6BungeeCord", "§7wurde §cdeaktiviert");
                         }
                         break;
+                    case 15:
+                        if (SettingsModes.settings.get(SettingsItems.ItemType.BACKUP) == SettingsItems.ItemState.DISABLED) {
+                            if (e.getClick().equals(ClickType.LEFT)) {
+                                SettingsModes.settings.put(SettingsItems.ItemType.BACKUP, SettingsItems.ItemState.ENABLED);
+                                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, 1);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
+                                Utils.sendChange("§6Backup", "§6jede Stunde");
+                            } else {
+                                return;
+                            }
+                        } else if (SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) == 1) {
+                            if (e.getClick().equals(ClickType.LEFT)) {
+                                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, 2);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
+                                Utils.sendChange("§6Backup", "§7alle §6" + SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) + " Stunden");
+                            } else if (e.getClick().equals(ClickType.RIGHT)) {
+                                SettingsModes.settings.put(SettingsItems.ItemType.BACKUP, SettingsItems.ItemState.DISABLED);
+                                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, 0);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
+                                Utils.sendChange("§6Backup", "§7wurde §cdeaktiviert");
+                            }
+                        } else {
+                            if (e.getClick().equals(ClickType.LEFT)) {
+                                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) + 1);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
+                                if (SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) == 1) {
+                                    Utils.sendChange("§6Backup", "§6jede Stunde");
+                                } else {
+                                    Utils.sendChange("§6Backup", "§7alle §6" + SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) + " Stunden");
+                                }
+                            } else if (e.getClick().equals(ClickType.RIGHT)) {
+                                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) - 1);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
+                                if (SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) == 1) {
+                                    Utils.sendChange("§6Backup", "§6jede Stunde");
+                                } else {
+                                    Utils.sendChange("§6Backup", "§7alle §6" + SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) + " Stunden");
+                                }
+                            }
+                        }
+                        break;
                     //zurück
                     case 18:
                         p.openInventory(Settings.getOtherMenu());
@@ -464,61 +505,151 @@ public class InventoryClickListener implements Listener {
             //Timer Menu
             else if (e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen")) {
                 switch (slot) {
-                    case 1:
+                    case 11:
+                        if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() + 3600 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() + 3600);
+                        } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() + 3600 * 10 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() + 3600 * 10);
+                        }
+                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
+                        Timer.firststart = false;
+                        e.getClickedInventory().setItem(11, Settings.ButtonPlus("hours"));
+                        e.getClickedInventory().setItem(13, Settings.ButtonPlus("min"));
+                        e.getClickedInventory().setItem(15, Settings.ButtonPlus("sec"));
+                        e.getClickedInventory().setItem(20, Settings.Clock("hours"));
+                        e.getClickedInventory().setItem(22, Settings.Clock("min"));
+                        e.getClickedInventory().setItem(24, Settings.Clock("sec"));
+                        e.getClickedInventory().setItem(29, Settings.ButtonMinus("hours"));
+                        e.getClickedInventory().setItem(31, Settings.ButtonMinus("min"));
+                        e.getClickedInventory().setItem(33, Settings.ButtonMinus("sec"));
+                        break;
+                    case 13:
+                        if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() + 60 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() + 60);
+                        } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() + 60 * 10 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() + 60 * 10);
+                        }
+                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
+                        Timer.firststart = false;
+                        e.getClickedInventory().setItem(11, Settings.ButtonPlus("hours"));
+                        e.getClickedInventory().setItem(13, Settings.ButtonPlus("min"));
+                        e.getClickedInventory().setItem(15, Settings.ButtonPlus("sec"));
+                        e.getClickedInventory().setItem(20, Settings.Clock("hours"));
+                        e.getClickedInventory().setItem(22, Settings.Clock("min"));
+                        e.getClickedInventory().setItem(24, Settings.Clock("sec"));
+                        e.getClickedInventory().setItem(29, Settings.ButtonMinus("hours"));
+                        e.getClickedInventory().setItem(31, Settings.ButtonMinus("min"));
+                        e.getClickedInventory().setItem(33, Settings.ButtonMinus("sec"));
+                        break;
+                    case 15:
+                        if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() + 1 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() + 1);
+                        } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() + 10 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() + 10);
+                        }
+                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
+                        Timer.firststart = false;
+                        e.getClickedInventory().setItem(11, Settings.ButtonPlus("hours"));
+                        e.getClickedInventory().setItem(13, Settings.ButtonPlus("min"));
+                        e.getClickedInventory().setItem(15, Settings.ButtonPlus("sec"));
+                        e.getClickedInventory().setItem(20, Settings.Clock("hours"));
+                        e.getClickedInventory().setItem(22, Settings.Clock("min"));
+                        e.getClickedInventory().setItem(24, Settings.Clock("sec"));
+                        e.getClickedInventory().setItem(29, Settings.ButtonMinus("hours"));
+                        e.getClickedInventory().setItem(31, Settings.ButtonMinus("min"));
+                        e.getClickedInventory().setItem(33, Settings.ButtonMinus("sec"));
+                        break;
+                    case 29:
+                        if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() - 3600 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() - 3600);
+                        } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() - 3600 * 10 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() - 3600 * 10);
+                        }
+                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
+                        Timer.firststart = false;
+                        e.getClickedInventory().setItem(11, Settings.ButtonPlus("hours"));
+                        e.getClickedInventory().setItem(13, Settings.ButtonPlus("min"));
+                        e.getClickedInventory().setItem(15, Settings.ButtonPlus("sec"));
+                        e.getClickedInventory().setItem(20, Settings.Clock("hours"));
+                        e.getClickedInventory().setItem(22, Settings.Clock("min"));
+                        e.getClickedInventory().setItem(24, Settings.Clock("sec"));
+                        e.getClickedInventory().setItem(29, Settings.ButtonMinus("hours"));
+                        e.getClickedInventory().setItem(31, Settings.ButtonMinus("min"));
+                        e.getClickedInventory().setItem(33, Settings.ButtonMinus("sec"));
+                        break;
+                    case 31:
+                        if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() - 60 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() - 60);
+                        } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() - 60 * 10 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() - 60 * 10);
+                        }
+                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
+                        Timer.firststart = false;
+                        e.getClickedInventory().setItem(11, Settings.ButtonPlus("hours"));
+                        e.getClickedInventory().setItem(13, Settings.ButtonPlus("min"));
+                        e.getClickedInventory().setItem(15, Settings.ButtonPlus("sec"));
+                        e.getClickedInventory().setItem(20, Settings.Clock("hours"));
+                        e.getClickedInventory().setItem(22, Settings.Clock("min"));
+                        e.getClickedInventory().setItem(24, Settings.Clock("sec"));
+                        e.getClickedInventory().setItem(29, Settings.ButtonMinus("hours"));
+                        e.getClickedInventory().setItem(31, Settings.ButtonMinus("min"));
+                        e.getClickedInventory().setItem(33, Settings.ButtonMinus("sec"));
+                        break;
+                    case 33:
+                        if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() - 1 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() - 1);
+                        } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() - 10 < 0)) {
+                            Timer.setCurrentTime(Timer.getCurrentTime() - 10);
+                        }
+                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
+                        Timer.firststart = false;
+                        e.getClickedInventory().setItem(11, Settings.ButtonPlus("hours"));
+                        e.getClickedInventory().setItem(13, Settings.ButtonPlus("min"));
+                        e.getClickedInventory().setItem(15, Settings.ButtonPlus("sec"));
+                        e.getClickedInventory().setItem(20, Settings.Clock("hours"));
+                        e.getClickedInventory().setItem(22, Settings.Clock("min"));
+                        e.getClickedInventory().setItem(24, Settings.Clock("sec"));
+                        e.getClickedInventory().setItem(29, Settings.ButtonMinus("hours"));
+                        e.getClickedInventory().setItem(31, Settings.ButtonMinus("min"));
+                        e.getClickedInventory().setItem(33, Settings.ButtonMinus("sec"));
+                        break;
+                    case 47:
                         if (SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.ENABLED) {
                             SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(1, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
                             Utils.sendChange("§6Der Timer", "§cwurde deaktiviert");
                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                 pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("hi"));
                             }
                         } else {
                             SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(1, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
                             Utils.sendChange("§6Der Timer", "§awurde aktiviert");
                         }
                         break;
-                    case 2:
-                        if (e.getClick() == ClickType.LEFT) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() + 60);
-                            e.getClickedInventory().setItem(2, Settings.TimerChangeTime());
-                        } else if (e.getClick() == ClickType.RIGHT) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 60);
-                            e.getClickedInventory().setItem(2, Settings.TimerChangeTime());
-                        } else if (e.getClick() == ClickType.SHIFT_LEFT) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() + 3600);
-                            e.getClickedInventory().setItem(2, Settings.TimerChangeTime());
-                        } else if (e.getClick() == ClickType.SHIFT_RIGHT) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 3600);
-                            e.getClickedInventory().setItem(2, Settings.TimerChangeTime());
-                        }
-                        Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
-                        break;
-                    case 3:
+                    case 49:
                         if (SettingsModes.timer.get(SettingsItems.ItemType.REVERSE) == SettingsItems.ItemState.ENABLED) {
                             SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(3, SettingsItems.getMenuItem(SettingsItems.ItemType.REVERSE, SettingsModes.timer.get(SettingsItems.ItemType.REVERSE)));
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.REVERSE, SettingsModes.timer.get(SettingsItems.ItemType.REVERSE)));
                             Utils.sendChange("§6Der Timer", "§7läuft nun §avorwärts");
                         } else {
                             SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(3, SettingsItems.getMenuItem(SettingsItems.ItemType.REVERSE, SettingsModes.timer.get(SettingsItems.ItemType.REVERSE)));
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.REVERSE, SettingsModes.timer.get(SettingsItems.ItemType.REVERSE)));
                             Utils.sendChange("§6Der Timer", "§7läuft nun §crückwärts");
                         }
                         break;
-                    case 4:
+                    case 51:
                         if (SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART) == SettingsItems.ItemState.ENABLED) {
                             SettingsModes.timer.put(SettingsItems.ItemType.AUTOSTART, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(4, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
                             Utils.sendChange("§6Automatischer Timer", "§7wurde §cdeaktiviert");
                         } else {
                             SettingsModes.timer.put(SettingsItems.ItemType.AUTOSTART, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(4, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
                             Utils.sendChange("§6Automatischer Timer", "§7wurde §aaktiviert");
                         }
-
                         break;
-
-                    case 9:
+                    case 45:
                         p.openInventory(Settings.getOtherMenu());
                         break;
                 }

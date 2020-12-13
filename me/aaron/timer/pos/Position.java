@@ -8,9 +8,11 @@ import me.aaron.timer.TabCompletes.PositionTabCompleter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Position {
-    public static ArrayList<String> positionlist = new ArrayList<String>();
+    public static ArrayList<String> positionlist = new ArrayList<>();
     PositionTabCompleter TabCompleter = new PositionTabCompleter();
     Config config = new Config();
     public StringBuilder positions = new StringBuilder();
@@ -60,8 +62,16 @@ public class Position {
     }
 
     public void share(Player p) {
+        String world = p.getWorld().getName();
+        if (p.getWorld().getName().equalsIgnoreCase("world")) {
+            world = "Overworld";
+        } else if (p.getWorld().getName().equalsIgnoreCase("world_nether")) {
+            world = "Nether";
+        } else if (p.getWorld().getName().equalsIgnoreCase("world_the_end")) {
+            world = "End";
+        }
         for (Player pl : Bukkit.getOnlinePlayers()) {
-            pl.sendMessage("§8[§6Position§8] §a" + p.getName() + " §7befindet sich bei §8[§6" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ", " + p.getWorld().getName() + "§8]");
+            pl.sendMessage("§8[§6Position§8] §a" + p.getName() + " §7befindet sich bei §8[§6" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ", " + world + "§8]");
         }
     }
 
