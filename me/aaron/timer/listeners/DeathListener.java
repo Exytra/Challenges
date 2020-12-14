@@ -32,7 +32,19 @@ public class DeathListener implements Listener {
 
         }
         if (SettingsModes.settings.get(SettingsItems.ItemType.SHOWCOORDSONDEAETH) == SettingsItems.ItemState.ENABLED) {
-            e.setDeathMessage(DeathCause + "§8 [§6" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ", " + p.getWorld().getName() + "§8]");
+            String world = p.getWorld().getName();
+            switch (world) {
+                case "world":
+                    world = "Overworld";
+                    break;
+                case "world_nether":
+                    world = "Nether";
+                    break;
+                case "world_the_end":
+                    world = "End";
+                    break;
+            }
+            e.setDeathMessage(DeathCause + "§8 [§6" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ", " + world + "§8]");
         }
     }
 }

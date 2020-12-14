@@ -1,11 +1,7 @@
 package me.aaron.timer.utils;
 
-import javafx.geometry.Pos;
-import me.aaron.timer.Main;
-import me.aaron.timer.pos.Position;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;

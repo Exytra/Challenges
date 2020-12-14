@@ -16,9 +16,9 @@ public class RankCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("admin")) {
-                Bukkit.getPlayerExact(args[0]).setOp(true);
                 if (!(sender instanceof Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
                     try {
+                        Bukkit.getPlayerExact(args[0]).setOp(true);
                         Permissions.ranks.put(Bukkit.getPlayerExact(args[0]), Permissions.Rank.ADMIN);
                         sender.sendMessage(Main.getPrefix("Rank", "Der Spieler §9" + Bukkit.getPlayerExact(args[0]).getName() + " §7hat nun den Rang §4Admin§7."));
                         Bukkit.getPlayerExact(args[0]).sendMessage(Main.getPrefix("Rang", "Du hast nun den Rang §4Admin§7."));
@@ -28,9 +28,9 @@ public class RankCommand implements CommandExecutor {
                     }
                 }
             } else if (args[1].equalsIgnoreCase("op")) {
-                Bukkit.getPlayerExact(args[0]).setOp(true);
                 if (!(sender instanceof  Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
                     try {
+                        Bukkit.getPlayerExact(args[0]).setOp(true);
                         Permissions.ranks.put(Bukkit.getPlayerExact(args[0]), Permissions.Rank.OP);
                         sender.sendMessage(Main.getPrefix("Rank", "Der Spieler §9" + Bukkit.getPlayerExact(args[0]).getName() + " §7hat nun den Rang §2OP§7."));
                         Bukkit.getPlayerExact(args[0]).sendMessage(Main.getPrefix("Rang", "Du hast nun den Rang §2OP§7."));
@@ -41,8 +41,8 @@ public class RankCommand implements CommandExecutor {
                 }
             } else if (args[1].equalsIgnoreCase("user")) {
                 if (!(sender instanceof  Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
-                    Bukkit.getPlayerExact(args[0]).setOp(false);
                     try {
+                        Bukkit.getPlayerExact(args[0]).setOp(false);
                         Permissions.ranks.put(Bukkit.getPlayerExact(args[0]), Permissions.Rank.USER);
                         sender.sendMessage(Main.getPrefix("Rank", "Der Spieler §9" + Bukkit.getPlayerExact(args[0]).getName() + " §7hat nun den Rang §9User§7."));
                         Bukkit.getPlayerExact(args[0]).sendMessage(Main.getPrefix("Rang", "Du hast nun den Rang §9User§7."));
@@ -53,12 +53,13 @@ public class RankCommand implements CommandExecutor {
                 }
             } else if (args[1].equalsIgnoreCase("guest")) {
                 if (!(sender instanceof  Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
-                    Bukkit.getPlayerExact(args[0]).setOp(false);
                     try {
+                        Bukkit.getPlayerExact(args[0]).setOp(false);
                         Permissions.ranks.put(Bukkit.getPlayerExact(args[0]), Permissions.Rank.GUEST);
                         sender.sendMessage(Main.getPrefix("Rank", "Der Spieler §9" + Bukkit.getPlayerExact(args[0]).getName() + " §7hat nun den Rang §9Guest§7."));
                         Bukkit.getPlayerExact(args[0]).sendMessage(Main.getPrefix("Rang", "Du hast nun den Rang §9Guest§7."));
                         Utils.setNewRankPrefix(Bukkit.getPlayerExact(args[0]), Permissions.Rank.GUEST);
+                        Bukkit.getPlayerExact(args[0]).setGameMode(GameMode.SPECTATOR);
                     } catch (Exception e) {
                         sender.sendMessage(Main.getPrefix("Rank", "Dieser Spieler konnte §cnicht gefunden §7werden."));
                     }
