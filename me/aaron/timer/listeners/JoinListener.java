@@ -1,8 +1,7 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.challenges.Trafficlight;
-import me.aaron.timer.scoreboard.Sb;
+import me.aaron.timer.utils.ScoreboardManager;
 import me.aaron.timer.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
@@ -21,6 +20,7 @@ public class JoinListener implements Listener {
         Permissions.Rank rank = (rankString == null) ? Permissions.Rank.GUEST : Permissions.Rank.valueOf(rankString);
         Utils.setNewRankPrefix(p, rank);
         Permissions.ranks.put(p, rank);
+        MoveListener.lastMovement.put(p, System.currentTimeMillis() * 1000);
 
         e.setJoinMessage("§a» §f" + Permissions.getPrefix(Permissions.getRank(p)) + "§f" + p.getName());
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SettingsModes.maxHP);
@@ -41,7 +41,7 @@ public class JoinListener implements Listener {
             //trafficlight.addPlayer(p);
         }
 
-        Sb.createScoreboard(p);
+        ScoreboardManager.createScoreboard(p);
 
         if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK) == SettingsItems.ItemState.ENABLED) {
             /*ForceBlock forceBlock = new ForceBlock(Main.getInstance());

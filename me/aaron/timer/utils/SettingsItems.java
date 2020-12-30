@@ -528,6 +528,102 @@ public class SettingsItems {
                 itemStack.setAmount((SettingsModes.ints.get(ItemType.BACKUP) == 0) ? 1 : SettingsModes.ints.get(ItemType.BACKUP));
             }
             itemLore.add(" ");
+        } else if (type == ItemType.ALL_ITEMS){
+            itemStack.setType(Material.BEACON);
+            itemMeta.setDisplayName("§6Alle Items");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Du musst alle Items in Minecraft");
+            itemLore.add("§7in einer vorgegebenen Reihenfolge sammeln.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.BACKPACK) {
+            itemStack.setType(Material.ENDER_CHEST);
+            itemMeta.setDisplayName("§6Backpack");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Gibt den Spielern einen Rucksack.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.NO_CRAFTING) {
+            itemStack.setType(Material.CRAFTING_TABLE);
+            itemMeta.setDisplayName("§6Kein Crafting");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Es ist den Spielern nicht erlaubt,");
+            itemLore.add("§7einen §9Crafting Table §7zu nutzen.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.NO_TRADING) {
+            itemStack.setType(Material.EMERALD);
+            itemMeta.setDisplayName("§6Kein Traden");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Es ist den Spielern nicht erlaubt,");
+            itemLore.add("§7mit §9Villagern §7zu traden.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.ALL_MOBS) {
+            itemStack.setType(Material.ZOMBIE_HEAD);
+            itemMeta.setDisplayName("§6Alle Mobs");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler müssen alle Mobs töten,");
+            itemLore.add("§7die es in Minecraft gibt.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.AFK) {
+            itemMeta.setDisplayName("§6AFK");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Wenn ein Spieler AFK ist,");
+            itemLore.add("§7steht AFK neben seinem Namen.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemStack.setType(Material.RED_DYE);
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemStack.setType(Material.LIME_DYE);
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -558,6 +654,7 @@ public class SettingsItems {
         CANCELLDAMAGE,
         BUNGEECORD,
         BACKUP,
+        AFK,
 
         // timer
         RESUME,
@@ -609,7 +706,7 @@ public class SettingsItems {
         EVERY_X_SECONDS_CHUNK_DESTRUCTION,
         JUMP_AND_RUN,
         WORLD_IS_ONE_BIOM,
-        TRAVEL_LIMIT,
+        WALK_LIMIT,
         NO_CRAFTING,
         NO_TRADING,
         WORLD_IS_ONE_BLOCK,
@@ -623,12 +720,14 @@ public class SettingsItems {
         BLOCKED_SLOTS,
         NO_TOOLS,
         SYNC_PLAYERS,
+        EXPLODE_NEAR_ENTITIES,
 
         //projects
         ALL_DEATHS,
         ALL_ACHIEVMENTS,
         ALL_ITEMS,
         RARE_THINGS,
+        ALL_MOBS,
     }
 
     public enum ItemState {

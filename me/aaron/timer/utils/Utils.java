@@ -90,7 +90,21 @@ public class Utils {
     }
 
     public static String firstLatterCapitalized(String string) {
-        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+        StringBuilder msg = new StringBuilder();
+        boolean nextUpperCase = true;
+        for (int i = 0; i < string.length(); i ++) {
+            String current = string.substring(i, i + 1);
+            if (nextUpperCase) {
+                msg.append(current.toUpperCase());
+                nextUpperCase = false;
+            } else {
+                msg.append(current);
+            }
+            if (current.equals(" ")) {
+                nextUpperCase = true;
+            }
+        }
+        return msg.toString();
     }
 
     public static int TimeToTicks(int hours, int minutes, int seconds) {
@@ -115,5 +129,17 @@ public class Utils {
         p.setCustomName(Permissions.getPrefix(rank) + "§f" + p.getName());
         p.setCustomNameVisible(true);
         p.setPlayerListName(Permissions.getPrefix(rank) + "§f" + p.getName());
+    }
+
+    public static Material randomItem() {
+        Material item = null;
+        Random random = new Random();
+        while (item == null) {
+            item = Material.values()[random.nextInt(Material.values().length)];
+            if (item == Material.STRUCTURE_BLOCK || item == Material.BARRIER || item == Material.COMMAND_BLOCK_MINECART || item == Material.CHAIN_COMMAND_BLOCK || item == Material.REPEATING_COMMAND_BLOCK || item == Material.END_GATEWAY || item == Material.BEDROCK || item == Material.MOVING_PISTON || item == Material.KELP_PLANT || item == Material.AIR || item.getKey().getKey().contains("spawn") || item.getKey().getKey().contains("potted") || item.getKey().getKey().contains("wall")) {
+                item = null;
+            }
+        }
+        return item;
     }
 }

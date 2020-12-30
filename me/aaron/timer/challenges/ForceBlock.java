@@ -27,7 +27,7 @@ public class ForceBlock {
     String BlockNameWithDash;
     String BlockName;
 
-    public ForceBlock (Main plugin) {
+    public ForceBlock(Main plugin) {
         this.plugin = plugin;
     }
 

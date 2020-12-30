@@ -21,7 +21,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.IOException;
 
 public class Timer {
-    Config conf = new Config();
     public static int timerSchedular;
     public static TimerState state = TimerState.STOPPED;
     public static boolean firststart = true;
@@ -37,9 +36,12 @@ public class Timer {
             if (SettingsModes.settings.get(ItemType.TIMER) == ItemState.ENABLED) {
                 sendTimer(getCurrentTime());
             }
-            if(Main.started) {
+            if (Main.started) {
                 Main.started = false;
                 pause(false);
+                if (Config.getString("timer.state").equalsIgnoreCase("RUNNING") && Bukkit.getOnlinePlayers().size() != 0) {
+                    resume(false);
+                }
             } else if (state != TimerState.PAUSED) {
                 if (SettingsModes.challenge.get(ItemType.SPEED) == ItemState.ENABLED) {
                     for (World wl : Bukkit.getWorlds()) {

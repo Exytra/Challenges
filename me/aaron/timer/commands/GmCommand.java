@@ -1,7 +1,6 @@
 package me.aaron.timer.commands;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.gm.Gm;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -10,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class GmCommand implements CommandExecutor {
-    Gm gm = new Gm();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -24,16 +22,16 @@ public class GmCommand implements CommandExecutor {
 
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("0") || args[0].equalsIgnoreCase("survival")) {
-                    gm.survival(p);
+                    p.setGameMode(GameMode.SURVIVAL);
                 }
                 if (args[0].equalsIgnoreCase("1") || args[0].equalsIgnoreCase("creative")) {
-                    gm.creative(p);
+                    p.setGameMode(GameMode.CREATIVE);
                 }
                 if (args[0].equalsIgnoreCase("2") || args[0].equalsIgnoreCase("adventure")) {
-                    gm.adventure(p);
+                    p.setGameMode(GameMode.ADVENTURE);
                 }
                 if (args[0].equalsIgnoreCase("3") || args[0].equalsIgnoreCase("spectator")) {
-                    gm.spectator(p);
+                    p.setGameMode(GameMode.SPECTATOR);
                 }
             }
             if (args.length == 2) {
@@ -70,7 +68,7 @@ public class GmCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         for (Player pl : Bukkit.getOnlinePlayers()) {
-                            pl.sendMessage("§8[§6Gamemode§8] §cError");
+                            pl.sendMessage("§8[§6Gamemode§8] §7Der Spieler §9" + args[0] + " §7 konnte §cnicht gefunden §7werden.");
                         }
                     }
                 }

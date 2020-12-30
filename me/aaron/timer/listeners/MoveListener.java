@@ -2,6 +2,7 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.Trafficlight;
+import me.aaron.timer.utils.AFK;
 import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
@@ -16,7 +17,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.HashMap;
+
 public class MoveListener implements Listener {
+    public static HashMap<Player, Long> lastMovement = new HashMap<>();
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
@@ -92,6 +96,12 @@ public class MoveListener implements Listener {
                     }
                 }
             }
+        }
+        if (SettingsModes.settings.get(SettingsItems.ItemType.AFK) == SettingsItems.ItemState.ENABLED) {
+            if (!AFK.afk.contains(p)) {
+                AFK.newMovement(p, lastMovement.get(p));
+            }
+            lastMovement.put(p, System.currentTimeMillis() / 1000);
         }
     }
 }

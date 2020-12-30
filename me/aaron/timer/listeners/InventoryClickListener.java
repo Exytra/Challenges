@@ -37,11 +37,13 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2")) {
+        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:")) {
             e.setCancelled(true);
             if(e.getCurrentItem().isSimilar(Settings.Health())) { p.openInventory(Settings.getHealthMenu()); }
 
             else if (e.getCurrentItem().isSimilar(Settings.ChallengesSettings())) { p.openInventory(Settings.getChallengesMenu()); }
+
+            else if (e.getCurrentItem().isSimilar(Settings.Projects())) { p.openInventory(Settings.ProjectMenu()); }
 
             else if (e.getCurrentItem().isSimilar(Settings.Other())) { p.openInventory(Settings.getOtherMenu()); }
 
@@ -275,6 +277,28 @@ public class InventoryClickListener implements Listener {
                             Utils.sendChange("§6Force-Mob", "§7wurde §cdeaktiviert");
                         }
                         break;
+                    case 23:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.NO_CRAFTING, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_CRAFTING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING)));
+                            Utils.sendChange("§6Kein Craften", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.NO_CRAFTING, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_CRAFTING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING)));
+                            Utils.sendChange("§6Kein Craften", "§7wurde §cdeaktiviert");
+                        }
+                        break;
+                    case 24:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.NO_TRADING, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_TRADING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING)));
+                            Utils.sendChange("§6Kein Traden", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.NO_TRADING, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_TRADING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING)));
+                            Utils.sendChange("§6Kein Traden", "§7wurde §cdeaktiviert");
+                        }
+                        break;
 
                     //zurück
                     case 27:
@@ -496,6 +520,17 @@ public class InventoryClickListener implements Listener {
                             }
                         }
                         break;
+                    case 16:
+                        if (SettingsModes.settings.get(SettingsItems.ItemType.AFK) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.settings.put(SettingsItems.ItemType.AFK, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.AFK, SettingsModes.settings.get(SettingsItems.ItemType.AFK)));
+                            Utils.sendChange("§6AFK-Detector", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.settings.put(SettingsItems.ItemType.AFK, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.AFK, SettingsModes.settings.get(SettingsItems.ItemType.AFK)));
+                            Utils.sendChange("§6AFK-Detector", "§7wurde §cdeaktiviert");
+                        }
+                        break;
                     //zurück
                     case 18:
                         p.openInventory(Settings.getOtherMenu());
@@ -651,6 +686,34 @@ public class InventoryClickListener implements Listener {
                         break;
                     case 45:
                         p.openInventory(Settings.getOtherMenu());
+                        break;
+                }
+            } else if (e.getView().getTitle().equalsIgnoreCase("Projekte")) {
+                switch (slot) {
+                    case 10:
+                        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
+                            Utils.sendChange("§6Alle Items", "§7wurde §cdeaktiviert");
+                        } else {
+                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
+                            Utils.sendChange("§6Alle Items", "§7wurde §aaktiviert");
+                        }
+                        break;
+                    case 11:
+                        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
+                            Utils.sendChange("§6Alle Mobs", "§7wurde §cdeaktiviert");
+                        } else {
+                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
+                            Utils.sendChange("§6Alle Mobs", "§7wurde §aaktiviert");
+                        }
+                        break;
+                    case 27:
+                        p.openInventory(Settings.getMenu());
                         break;
                 }
             }

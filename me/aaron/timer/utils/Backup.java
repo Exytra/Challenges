@@ -9,16 +9,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Backup {
-    private static final int BUFFER_SIZE = 4096;
-    public static int timertime = 70000;
+    public static int timertime;
     public void start() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(Main.class), () -> {
             if (Bukkit.getOnlinePlayers().size() != 0) {
                 timertime ++;
             }
-            if (timertime == SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) * 3600) {
+            int current = SettingsModes.ints.get(SettingsItems.ItemType.BACKUP) * 3600;
+            if (timertime == current) {
                 timertime = 0;
+                Bukkit.savePlayers();
                 backup();
+            } else if (timertime <= current && timertime >= current - 10) {
+                Bukkit.broadcastMessage("§7§o[Server]: Backup in " + (current - timertime) + " Sekunden");
             }
         }, 0, 20);
     }
@@ -61,10 +64,6 @@ public class Backup {
             FileUtils.copyDirectory(srcWorld, destWorld);
             FileUtils.copyDirectory(srcNether, destNether);
             FileUtils.copyDirectory(srcEnd, destEnd);
-            /*List<File> files = new ArrayList<>();
-            files.add(destWorld);
-            files.add(destNether);
-            files.add(destEnd);*/
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -6,10 +6,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.aaron.timer.invsee.Invsee;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 
 public class InvseeCommand implements CommandExecutor {
-    Invsee invsee = new Invsee();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!(sender instanceof Player)) {
@@ -21,7 +21,11 @@ public class InvseeCommand implements CommandExecutor {
             if (args.length == 1) {
                 try {
                     Player p = Bukkit.getPlayerExact(args[0]);
-                    invsee.invsee(p, s);
+                    Inventory inv = Bukkit.createInventory(null, InventoryType.PLAYER, "InvSee: §c§l" + p.getName());
+                    for (int i = 0; i < p.getInventory().getSize(); i ++) {
+                        inv.setItem(i, p.getInventory().getItem(i));
+                    }
+                    s.openInventory(inv);
                 } catch (Exception e) {
                     s.sendMessage(Main.getPrefix("InvSee", "Der Spieler §9" + args[0] + " §7konnte §cnicht gefunden §7werden."));
                 }

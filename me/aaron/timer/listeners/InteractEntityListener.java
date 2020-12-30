@@ -3,17 +3,17 @@ package me.aaron.timer.listeners;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
 import me.aaron.timer.utils.Timer;
-import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-public class InteractListener implements Listener {
+public class InteractEntityListener implements Listener {
     @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (e.getClickedBlock().getType() == Material.CRAFTING_TABLE && SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING) == SettingsItems.ItemState.ENABLED) {
+    public void onInteractEntity(PlayerInteractEntityEvent e) {
+        if (e.getRightClicked().getType() == EntityType.VILLAGER) {
+            if (SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING) == SettingsItems.ItemState.ENABLED) {
                 if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
                     e.setCancelled(true);
                 }

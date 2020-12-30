@@ -5,10 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.aaron.timer.fly.Fly;
 
 public class FlyCommand implements CommandExecutor {
-    Fly fly = new Fly();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -17,7 +15,12 @@ public class FlyCommand implements CommandExecutor {
         }
         Player p = (Player) sender;
         if (p.hasPermission("challenges.fly")) {
-            fly.switch_fly(p);
+            p.setAllowFlight(!p.getAllowFlight());
+            if (p.getAllowFlight()) {
+                p.sendMessage("§8[§6Fly§8]§a Aktiviert");
+            } else {
+                p.sendMessage("§8[§6Fly§8]§c Deaktiviert");
+            }
         } else {
             p.sendMessage(Main.getPrefix("Fly", "Du hast hierfür §ckeine Berechtigung"));
         }

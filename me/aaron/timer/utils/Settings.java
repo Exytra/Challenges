@@ -13,18 +13,19 @@ import java.util.ArrayList;
 public class Settings {
     public static Inventory getMenu() {
         Inventory Settings = Bukkit.createInventory(null, 27, "Settings");
-        Settings = Utils.fillWithGlass(Settings);
+        Utils.fillWithGlass(Settings);
 
-        Settings.setItem(11, ChallengesSettings());
-        Settings.setItem(13, Health());
-        Settings.setItem(15, Other());
+        Settings.setItem(10, ChallengesSettings());
+        Settings.setItem(12, Health());
+        Settings.setItem(14, Projects());
+        Settings.setItem(16, Other());
 
         return Settings;
     }
 
     public static Inventory getHealthMenu() {
         Inventory HealthSettings = Bukkit.createInventory(null, 27, "Lebenseinstellungen");
-        HealthSettings = Utils.fillWithGlass(HealthSettings);
+        Utils.fillWithGlass(HealthSettings);
 
         HealthSettings.setItem(1, GeteilteHerzen());
         HealthSettings.setItem(2, AllowRespawn());
@@ -45,7 +46,7 @@ public class Settings {
 
     public static Inventory getChallengesMenu() {
         Inventory inv = Bukkit.createInventory(null, 36, "Challenges");
-        inv = Utils.fillWithGlass(inv);
+        Utils.fillWithGlass(inv);
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.FLYONDAMAGE, SettingsModes.challenge.get(SettingsItems.ItemType.FLYONDAMAGE)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.SPEED, SettingsModes.challenge.get(SettingsItems.ItemType.SPEED)));
@@ -58,6 +59,8 @@ public class Settings {
         inv.setItem(20, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
         inv.setItem(21, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
         inv.setItem(22, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
+        inv.setItem(23, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_CRAFTING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING)));
+        inv.setItem(24, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_TRADING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING)));
 
         inv.setItem(27, Back());
 
@@ -66,7 +69,7 @@ public class Settings {
 
     public static Inventory getOtherMenu() {
         Inventory inv = Bukkit.createInventory(null, 27, "Restliche Einstellungen §7» §8Seite 1");
-        inv = Utils.fillWithGlass(inv);
+        Utils.fillWithGlass(inv);
 
         inv.setItem(1, TimerSettings());
         inv.setItem(2, SendTitle());
@@ -92,7 +95,7 @@ public class Settings {
 
     public static Inventory getOtherMenu2() {
         Inventory inv = Bukkit.createInventory(null, 27, "Restliche Einstellungen §7» §8Seite 2");
-        inv = Utils.fillWithGlass(inv);
+        Utils.fillWithGlass(inv);
 
         inv.setItem(1, Enderdragon());
         inv.setItem(2, Wither());
@@ -100,6 +103,7 @@ public class Settings {
         inv.setItem(4, Hardcore());
         inv.setItem(5, BUNGEECORD());
         inv.setItem(6, Backup());
+        inv.setItem(7, AFK());
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.ENDER_DRAGON, SettingsModes.challenge.get(SettingsItems.ItemType.ENDER_DRAGON)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.WITHER, SettingsModes.challenge.get(SettingsItems.ItemType.WITHER)));
@@ -107,6 +111,7 @@ public class Settings {
         inv.setItem(13, SettingsItems.getMenuItem(SettingsItems.ItemType.HARDCORE, SettingsModes.settings.get(SettingsItems.ItemType.HARDCORE)));
         inv.setItem(14, SettingsItems.getMenuItem(SettingsItems.ItemType.BUNGEECORD, SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD)));
         inv.setItem(15, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
+        inv.setItem(16, SettingsItems.getMenuItem(SettingsItems.ItemType.AFK, SettingsModes.settings.get(SettingsItems.ItemType.AFK)));
 
         inv.setItem(18, Back());
 
@@ -114,10 +119,8 @@ public class Settings {
     }
 
     public static Inventory TimerMenu() {
-
-
         Inventory inv = Bukkit.createInventory(null, 54, "Timer Einstellungen");
-        inv = Utils.fillWithGlass(inv);
+        Utils.fillWithGlass(inv);
 
         inv.setItem(11, ButtonPlus("hours"));
         inv.setItem(20, Clock("hours"));
@@ -133,6 +136,18 @@ public class Settings {
         inv.setItem(51, SettingsItems.getMenuItem(SettingsItems.ItemType.AUTOSTART, SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART)));
 
         inv.setItem(45, Back());
+
+        return inv;
+    }
+
+    public static Inventory ProjectMenu() {
+        Inventory inv = Bukkit.createInventory(null, 36, "Projekte");
+        Utils.fillWithGlass(inv);
+
+        inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
+        inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
+
+        inv.setItem(27, Back());
 
         return inv;
     }
@@ -157,17 +172,40 @@ public class Settings {
         return itemStack;
     }
 
+    public static ItemStack AFK() {
+        ItemStack itemStack = new ItemStack(Material.DEAD_TUBE_CORAL);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§6AFK");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Wenn ein Spieler AFK ist,");
+        itemLore.add("§7steht AFK neben seinem Namen.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7An / Aus");
+        itemLore.add(" ");
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
     public static ItemStack Clock(String type) {
         ItemStack itemStack = new ItemStack(Material.CLOCK);
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
 
-        if (type.equals("sec")) {
-            itemMeta.setDisplayName("§6Sekunden");
-        } else if (type.equals("min")) {
-            itemMeta.setDisplayName("§6Minuten");
-        } else if (type.equals("hours")) {
-            itemMeta.setDisplayName("§6Stunden");
+        switch (type) {
+            case "sec":
+                itemMeta.setDisplayName("§6Sekunden");
+                break;
+            case "min":
+                itemMeta.setDisplayName("§6Minuten");
+                break;
+            case "hours":
+                itemMeta.setDisplayName("§6Stunden");
+                break;
         }
         itemLore.add(" ");
         itemLore.add("§9Beschreibung:");
@@ -187,12 +225,16 @@ public class Settings {
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
 
-        if (type.equals("sec")) {
-            itemMeta.setDisplayName("§6Sekunden");
-        } else if (type.equals("min")) {
-            itemMeta.setDisplayName("§6Minuten");
-        } else if (type.equals("hours")) {
-            itemMeta.setDisplayName("§6Stunden");
+        switch (type) {
+            case "sec":
+                itemMeta.setDisplayName("§6Sekunden");
+                break;
+            case "min":
+                itemMeta.setDisplayName("§6Minuten");
+                break;
+            case "hours":
+                itemMeta.setDisplayName("§6Stunden");
+                break;
         }
         itemLore.add(" ");
         itemLore.add("§9Beschreibung:");
@@ -215,12 +257,16 @@ public class Settings {
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
 
-        if (type.equals("sec")) {
-            itemMeta.setDisplayName("§6Sekunden");
-        } else if (type.equals("min")) {
-            itemMeta.setDisplayName("§6Minuten");
-        } else if (type.equals("hours")) {
-            itemMeta.setDisplayName("§6Stunden");
+        switch (type) {
+            case "sec":
+                itemMeta.setDisplayName("§6Sekunden");
+                break;
+            case "min":
+                itemMeta.setDisplayName("§6Minuten");
+                break;
+            case "hours":
+                itemMeta.setDisplayName("§6Stunden");
+                break;
         }
         itemLore.add(" ");
         itemLore.add("§9Beschreibung:");
@@ -525,13 +571,12 @@ public class Settings {
     }
 
     public static ItemStack ChallengesSettings() {
-
         ItemStack Challenges = new ItemStack(Material.CRAFTING_TABLE);
         ItemMeta ChallengesMeta = Challenges.getItemMeta();
         ArrayList<String> ChallengesLore = new ArrayList<>();
         ChallengesMeta.setDisplayName("§9Challenges");
         ChallengesLore.add(" ");
-        ChallengesLore.add("§7Öffnet die §eEinstellungen §7für die §eChallenges");
+        ChallengesLore.add("§7Öffnet die §9Einstellungen §7für die §9Challenges");
         ChallengesLore.add(" ");
 
         ChallengesMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -547,7 +592,6 @@ public class Settings {
     }
 
     public static ItemStack MaxHealth() {
-
         ItemStack Challenges = new ItemStack(Material.RED_DYE);
         ItemMeta ChallengesMeta = Challenges.getItemMeta();
         ArrayList<String> ChallengesLore = new ArrayList<>();
@@ -569,7 +613,6 @@ public class Settings {
     }
 
     public static ItemStack MaxHealthButton() {
-
         ItemStack Challenges = new ItemStack(Material.STONE_BUTTON);
         ItemMeta ChallengesMeta = Challenges.getItemMeta();
         ArrayList<String> ChallengesLore = new ArrayList<>();
@@ -592,13 +635,12 @@ public class Settings {
     }
 
     public static ItemStack Health() {
-
         ItemStack Health = new ItemStack(Material.TOTEM_OF_UNDYING);
         ItemMeta HealthMeta = Health.getItemMeta();
         ArrayList<String> HealthLore = new ArrayList<>();
         HealthMeta.setDisplayName("§9Lebensanzeige");
         HealthLore.add(" ");
-        HealthLore.add("§7Öffnet die §eLebenseinstellungen.");
+        HealthLore.add("§7Öffnet die §9Lebenseinstellungen.");
         HealthLore.add(" ");
 
         HealthMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -613,14 +655,36 @@ public class Settings {
         return Health;
     }
 
-    public static ItemStack Other() {
+    public static ItemStack Projects() {
+        ItemStack itemStack = new ItemStack(Material.GRASS_BLOCK);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§9Projekte");
+        itemLore.add(" ");
+        itemLore.add("§7Öffnet die Einstellungen für Projekte");
+        itemLore.add("§7wie zum Beispiel §9Alle Achievements,");
+        itemLore.add("§9Alle Items, Alle Tode §7und weitere ...");
+        itemLore.add(" ");
 
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Other() {
         ItemStack Other = new ItemStack(Material.STRING);
         ItemMeta OtherMeta = Other.getItemMeta();
         ArrayList<String> OtherLore = new ArrayList<>();
         OtherMeta.setDisplayName("§9Andere Einstellungen");
         OtherLore.add(" ");
-        OtherLore.add("§7Öffnet §erestliche Einstellungen.");
+        OtherLore.add("§7Öffnet §9restliche Einstellungen.");
         OtherLore.add(" ");
 
         OtherMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

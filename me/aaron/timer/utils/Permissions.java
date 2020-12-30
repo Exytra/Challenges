@@ -16,7 +16,17 @@ public class Permissions {
     }
 
     public static boolean hasPermission(Player p, Rank rank) {
-        return ranks.get(p) == rank;
+        switch (rank) {
+            case ADMIN:
+                return getRank(p) == Rank.ADMIN;
+            case OP:
+                return getRank(p) == Rank.ADMIN || getRank(p) == Rank.OP;
+            case USER:
+                return getRank(p) == Rank.ADMIN || getRank(p) == Rank.OP || getRank(p) == Rank.USER;
+            case GUEST:
+                return true;
+        }
+        return false;
     }
 
     public static String getPrefix(Rank rank) {
@@ -26,7 +36,7 @@ public class Permissions {
     public enum Rank {
         GUEST("§8[§7Spec§8] "),
         USER(""),
-        OP("§8[§2OP§8] "),
+        OP(""),
         ADMIN("§8[§4Admin§8] ");
 
         private final String prefix;

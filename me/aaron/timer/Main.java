@@ -1,14 +1,16 @@
 package me.aaron.timer;
 //import me.aaron.timer.commands.BetterTimerCommand;
+import me.aaron.timer.projects.AllItems;
+import me.aaron.timer.projects.AllMobs;
 import me.aaron.timer.tabCompletes.*;
 import me.aaron.timer.challenges.ForceBlock;
 import me.aaron.timer.challenges.ForceMob;
 import me.aaron.timer.challenges.Trafficlight;
 import me.aaron.timer.commands.*;
-import me.aaron.timer.dorfspawn.Dorfspawn;
+import me.aaron.timer.commands.DorfCommand;
 import me.aaron.timer.listeners.*;
 import me.aaron.timer.utils.Position;
-import me.aaron.timer.refresh.Reload;
+import me.aaron.timer.commands.ReloadCommand;
 import me.aaron.timer.utils.*;
 import me.aaron.timer.commands.ResetCommand;
 import org.bukkit.Bukkit;
@@ -37,7 +39,9 @@ import static me.aaron.timer.utils.Permissions.ranks;
 
 public final class Main extends JavaPlugin {
     //todo:
-    //tempban-command
+    //multiworld-plugin
+    //hub
+    //test-command
 
     public Trafficlight trafficlight;
     Config config = new Config();
@@ -124,6 +128,14 @@ public final class Main extends JavaPlugin {
             Backup backup = new Backup();
             backup.start();
         }
+        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS) == SettingsItems.ItemState.ENABLED) {
+            AllItems.start();
+        }
+        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS) == SettingsItems.ItemState.ENABLED) {
+            AllMobs.start();
+        }
+
+        AFK.start();
     }
 
     @Override
@@ -162,6 +174,8 @@ public final class Main extends JavaPlugin {
         pm.registerEvents(new ForceMob(getInstance()), this);
         pm.registerEvents(new GamemodeChangeListener(), this);
         pm.registerEvents(new PreLoginListener(), this);
+        pm.registerEvents(new InteractListener(), this);
+        pm.registerEvents(new InteractEntityListener(), this);
     }
 
     private void commandRegistration() {
@@ -179,8 +193,8 @@ public final class Main extends JavaPlugin {
         this.getCommand("invsee").setExecutor(new InvseeCommand());
         this.getCommand("heal").setExecutor(new HealCommand());
         this.getCommand("reset").setExecutor(new ResetCommand());
-        this.getCommand("refresh").setExecutor(new Reload());
-        this.getCommand("rl").setExecutor(new Reload());
+        this.getCommand("refresh").setExecutor(new ReloadCommand());
+        this.getCommand("rl").setExecutor(new ReloadCommand());
         this.getCommand("sun").setExecutor(new SunCommand());
         this.getCommand("rain").setExecutor(new RainCommand());
         this.getCommand("thunder").setExecutor(new ThunderCommand());
@@ -188,7 +202,7 @@ public final class Main extends JavaPlugin {
         this.getCommand("trash").setExecutor(new TrashCommand());
         this.getCommand("seed").setExecutor(new SeedCommand());
         this.getCommand("l").setExecutor(new HubCommand());
-        this.getCommand("dorf").setExecutor(new Dorfspawn());
+        this.getCommand("dorf").setExecutor(new DorfCommand());
         this.getCommand("save").setExecutor(new SaveCommand());
         this.getCommand("rank").setExecutor(new RankCommand());
         this.getCommand("ban").setExecutor(new BanCommand());
@@ -198,6 +212,8 @@ public final class Main extends JavaPlugin {
         this.getCommand("timeout").setExecutor(new TempBanCommand());
         this.getCommand("stilletreppe").setExecutor(new TempBanCommand());
         this.getCommand("backup").setExecutor(new BackupCommand());
+        this.getCommand("skipitem").setExecutor(new SkipitemCommand());
+        this.getCommand("mobs").setExecutor(new MobsCommand());
     }
 
     private void TabCompleterRegistration() {
@@ -209,6 +225,7 @@ public final class Main extends JavaPlugin {
         this.getCommand("position").setTabCompleter(new PositionTabCompleter());
         this.getCommand("pos").setTabCompleter(new PositionTabCompleter());
         this.getCommand("rank").setTabCompleter(new RankTabCompleter());
+        this.getCommand("mobs").setTabCompleter(new MobsTabCompleter());
     }
 
     public void copy(File sourceLocation, File targetLocation) throws IOException {

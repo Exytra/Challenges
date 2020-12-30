@@ -62,23 +62,23 @@ public class ForceMob  implements Listener {
                         } else {
                             lefttime = neededtime - currenttime;
                             bossBar.setProgress(Utils.getBossBarProgress(neededtime, currenttime, true));
-                            bossBar.setTitle("§7Töte in " + Timer.ConvertTimerTime(lefttime, "§9") + " §9" + MobName);
+                            bossBar.setTitle("§7Töte in " + Timer.ConvertTimerTime(lefttime, "§9") + " §9" + Utils.firstLatterCapitalized(MobName));
                             bossBar.setColor(BarColor.BLUE);
                             currenttime ++;
                         }
                     } else {
                         if (forcedMob == null) {
-                            this.forcedMob = getRandomEntity();
+                            forcedMob = getRandomEntity();
                             neededtime = Utils.getRandomInt(240, 420);
                             currenttime = 0;
                             MobNameWithDash = forcedMob.toString();
                             MobName = MobNameWithDash.replace("_", " ");
-                            bossBar.setTitle("§7Töte in " + Timer.ConvertTimerTime(neededtime - currenttime, "§9") + " §9" + MobName);
+                            bossBar.setTitle("§7Töte in " + Timer.ConvertTimerTime(neededtime - currenttime, "§9") + " §9" + Utils.firstLatterCapitalized(MobName));
                             for (Player pl : Bukkit.getOnlinePlayers()) {
-                                pl.sendMessage(Main.getPrefix("Force-Mob", "§9Neue Anweisung: §7Töte in " + Timer.ConvertTimerTime(neededtime - currenttime, "§6") + " §9" + MobName));
+                                pl.sendMessage(Main.getPrefix("Force-Mob", "§9Neue Anweisung: §7Töte in " + Timer.ConvertTimerTime(neededtime - currenttime, "§6") + " §9" + Utils.firstLatterCapitalized(MobName)));
                             }
                         } else {
-                            this.forcedMob = null;
+                            forcedMob = null;
                                 for (Player pl : Bukkit.getOnlinePlayers()) {
                                     pl.setHealth(0);
                             }
@@ -119,17 +119,8 @@ public class ForceMob  implements Listener {
         bossBar.addPlayer(p);
     }
 
-    public void setForcedMob(EntityType type) {
-        this.forcedMob = type;
-    }
-
-    public EntityType getForcedMob() {
-        return forcedMob;
-    }
-
     @EventHandler
     public void onEntityKill(EntityDeathEvent e) {
-        Player p = e.getEntity().getKiller();
         Entity ent = e.getEntity();
         if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB) == SettingsItems.ItemState.ENABLED) {
             if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.ENABLED) {

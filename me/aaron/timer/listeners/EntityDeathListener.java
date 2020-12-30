@@ -1,6 +1,7 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.projects.AllMobs;
 import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
@@ -44,18 +45,10 @@ public class EntityDeathListener implements Listener {
             }
         }
 
-        /*if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB) == SettingsItems.ItemState.ENABLED) {
-            ForceMob forceMob = new ForceMob(Main.getInstance());
-            if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
-                Bukkit.broadcastMessage(e.getEntity().getType() + "");
-                Bukkit.broadcastMessage(forceMob.forcedMob + " forced after kill");
-                if (e.getEntity().getType().toString().equals(forceMob.forcedMob.toString())) {
-                    forceMob.forcedMob = null;
-                    for (Player pl : Bukkit.getOnlinePlayers()) {
-                        pl.sendMessage("LOLOL");
-                    }
-                }
+        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS) == SettingsItems.ItemState.ENABLED) {
+            if (e.getEntity().getKiller() != null) {
+                AllMobs.killed(e.getEntityType());
             }
-        }*/
+        }
     }
 }
