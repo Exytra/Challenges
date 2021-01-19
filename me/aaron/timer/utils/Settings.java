@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Settings {
     public static Inventory getMenu() {
@@ -106,6 +107,16 @@ public class Settings {
         return inv;
     }
 
+    public static Inventory resetPrompt(String title) {
+        Inventory inv = Bukkit.createInventory(null, 27, "§c" + title + " §rzurücksetzen?");
+        Utils.fillWithGlass(inv);
+
+        inv.setItem(11, Confirm());
+        inv.setItem(15, Cancel());
+
+        return inv;
+    }
+
     public static Inventory getOtherMenu2() {
         Inventory inv = Bukkit.createInventory(null, 27, "Restliche Einstellungen §7» §8Seite 2");
         Utils.fillWithGlass(inv);
@@ -137,8 +148,10 @@ public class Settings {
         Utils.fillWithGlass(inv);
 
         inv.setItem(1, Backpack());
+        inv.setItem(2, Stats());
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKPACK, SettingsModes.settings.get(SettingsItems.ItemType.BACKPACK)));
+        inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.STATS, SettingsModes.settings.get(SettingsItems.ItemType.STATS)));
 
         inv.setItem(18, Back());
 
@@ -189,6 +202,63 @@ public class Settings {
         itemLore.add("§9Beschreibung:");
         itemLore.add("§7Zeigt die Leben der Spieler");
         itemLore.add("§7an, wenn man TAB drückt");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7An / Aus");
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Confirm() {
+        ItemStack itemStack = new ItemStack(Material.LIME_CONCRETE);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§aBestätigen");
+        itemLore.add(" ");
+        itemLore.add("§cIch verstehe, dass ich den Reset");
+        itemLore.add("§cnicht mehr rückgängig machen kann.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7Zurücksetzen");
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Cancel() {
+        ItemStack itemStack = new ItemStack(Material.RED_CONCRETE);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§cAbbrechen");
+        itemLore.add(" ");
+        itemLore.add("§7Nicht zurücksetzen.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7Abbrechen");
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Stats() {
+        ItemStack itemStack = new ItemStack(Material.DAYLIGHT_DETECTOR);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§6Stats in der Tablist");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7In der Tablist steht die");
+        itemLore.add("§7RAM-Auslastung und die TPS.");
         itemLore.add(" ");
         itemLore.add("§8[§9Klick§8] §7An / Aus");
         itemLore.add(" ");

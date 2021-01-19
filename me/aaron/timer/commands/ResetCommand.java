@@ -17,22 +17,22 @@ public class ResetCommand implements CommandExecutor {
     public static int resetSchedular;
     private int waittime = 0;
     Config config = new Config();
-    public static boolean attemptone = false;
+    public static boolean attemptonce = false;
     @Override
     public boolean onCommand(CommandSender p, Command command, String label, String[] args) {
         if (p.hasPermission("challenges.reset")) {
             if (SettingsModes.settings.get(SettingsItems.ItemType.RESETCONFIRM) == SettingsItems.ItemState.ENABLED) {
                 if (args.length == 0) {
-                    if (!attemptone) {
+                    if (!attemptonce) {
                         p.sendMessage(Main.getPrefix("Reset", "Nutze /reset confirm §7 um den Reset auszuführen."));
-                        attemptone = true;
+                        attemptonce = true;
                         waittime = 0;
                         resetSchedular = Bukkit.getScheduler().scheduleSyncRepeatingTask(JavaPlugin.getPlugin(Main.class), () -> {
                             if (waittime <= 10) {
                                 waittime++;
                             } else {
                                 Bukkit.getScheduler().cancelTask(resetSchedular);
-                                attemptone = false;
+                                attemptonce = false;
                             }
                         }, 0, 20);
                     } else {
@@ -41,7 +41,7 @@ public class ResetCommand implements CommandExecutor {
                 }
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("confirm")) {
-                        if (attemptone) {
+                        if (attemptonce) {
                             Main.getInstance().saveConfig();
                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                 pl.kickPlayer("§8[§6Reset§8] \n §7Die Welten werden nun §9zurückgesetzt. \n §7Durch §9§l" + p.getName() + "§7 veranlasst. \n Du kannst den Server in ca. §9§l1 Minute §7wieder betreten.");

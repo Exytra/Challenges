@@ -2,11 +2,7 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.*;
-import me.aaron.timer.utils.Timer;
-import me.aaron.timer.utils.Settings;
-import me.aaron.timer.utils.SettingsItems;
-import me.aaron.timer.utils.SettingsModes;
-import me.aaron.timer.utils.Utils;
+import me.aaron.timer.utils.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -35,8 +31,9 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:")) {
+        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:") || e.getView().getTitle().contains("zurücksetzen?")) {
             e.setCancelled(true);
+            String title = e.getView().getTitle();
             if(e.getCurrentItem().isSimilar(Settings.Health())) { p.openInventory(Settings.getHealthMenu()); }
 
             else if (e.getCurrentItem().isSimilar(Settings.ChallengesSettings())) { p.openInventory(Settings.getChallengesMenu()); }
@@ -587,6 +584,17 @@ public class InventoryClickListener implements Listener {
                             Utils.sendChange("§6Backpack", "§7wurde §cdeaktiviert");
                         }
                         break;
+                    case 11:
+                        if (SettingsModes.settings.get(SettingsItems.ItemType.STATS) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.settings.put(SettingsItems.ItemType.STATS, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.STATS, SettingsModes.settings.get(SettingsItems.ItemType.STATS)));
+                            Utils.sendChange("§6Stats", "§7wurden §aaktiviert");
+                        } else {
+                            SettingsModes.settings.put(SettingsItems.ItemType.STATS, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.STATS, SettingsModes.settings.get(SettingsItems.ItemType.STATS)));
+                            Utils.sendChange("§6Stats", "§7wurden §cdeaktiviert");
+                        }
+                        break;
                     case 18:
                         p.openInventory(Settings.getOtherMenu2());
                         break;
@@ -746,30 +754,53 @@ public class InventoryClickListener implements Listener {
             } else if (e.getView().getTitle().equalsIgnoreCase("Projekte")) {
                 switch (slot) {
                     case 10:
-                        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS) == SettingsItems.ItemState.ENABLED) {
-                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
-                            Utils.sendChange("§6Alle Items", "§7wurde §cdeaktiviert");
-                        } else {
-                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
-                            Utils.sendChange("§6Alle Items", "§7wurde §aaktiviert");
+                        if (e.getClick() == ClickType.LEFT) {
+                            if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
+                                Utils.sendChange("§6Alle Items", "§7wurde §cdeaktiviert");
+                            } else {
+                                SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
+                                Utils.sendChange("§6Alle Items", "§7wurde §aaktiviert");
+                            }
+                        } else if (e.getClick() == ClickType.RIGHT) {
+                            p.openInventory(Settings.resetPrompt("Alle Items"));
                         }
                         break;
                     case 11:
-                        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS) == SettingsItems.ItemState.ENABLED) {
-                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
-                            Utils.sendChange("§6Alle Mobs", "§7wurde §cdeaktiviert");
-                        } else {
-                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
-                            Utils.sendChange("§6Alle Mobs", "§7wurde §aaktiviert");
+                        if (e.getClick() == ClickType.LEFT) {
+                            if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
+                                Utils.sendChange("§6Alle Mobs", "§7wurde §cdeaktiviert");
+                            } else {
+                                SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
+                                Utils.sendChange("§6Alle Mobs", "§7wurde §aaktiviert");
+                            }
+                        } else if (e.getClick() == ClickType.RIGHT) {
+                            p.openInventory(Settings.resetPrompt("Alle Mobs"));
                         }
                         break;
                     case 27:
                         p.openInventory(Settings.getMenu());
                         break;
+                }
+            } else if (e.getView().getTitle().contains("zurücksetzen?")) {
+                switch (slot) {
+                    case 11:
+                        if (title.contains("Alle Items")) {
+                            Config.resetProject(SettingsItems.ItemType.ALL_ITEMS);
+                            Utils.sendChange("§6Alle Items sammeln", "§7wurde §czurückgesetzt");
+                        } else if (title.contains("Alle Mobs")) {
+                            Config.resetProject(SettingsItems.ItemType.ALL_MOBS);
+                            Utils.sendChange("§6Alle Mobs töten", "§7wurde §czurückgesetzt");
+                        }
+                        p.closeInventory();
+                        break;
+                    case 15:
+                        p.openInventory(Settings.ProjectMenu());
                 }
             }
         }

@@ -1,5 +1,6 @@
 package me.aaron.timer.utils;
 
+import me.aaron.timer.Main;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -532,11 +533,11 @@ public class SettingsItems {
             itemStack.setType(Material.BEACON);
             itemMeta.setDisplayName("§6Alle Items");
             itemLore.add(" ");
-            itemLore.add("§9Beschreibung:");
             itemLore.add("§7Du musst alle Items in Minecraft");
             itemLore.add("§7in einer vorgegebenen Reihenfolge sammeln.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Zurücksetzen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -597,11 +598,11 @@ public class SettingsItems {
             itemStack.setType(Material.ZOMBIE_HEAD);
             itemMeta.setDisplayName("§6Alle Mobs");
             itemLore.add(" ");
-            itemLore.add("§9Beschreibung:");
             itemLore.add("§7Die Spieler müssen alle Mobs töten,");
             itemLore.add("§7die es in Minecraft gibt.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Zurücksetzen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -658,6 +659,23 @@ public class SettingsItems {
                 itemLore.add("§8[§2Aktiv§8]");
             }
             itemLore.add(" ");
+        } else if (type == ItemType.STATS) {
+            itemMeta.setDisplayName("§6Stats in der Tablist");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7In der Tablist steht die");
+            itemLore.add("§7RAM-Auslastung und die TPS.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemStack.setType(Material.RED_DYE);
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemStack.setType(Material.LIME_DYE);
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -689,6 +707,7 @@ public class SettingsItems {
         BUNGEECORD,
         BACKUP,
         AFK,
+        STATS,
 
         // timer
         RESUME,

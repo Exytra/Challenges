@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class ReloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
+        if (!(sender instanceof Player) || sender.hasPermission("challenges.reload")) {
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 pl.sendMessage("§8[§6Reload§8] §cEs könnte nun laggen.");
             }

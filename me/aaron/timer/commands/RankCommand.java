@@ -26,6 +26,8 @@ public class RankCommand implements CommandExecutor {
                     } catch (Exception e) {
                         sender.sendMessage(Main.getPrefix("Rank", "Dieser Spieler konnte §cnicht gefunden §7werden."));
                     }
+                } else {
+                    sender.sendMessage(Main.getPrefix("Rang", "Du hast hierfür §ckeine Berechtigung."));
                 }
             } else if (args[1].equalsIgnoreCase("op")) {
                 if (!(sender instanceof  Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
@@ -38,6 +40,8 @@ public class RankCommand implements CommandExecutor {
                     } catch (Exception e) {
                         sender.sendMessage(Main.getPrefix("Rank", "Dieser Spieler konnte §cnicht gefunden §7werden."));
                     }
+                } else {
+                    sender.sendMessage(Main.getPrefix("Rang", "Du hast hierfür §ckeine Berechtigung."));
                 }
             } else if (args[1].equalsIgnoreCase("user")) {
                 if (!(sender instanceof  Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
@@ -50,13 +54,14 @@ public class RankCommand implements CommandExecutor {
                     } catch (Exception e) {
                         sender.sendMessage(Main.getPrefix("Rank", "Dieser Spieler konnte §cnicht gefunden §7werden."));
                     }
+                } else {
+                    sender.sendMessage(Main.getPrefix("Rang", "Du hast hierfür §ckeine Berechtigung."));
                 }
             } else if (args[1].equalsIgnoreCase("guest")) {
                 if (!(sender instanceof  Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
                     try {
                         Player p = Bukkit.getPlayerExact(args[0]);
                         p.setOp(false);
-                        p.setGameMode(GameMode.SPECTATOR);
                         Permissions.ranks.put(Bukkit.getPlayerExact(args[0]), Permissions.Rank.GUEST);
                         sender.sendMessage(Main.getPrefix("Rank", "Der Spieler §9" + Bukkit.getPlayerExact(args[0]).getName() + " §7hat nun den Rang §9Guest§7."));
                         p.sendMessage(Main.getPrefix("Rang", "Du hast nun den Rang §9Guest§7."));
@@ -64,6 +69,8 @@ public class RankCommand implements CommandExecutor {
                     } catch (Exception e) {
                         sender.sendMessage(Main.getPrefix("Rank", "Dieser Spieler konnte §cnicht gefunden §7werden."));
                     }
+                } else {
+                    sender.sendMessage(Main.getPrefix("Rang", "Du hast hierfür §ckeine Berechtigung."));
                 }
             }
         }

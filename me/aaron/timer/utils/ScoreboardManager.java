@@ -16,7 +16,11 @@ import java.util.Arrays;
 public class ScoreboardManager extends JavaPlugin {
     public static void createScoreboard(Player p) {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(Main.class), () -> {
-            p.setPlayerListHeader("§8§m                        §8[§9SERVER§8]§m                        §7\n \nWillkommen §9" + p.getName() + " \n §7Spieler Online: §9" + Bukkit.getOnlinePlayers().size() + "\n\n§7 RAM-Auslastung: §9" + Utils.getPercent(Integer.parseInt(Runtime.getRuntime().maxMemory() + ""), Integer.parseInt((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) + "")) + "% §8 | §7TPS: §9" + Utils.getTPS() + "\n");
+            if (SettingsModes.settings.get(SettingsItems.ItemType.STATS) == SettingsItems.ItemState.ENABLED) {
+                p.setPlayerListHeader("§8§m                        §8[§9SERVER§8]§m                        §7\n \nWillkommen §9" + p.getName() + " \n §7Spieler Online: §9" + Bukkit.getOnlinePlayers().size() + "\n\n§7 RAM-Auslastung: §9" + Utils.getPercent(Integer.parseInt(Runtime.getRuntime().maxMemory() + ""), Integer.parseInt((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) + "")) + "% §8 | §7TPS: §9" + Utils.getTPS() + "\n");
+            } else {
+                p.setPlayerListHeader("§8§m                        §8[§9SERVER§8]§m                        §7\n \nWillkommen §9" + p.getName() + " \n §7Spieler Online: §9" + Bukkit.getOnlinePlayers().size() + "\n");
+            }
             if (Bukkit.getServer().hasWhitelist()) {
                 p.setPlayerListFooter("\n §7§oDieses Netzwerk ist privat! \n §c§oKein Fremder kann diesen Server betreten!");
             } else {

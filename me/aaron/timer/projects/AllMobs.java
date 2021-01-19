@@ -3,6 +3,7 @@ package me.aaron.timer.projects;
 import me.aaron.timer.Main;
 import me.aaron.timer.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -41,7 +42,18 @@ public class AllMobs {
         if (entities.size() == 0) {
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 pl.sendTitle("§9Alle Mobs §7getötet", "", 10, 60, 10);
-                pl.sendMessage(Main.getPrefix("Alle Mobs", "Du hast §9alle Mobs §7getötet!"));
+                if (Bukkit.getOnlinePlayers().size() < 1) {
+                    pl.sendMessage(Main.getPrefix("Alle Mobs", "Ihr habt §9alle Mobs §7getötet!"));
+                } else {
+                    pl.sendMessage(Main.getPrefix("Alle Mobs", "Du hast §9alle Mobs §7getötet!"));
+                }
+                pl.playSound(pl.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 30, 1);
+            }
+            for (EntityType entType : EntityType.values()) {
+                if (entType.isAlive() && entType != EntityType.ARMOR_STAND && entType != EntityType.PLAYER && entType != EntityType.GIANT) {
+                    entities.add(entType);
+                    mobnames.add(entType.name());
+                }
             }
         }
     }

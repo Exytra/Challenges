@@ -41,6 +41,8 @@ public final class Main extends JavaPlugin {
     //hub
     //test-command
 
+    public static boolean debug = false;
+
     public Trafficlight trafficlight;
     Config config = new Config();
 
@@ -60,12 +62,15 @@ public final class Main extends JavaPlugin {
         }
         deletedFolders = true;
         if(Config.contains("reset.isReset") && Config.getBoolean("reset.isReset")) {
+            try {
+                Config.set("reset.isReset", false);
+                Config.set("project.allmobs.mobs", null);
+                Config.set("project.allitems.items", null);
+                Config.set("project.allitems.current", null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
-        }
-        try {
-            config.set("reset.isReset", false);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -142,7 +147,13 @@ public final class Main extends JavaPlugin {
         }
         BackpackCommand.getBackpack();
 
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            MoveListener.lastMovement.put(pl, System.currentTimeMillis() * 1000);
+            AFK.afk.clear();
+            Utils.setNewRankPrefix(pl, Permissions.getRank(pl));
+        }
         AFK.start();
+        Permissions.start();
     }
 
     @Override
@@ -183,6 +194,7 @@ public final class Main extends JavaPlugin {
         pm.registerEvents(new PreLoginListener(), this);
         pm.registerEvents(new InteractListener(), this);
         pm.registerEvents(new InteractEntityListener(), this);
+        pm.registerEvents(new BucketListener(), this);
     }
 
     private void commandRegistration() {

@@ -1,12 +1,14 @@
 package me.aaron.timer.utils;
 
 import javafx.geometry.Pos;
+import me.aaron.timer.Main;
 import me.aaron.timer.commands.BackpackCommand;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,6 +108,7 @@ public class Config {
             config.set("settings.backup", SettingsModes.ints.get(SettingsItems.ItemType.BACKUP));
             config.set("settings.backuptimer", Backup.timertime);
             config.set("settings.afk", SettingsModes.settings.get(SettingsItems.ItemType.AFK).name());
+            config.set("settings.stats", SettingsModes.settings.get(SettingsItems.ItemType.STATS).name());
             config.set("scoreboard.tabhp", SettingsModes.scoreboard.get(SettingsItems.ItemType.TABHP).name());
             config.set("gamerule.natrualregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.NATURALREGENERATION).name());
             config.set("gamerule.otherregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.OTHERREGENERATION).name());
@@ -160,6 +163,11 @@ public class Config {
 
     public static boolean loadConfig() {
         if (Config.file.exists()) {
+            try {
+                Main.debug = Config.getBoolean("debugmode");
+            } catch (Exception e) {
+                resetSingle("debugmode", "false");
+            }
             try {
                 SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.valueOf(Config.getString("timer.reverse")));
             } catch (Exception e) {
@@ -265,6 +273,11 @@ public class Config {
                 SettingsModes.settings.put(SettingsItems.ItemType.AFK, SettingsItems.ItemState.valueOf(Config.getString("settings.afk")));
             } catch (Exception e) {
                 resetSingle("settings.afk", "ENABLED");
+            }
+            try {
+                SettingsModes.settings.put(SettingsItems.ItemType.STATS, SettingsItems.ItemState.valueOf(Config.getString("settings.stats")));
+            } catch (Exception e) {
+                resetSingle("settings.stats", "ENABLED");
             }
             try {
                 SettingsModes.scoreboard.put(SettingsItems.ItemType.TABHP, SettingsItems.ItemState.valueOf(Config.getString("scoreboard.tabhp")));
@@ -409,6 +422,7 @@ public class Config {
     }
 
     public static boolean resetConfig() {
+        config.set("debugmode: ", false);
         config.set("timer.currenttime", 0);
         config.set("timer.reverse", "DISABLED");
         config.set("timer.starttime", 0);
@@ -430,6 +444,7 @@ public class Config {
         config.set("settings.backup", 0);
         config.set("settings.backuptimer", 0);
         config.set("settings.afk", "ENABLED");
+        config.set("settings.stats", "ENABLED");
         config.set("scoreboard.tabhp", "ENABLED");
         config.set("gamerule.natrualregeneration", "ENABLED");
         config.set("gamerule.otherregeneration", "ENABLED");
@@ -484,5 +499,32 @@ public class Config {
             e.printStackTrace();
         }
         loadConfig();
+    }
+
+    public static void resetProject(SettingsItems.ItemType type) {
+        try {
+            switch (type) {
+                case ALL_ITEMS:
+                    Config.set("project.allitems.items", null);
+                    Config.set("project.allitems.current", null);
+                    AllItems.items.clear();
+                    for (Material mat : Material.values()) {
+                        AllItems.items.add(mat.toString());
+                    }
+                    AllItems.items.removeIf(str -> str.contains("WALL_") || str.contains("SPAWN_EGG") || str.equalsIgnoreCase("AIR") || str.equalsIgnoreCase("BEDROCK") || str.contains("PORTAL"));
+                case ALL_MOBS:
+                    Config.set("project.allmobs.mobs", null);
+                    AllMobs.entities.clear();
+                    AllMobs.mobnames.clear();
+                    for (EntityType entType : EntityType.values()) {
+                        if (entType.isAlive() && entType != EntityType.ARMOR_STAND && entType != EntityType.PLAYER && entType != EntityType.GIANT) {
+                            AllMobs.entities.add(entType);
+                            AllMobs.mobnames.add(entType.name());
+                        }
+                    }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
