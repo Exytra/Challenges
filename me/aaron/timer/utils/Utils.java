@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.aaron.timer.Main;
 import net.dv8tion.jda.api.JDA;
+import net.minecraft.server.v1_16_R3.MinecraftServer;
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import net.minecraft.server.v1_16_R3.NBTTagList;
 import org.bukkit.Bukkit;
@@ -37,6 +38,12 @@ public class Utils {
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 pl.sendTitle(Title, Subtitle, 5, 40, 5);
             }
+        }
+    }
+
+    public static void sendTitle(String title, String subtitle) {
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            pl.sendTitle(title, subtitle, 5, 40, 5);
         }
     }
 
@@ -98,7 +105,7 @@ public class Utils {
                 msg.append(current.toUpperCase());
                 nextUpperCase = false;
             } else {
-                msg.append(current);
+                msg.append(current.toLowerCase());
             }
             if (current.equals(" ")) {
                 nextUpperCase = true;
@@ -141,5 +148,14 @@ public class Utils {
             }
         }
         return item;
+    }
+
+    public static long getPercent(double max, double current) {
+        double multiplier = 100 / max;
+        return Math.round(current * multiplier);
+    }
+
+    public static int getTPS() {
+        return MinecraftServer.TPS;
     }
 }

@@ -1,9 +1,7 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.challenges.ForceBlock;
-import me.aaron.timer.challenges.ForceMob;
-import me.aaron.timer.challenges.Trafficlight;
+import me.aaron.timer.challenges.*;
 import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.Settings;
 import me.aaron.timer.utils.SettingsItems;
@@ -37,7 +35,7 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:")) {
+        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:")) {
             e.setCancelled(true);
             if(e.getCurrentItem().isSimilar(Settings.Health())) { p.openInventory(Settings.getHealthMenu()); }
 
@@ -147,7 +145,7 @@ public class InventoryClickListener implements Listener {
                         break;
                 }
                 //Challenge Menu
-            } else if (e.getView().getTitle().equalsIgnoreCase("Challenges")) {
+            } else if (e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1")) {
                 switch (slot) {
                     case 10:
                         if (SettingsModes.challenge.get(SettingsItems.ItemType.FLYONDAMAGE) == SettingsItems.ItemState.ENABLED) {
@@ -299,10 +297,47 @@ public class InventoryClickListener implements Listener {
                             Utils.sendChange("§6Kein Traden", "§7wurde §cdeaktiviert");
                         }
                         break;
+                    case 25:
+                        ForceHeight forceHeight = new ForceHeight();
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
+                            forceHeight.start();
+                            Utils.sendChange("§6Force Height", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
+                            Utils.sendChange("§6Force Height", "§7wurde §cdeaktiviert");
+                        }
+                        break;
 
                     //zurück
                     case 27:
                         p.openInventory(Settings.getMenu());
+                        break;
+                    case 35:
+                        p.openInventory(Settings.getChallengesMenu2());
+                        break;
+                }
+            }
+            //Challenges Seite 2
+            else if (e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2")) {
+                switch (slot) {
+                    case 10:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
+                            Utils.sendChange("§6Force Biome", "§7wurde §cdeaktiviert");
+                        } else {
+                            ForceBiome forceBiome = new ForceBiome();
+                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
+                            Utils.sendChange("§6Force Biome", "§7wurde §aaktiviert");
+                            forceBiome.start();
+                        }
+                        break;
+                    case 27:
+                        p.openInventory(Settings.getChallengesMenu());
                         break;
                 }
             }
@@ -534,6 +569,26 @@ public class InventoryClickListener implements Listener {
                     //zurück
                     case 18:
                         p.openInventory(Settings.getOtherMenu());
+                        break;
+                    case 26:
+                        p.openInventory(Settings.getOtherMenu3());
+                        break;
+                }
+            } else if (e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3")) {
+                switch (slot) {
+                    case 10:
+                        if (SettingsModes.settings.get(SettingsItems.ItemType.BACKPACK) == SettingsItems.ItemState.DISABLED) {
+                            SettingsModes.settings.put(SettingsItems.ItemType.BACKPACK, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKPACK, SettingsModes.settings.get(SettingsItems.ItemType.BACKPACK)));
+                            Utils.sendChange("§6Backpack", "§7wurde §aaktiviert");
+                        } else {
+                            SettingsModes.settings.put(SettingsItems.ItemType.BACKPACK, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKPACK, SettingsModes.settings.get(SettingsItems.ItemType.BACKPACK)));
+                            Utils.sendChange("§6Backpack", "§7wurde §cdeaktiviert");
+                        }
+                        break;
+                    case 18:
+                        p.openInventory(Settings.getOtherMenu2());
                         break;
                 }
             }

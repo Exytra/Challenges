@@ -19,7 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
 
-public class ForceMob  implements Listener {
+public class ForceMob implements Listener {
     public static int ForceMobScheduler;
     private Main plugin;
     private BossBar bossBar;
@@ -56,7 +56,7 @@ public class ForceMob  implements Listener {
                     if (!(currenttime >= neededtime)) {
                         if (forcedMob == null) {
                             bossBar.setColor(BarColor.BLUE);
-                            bossBar.setTitle("Warten auf neue §9Anweisung ...");
+                            bossBar.setTitle("Warten auf neue §9Anweisung §7...");
                             bossBar.setProgress(1);
                             currenttime++;
                         } else {
@@ -79,8 +79,8 @@ public class ForceMob  implements Listener {
                             }
                         } else {
                             forcedMob = null;
-                                for (Player pl : Bukkit.getOnlinePlayers()) {
-                                    pl.setHealth(0);
+                            for (Player pl : Bukkit.getOnlinePlayers()) {
+                                pl.setHealth(0);
                             }
                         }
                     }

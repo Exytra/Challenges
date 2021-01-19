@@ -545,17 +545,19 @@ public class SettingsItems {
             }
             itemLore.add(" ");
         } else if (type == ItemType.BACKPACK) {
-            itemStack.setType(Material.ENDER_CHEST);
             itemMeta.setDisplayName("§6Backpack");
             itemLore.add(" ");
             itemLore.add("§9Beschreibung:");
-            itemLore.add("§7Gibt den Spielern einen Rucksack.");
+            itemLore.add("§7Erlaubt den Spielern ein Backpack");
+            itemLore.add("§7mit §9/backpack §7zu öffnen.");
             itemLore.add(" ");
             itemLore.add("§8[§9Klick§8] §7An / Aus");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
+                itemStack.setType(Material.RED_DYE);
                 itemLore.add("§8[§4Inaktiv§8]");
             } else {
+                itemStack.setType(Material.LIME_DYE);
                 itemLore.add("§8[§2Aktiv§8]");
             }
             itemLore.add(" ");
@@ -624,6 +626,38 @@ public class SettingsItems {
                 itemLore.add("§8[§2Aktiv§8]");
             }
             itemLore.add(" ");
+        } else if (type == ItemType.FORCE_HEIGHT) {
+            itemStack.setType(Material.TWISTING_VINES);
+            itemMeta.setDisplayName("§6Force Height");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler müssen zu einer vorgegebenen");
+            itemLore.add("§7Zeit auf einer vorgegebenen Höhe sein.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.FORCE_BIOME) {
+            itemStack.setType(Material.MYCELIUM);
+            itemMeta.setDisplayName("§6Force Biome");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler müssen zu einer vorgegebenen");
+            itemLore.add("§7Zeit in einem vorgegebenen Biom stehen.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -685,7 +719,7 @@ public class SettingsItems {
         THEFLOORISLAVA,
         FORCEMOB,
         FORCE_ITEM,
-        FORCE_BIOM,
+        FORCE_BIOME,
         FORCE_HEIGHT,
         FORCE_COORDINATES,
         ANVI_LCRUSHER,
@@ -721,6 +755,7 @@ public class SettingsItems {
         NO_TOOLS,
         SYNC_PLAYERS,
         EXPLODE_NEAR_ENTITIES,
+        DISAPPEARING_BLOCKS,
 
         //projects
         ALL_DEATHS,

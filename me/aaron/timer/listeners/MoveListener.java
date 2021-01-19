@@ -1,11 +1,9 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.challenges.ForceBiome;
 import me.aaron.timer.challenges.Trafficlight;
-import me.aaron.timer.utils.AFK;
-import me.aaron.timer.utils.Timer;
-import me.aaron.timer.utils.SettingsItems;
-import me.aaron.timer.utils.SettingsModes;
+import me.aaron.timer.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -102,6 +100,26 @@ public class MoveListener implements Listener {
                 AFK.newMovement(p, lastMovement.get(p));
             }
             lastMovement.put(p, System.currentTimeMillis() / 1000);
+        }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT) == SettingsItems.ItemState.ENABLED) {
+            Timer.sendTimer(Timer.getCurrentTime());
+        }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME) == SettingsItems.ItemState.ENABLED) {
+            Timer.sendTimer(Timer.getCurrentTime());
+            for (Player pl : Bukkit.getOnlinePlayers()) {
+                if (pl.getLocation().getBlock().getBiome() == ForceBiome.forcedbiome) {
+                    ForceBiome forceBiome = new ForceBiome();
+                    forceBiome.neededtime = Utils.getRandomInt(180, 540);
+                    forceBiome.currenttime = 0;
+                    for (Player pl2 : Bukkit.getOnlinePlayers()) {
+                        pl2.sendMessage(Main.getPrefix("Force Biome", "§aGeschafft! §7Das Biom §9" + Utils.firstLatterCapitalized(ForceBiome.forcedbiome.toString().replace("_", " ")) + " §7wurde von §9" + p.getName() + " §7gefunden."));
+                    }
+                    ForceBiome.forcedbiome = null;
+                    break;
+                }
+            }
         }
     }
 }

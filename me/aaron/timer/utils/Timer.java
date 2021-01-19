@@ -103,7 +103,13 @@ public class Timer {
     public static void sendTimer(int message) {
         for (Player pl : Bukkit.getOnlinePlayers()) {
             if (state == TimerState.RUNNING) {
-                pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ConvertTimerTime(message, "§6§l")));
+                if (SettingsModes.challenge.get(ItemType.FORCE_HEIGHT) == ItemState.ENABLED) {
+                    pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ConvertTimerTime(message, "§6§l") + " §7| §8[§6Y§8] §6" + pl.getLocation().getBlockY()));
+                } else if (SettingsModes.challenge.get(ItemType.FORCE_BIOME) == ItemState.ENABLED) {
+                    pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ConvertTimerTime(message, "§6§l") + " §7| §8[§6Biome§8] §6" + Utils.firstLatterCapitalized(pl.getLocation().getBlock().getBiome().toString().replace("_", " "))));
+                } else {
+                    pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ConvertTimerTime(message, "§6§l")));
+                }
             } else if (state == TimerState.PAUSED) {
                 pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§6§oDer Timer ist pausiert."));
             }

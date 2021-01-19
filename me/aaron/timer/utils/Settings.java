@@ -45,7 +45,7 @@ public class Settings {
     }
 
     public static Inventory getChallengesMenu() {
-        Inventory inv = Bukkit.createInventory(null, 36, "Challenges");
+        Inventory inv = Bukkit.createInventory(null, 36, "Challenges §7» §8Seite 1");
         Utils.fillWithGlass(inv);
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.FLYONDAMAGE, SettingsModes.challenge.get(SettingsItems.ItemType.FLYONDAMAGE)));
@@ -61,6 +61,19 @@ public class Settings {
         inv.setItem(22, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
         inv.setItem(23, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_CRAFTING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING)));
         inv.setItem(24, SettingsItems.getMenuItem(SettingsItems.ItemType.NO_TRADING, SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING)));
+        inv.setItem(25, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
+
+        inv.setItem(27, Back());
+        inv.setItem(35, Next());
+
+        return inv;
+    }
+
+    public static Inventory getChallengesMenu2() {
+        Inventory inv = Bukkit.createInventory(null, 36, "Challenges §7» §8Seite 2");
+        Utils.fillWithGlass(inv);
+
+        inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
 
         inv.setItem(27, Back());
 
@@ -112,6 +125,20 @@ public class Settings {
         inv.setItem(14, SettingsItems.getMenuItem(SettingsItems.ItemType.BUNGEECORD, SettingsModes.settings.get(SettingsItems.ItemType.BUNGEECORD)));
         inv.setItem(15, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKUP, SettingsModes.settings.get(SettingsItems.ItemType.BACKUP)));
         inv.setItem(16, SettingsItems.getMenuItem(SettingsItems.ItemType.AFK, SettingsModes.settings.get(SettingsItems.ItemType.AFK)));
+
+        inv.setItem(26, Next());
+        inv.setItem(18, Back());
+
+        return inv;
+    }
+
+    public static Inventory getOtherMenu3() {
+        Inventory inv = Bukkit.createInventory(null, 27, "Restliche Einstellungen §7» §8Seite 3");
+        Utils.fillWithGlass(inv);
+
+        inv.setItem(1, Backpack());
+
+        inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKPACK, SettingsModes.settings.get(SettingsItems.ItemType.BACKPACK)));
 
         inv.setItem(18, Back());
 
@@ -182,6 +209,25 @@ public class Settings {
         itemLore.add("§9Beschreibung:");
         itemLore.add("§7Wenn ein Spieler AFK ist,");
         itemLore.add("§7steht AFK neben seinem Namen.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7An / Aus");
+        itemLore.add(" ");
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Backpack() {
+        ItemStack itemStack = new ItemStack(Material.ENDER_CHEST);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§6Backpack");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Erlaubt den Spielern ein Backpack");
+        itemLore.add("§7mit §9/backpack §7zu öffnen.");
         itemLore.add(" ");
         itemLore.add("§8[§9Klick§8] §7An / Aus");
         itemLore.add(" ");
@@ -768,7 +814,7 @@ public class Settings {
 
     public static ItemStack Back() {
 
-        ItemStack Back = new ItemStack(Material.CROSSBOW);
+        ItemStack Back = new ItemStack(Material.ARROW);
         ItemMeta BackMeta = Back.getItemMeta();
         ArrayList<String> BackLore = new ArrayList<>();
         BackMeta.setDisplayName("§6Zurück");

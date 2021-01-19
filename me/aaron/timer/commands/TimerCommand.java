@@ -96,8 +96,8 @@ public class TimerCommand implements CommandExecutor {
                     p.sendMessage("§9/timer §8<§7resume§8>§7: Setzt den Timer fort.");
                     p.sendMessage("§9/timer §8<§7pause§8>§7: Pausiert den Timer.");
                     p.sendMessage("§9/timer §8<§7reverse§8>§7: Lässt den Timer rückwärts oder vorwärts laufen.");
-                    p.sendMessage("§9/timer §8<§7reset§8> §7: Setzt den Timer zurück.");
-                    p.sendMessage("§9/timer §8<§7Stunden§8> <§7Minuten§8> <§7Sekunden§8> §7: Setzt den Timer auf die angegebene Zeit.");
+                    p.sendMessage("§9/timer §8<§7reset§8>§7: Setzt den Timer zurück.");
+                    p.sendMessage("§9/timer §8<§7Stunden§8> <§7Minuten§8> <§7Sekunden§8>§7: Setzt den Timer auf die angegebene Zeit.");
                 }
             } else {
                 p.sendMessage(Main.getPrefix("Timer", "Du hast hierfür §ckeine Berechtigung"));
@@ -107,8 +107,8 @@ public class TimerCommand implements CommandExecutor {
             p.sendMessage("§9/timer §8<§7resume§8>§7: Setzt den Timer fort.");
             p.sendMessage("§9/timer §8<§7pause§8>§7: Pausiert den Timer.");
             p.sendMessage("§9/timer §8<§7reverse§8>§7: Lässt den Timer rückwärts oder vorwärts laufen.");
-            p.sendMessage("§9/timer §8<§7reset§8> §7: Setzt den Timer zurück.");
-            p.sendMessage("§9/timer §8<§7Stunden§8> <§7Minuten§8> <§7Sekunden§8> §7: Setzt den Timer auf die angegebene Zeit.");
+            p.sendMessage("§9/timer §8<§7reset§8>§7: Setzt den Timer zurück.");
+            p.sendMessage("§9/timer §8<§7Stunden§8> <§7Minuten§8> <§7Sekunden§8>§7: Setzt den Timer auf die angegebene Zeit.");
         }
 
         return false;

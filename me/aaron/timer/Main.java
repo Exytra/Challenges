@@ -1,11 +1,9 @@
 package me.aaron.timer;
 //import me.aaron.timer.commands.BetterTimerCommand;
+import me.aaron.timer.challenges.*;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import me.aaron.timer.tabCompletes.*;
-import me.aaron.timer.challenges.ForceBlock;
-import me.aaron.timer.challenges.ForceMob;
-import me.aaron.timer.challenges.Trafficlight;
 import me.aaron.timer.commands.*;
 import me.aaron.timer.commands.DorfCommand;
 import me.aaron.timer.listeners.*;
@@ -134,6 +132,15 @@ public final class Main extends JavaPlugin {
         if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS) == SettingsItems.ItemState.ENABLED) {
             AllMobs.start();
         }
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT) == SettingsItems.ItemState.ENABLED) {
+            ForceHeight forceHeight = new ForceHeight();
+            forceHeight.start();
+        }
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME) == SettingsItems.ItemState.ENABLED) {
+            ForceBiome forceBiome = new ForceBiome();
+            forceBiome.start();
+        }
+        BackpackCommand.getBackpack();
 
         AFK.start();
     }

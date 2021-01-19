@@ -22,7 +22,7 @@ public class NewWorld {
         this.wc = wc;
         wc.environment(environment);
         wc.createWorld();
-        Location spawn = Bukkit.getWorld(name).getSpawnLocation();
+        Location spawn = p.getBedSpawnLocation() == null ? Bukkit.getWorld(name).getSpawnLocation() : p.getBedSpawnLocation();
         p.teleport(spawn);
     }
 

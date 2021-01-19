@@ -1,6 +1,7 @@
 package me.aaron.timer.utils;
 
 import javafx.geometry.Pos;
+import me.aaron.timer.commands.BackpackCommand;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import org.bukkit.Bukkit;
@@ -128,6 +129,8 @@ public class Config {
             config.set("challenge.forcemob", SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB).name());
             config.set("challenge.no_crafting", SettingsModes.challenge.get(SettingsItems.ItemType.NO_CRAFTING).name());
             config.set("challenge.no_trading", SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING).name());
+            config.set("challenge.forceheight", SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT).name());
+            config.set("challenge.forcebiome", SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME).name());
 
             //projects
             config.set("project.allitems.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS).name());
@@ -141,6 +144,11 @@ public class Config {
             config.set("project.allmobs.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS).name());
             if (AllMobs.mobnames.size() != 0) {
                 config.set("project.allmobs.mobs", AllMobs.mobnames);
+            }
+
+            for (int i = 0; i < BackpackCommand.inventory.getSize(); i ++) {
+                config.set("backpack." + i + ".type", BackpackCommand.inventory.getItem(i) == null ? "AIR" : BackpackCommand.inventory.getItem(i).getType().name());
+                config.set("backpack." + i + ".amount", BackpackCommand.inventory.getItem(i) == null ? 0 : BackpackCommand.inventory.getItem(i).getAmount());
             }
             config.save(file);
             return true;
@@ -362,6 +370,16 @@ public class Config {
             } catch (Exception e) {
                 resetSingle("challenge.no_trading", "DISABLED");
             }
+            try {
+                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.valueOf(Config.getString("challenge.forceheight")));
+            } catch (Exception e) {
+                resetSingle("challenge.forceheight", "DISABLED");
+            }
+            try {
+                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.valueOf(Config.getString("challenge.forcebiome")));
+            } catch (Exception e) {
+                resetSingle("challenge.forcebiome", "DISABLED");
+            }
 
             //projects
             try {
@@ -435,6 +453,8 @@ public class Config {
         config.set("challenge.forcemob", "DISABLED");
         config.set("challenge.no_crafting", "DISABLED");
         config.set("challenge.no_trading", "DISABLED");
+        config.set("challenge.forceheight", "DISABLED");
+        config.set("challenge.forcebiome", "DISABLED");
 
         //projects
         config.set("project.allitems.state", "DISABLED");
@@ -443,6 +463,9 @@ public class Config {
 
         config.set("project.allmobs.state", "DISABLED");
         config.set("project.allmobs.mobs", null);
+
+        //backpack
+        config.set("backpack", null);
         try {
             config.save(file);
         } catch (IOException e) {

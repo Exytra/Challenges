@@ -17,9 +17,8 @@ public class ReloadCommand implements CommandExecutor {
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 pl.sendMessage("§8[§6Reload§8] §cEs könnte nun laggen.");
             }
-            if (Config.saveConfig()) {
-                Bukkit.getServer().reload();
-            }
+            Config.saveConfig();
+            Bukkit.getServer().reload();
         } else {
             sender.sendMessage(Main.getPrefix("Reload", "Du hast hierfür §ckeine Berechtigung"));
         }

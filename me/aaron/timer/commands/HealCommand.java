@@ -23,7 +23,7 @@ public class HealCommand implements CommandExecutor {
                 p.setFoodLevel(20);
                 p.sendMessage("§8[§6Heal§8] §7Du wurdest geheilt");
             } else if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
-                p.sendMessage("§8[§6Heal§8] §8Du hast alle geheilt");
+                p.sendMessage("§8[§6Heal§8] §7Du hast alle geheilt");
                 for (Player pl : Bukkit.getOnlinePlayers()) {
                     if (!pl.getName().equals(p.getName())) {
                         pl.sendMessage("§8[§6Heal§8] §7Du wurdest von §9" + p.getName() + "§7 geheilt");

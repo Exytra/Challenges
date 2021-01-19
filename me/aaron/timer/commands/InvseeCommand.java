@@ -21,10 +21,11 @@ public class InvseeCommand implements CommandExecutor {
             if (args.length == 1) {
                 try {
                     Player p = Bukkit.getPlayerExact(args[0]);
-                    Inventory inv = Bukkit.createInventory(null, InventoryType.PLAYER, "InvSee: §c§l" + p.getName());
+                    Inventory raw = Bukkit.createInventory(null, 54, "InvSee: §c§l" + p.getName());
                     for (int i = 0; i < p.getInventory().getSize(); i ++) {
-                        inv.setItem(i, p.getInventory().getItem(i));
+                        raw.setItem(i, p.getInventory().getItem(i ));
                     }
+                    Inventory inv = Bukkit.createInventory(null, 54, "InvSee: §c§l" + p.getName());
                     s.openInventory(inv);
                 } catch (Exception e) {
                     s.sendMessage(Main.getPrefix("InvSee", "Der Spieler §9" + args[0] + " §7konnte §cnicht gefunden §7werden."));
