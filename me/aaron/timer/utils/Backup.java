@@ -3,6 +3,7 @@ package me.aaron.timer.utils;
 import me.aaron.timer.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -20,8 +21,6 @@ public class Backup {
                 timertime = 0;
                 Bukkit.savePlayers();
                 backup();
-            } else if (timertime <= current && timertime >= current - 10) {
-                Bukkit.broadcastMessage("§7§o[Server]: Backup in " + (current - timertime) + " Sekunden");
             }
         }, 0, 20);
     }
@@ -43,29 +42,31 @@ public class Backup {
     }
 
     public static void copy(String source, String destination, String name) {
-        File srcWorld = new File(source + "/world");
-        File srcNether = new File(source + "/world_nether");
-        File srcEnd = new File(source + "/world_the_end");
-        File destWorld = new File(destination + "/" + name + "/world");
-        File destNether = new File(destination + "/" + name +  "/world_nether");
-        File destEnd = new File(destination + "/" + name + "/world_the_end");
+        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getPlugin(Main.class), () -> {
+            File srcWorld = new File(source + "/world");
+            File srcNether = new File(source + "/world_nether");
+            File srcEnd = new File(source + "/world_the_end");
+            File destWorld = new File(destination + "/" + name + "/world");
+            File destNether = new File(destination + "/" + name +  "/world_nether");
+            File destEnd = new File(destination + "/" + name + "/world_the_end");
 
-        if (!destWorld.exists()) {
-            destWorld.mkdir();
-        }
-        if (!destNether.exists()) {
-            destNether.mkdir();
-        }
-        if (!destEnd.exists()) {
-            destEnd.mkdir();
-        }
+            if (!destWorld.exists()) {
+                destWorld.mkdir();
+            }
+            if (!destNether.exists()) {
+                destNether.mkdir();
+            }
+            if (!destEnd.exists()) {
+                destEnd.mkdir();
+            }
 
-        try {
-            FileUtils.copyDirectory(srcWorld, destWorld);
-            FileUtils.copyDirectory(srcNether, destNether);
-            FileUtils.copyDirectory(srcEnd, destEnd);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                FileUtils.copyDirectory(srcWorld, destWorld);
+                FileUtils.copyDirectory(srcNether, destNether);
+                FileUtils.copyDirectory(srcEnd, destEnd);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -4,10 +4,7 @@ import me.aaron.timer.Main;
 import me.aaron.timer.challenges.ForceBiome;
 import me.aaron.timer.challenges.Trafficlight;
 import me.aaron.timer.utils.*;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -118,6 +115,28 @@ public class MoveListener implements Listener {
                     }
                     ForceBiome.forcedbiome = null;
                     break;
+                }
+            }
+        }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER) == SettingsItems.ItemState.ENABLED && Permissions.hasPermission(p, Permissions.Rank.USER) && p.getGameMode() == GameMode.SURVIVAL) {
+            if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
+                Chunk chunk = p.getLocation().getChunk();
+                Material blockType = p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+                int X = chunk.getX() * 16;
+                int Z = chunk.getZ() * 16;
+
+                if (e.getFrom() != e.getTo() && p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.AIR && p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.BEDROCK) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int z = 0; z < 16; z++) {
+                            for (int y = 0; y < 255; y++) {
+                                if (chunk.getWorld().getBlockAt(X + x, y, Z + z).getType() == blockType) {
+                                    chunk.getWorld().getBlockAt(X + x, y, Z + z).setType(Material.AIR);
+                                }
+                            }
+                        }
+                    }
+                    p.getLocation().getBlock().getRelative(BlockFace.DOWN).setType(Material.GLASS);
                 }
             }
         }

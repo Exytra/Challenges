@@ -1,6 +1,7 @@
 package me.aaron.timer;
 //import me.aaron.timer.commands.BetterTimerCommand;
 import me.aaron.timer.challenges.*;
+import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import me.aaron.timer.tabCompletes.*;
@@ -11,6 +12,11 @@ import me.aaron.timer.utils.Position;
 import me.aaron.timer.commands.ReloadCommand;
 import me.aaron.timer.utils.*;
 import me.aaron.timer.commands.ResetCommand;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -25,6 +31,7 @@ import me.aaron.timer.commands.PositionCommand;
 import me.aaron.timer.commands.InvseeCommand;
 import me.aaron.timer.commands.HealCommand;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,8 +50,9 @@ public final class Main extends JavaPlugin {
 
     public static boolean debug = false;
 
+    public static final String version = "2.5";
+
     public Trafficlight trafficlight;
-    Config config = new Config();
 
     public static boolean started = false;
     public static Main plugin;
@@ -67,6 +75,9 @@ public final class Main extends JavaPlugin {
                 Config.set("project.allmobs.mobs", null);
                 Config.set("project.allitems.items", null);
                 Config.set("project.allitems.current", null);
+                Config.set("positions.list", null);
+                Config.set("random_drops.drops", null);
+                Config.set("positions.list", null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -154,6 +165,41 @@ public final class Main extends JavaPlugin {
         }
         AFK.start();
         Permissions.start();
+
+        TextComponent component = new TextComponent(" Download");
+        component.setColor(ChatColor.BLUE);
+        component.setBold(true);
+        component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/"));
+        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Du wirst zur Update-Seite weitergeleitet").color(ChatColor.WHITE).italic(true).create()));
+
+
+        if (SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.ENABLED) {
+            new UpdateChecker(this, 86023).Check(vers -> {
+                Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                    if (!vers.equalsIgnoreCase(version) && SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.ENABLED) {
+                        for (Player pl : Bukkit.getOnlinePlayers()) {
+                            pl.sendMessage(Main.getPrefix("Challenge-Plugin", "Es ist ein neues Update des Challenge-Plugins verfügbar §8(§9" + version + " §8» §9" + vers + "§8)§7. Bitte lade es hier herunter:"));
+                            pl.spigot().sendMessage(component);
+                        }
+                        Bukkit.getLogger().info(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Challenge-Plugin" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Es ist ein neues Update des Challenge-Plugins verfügbar bitte lade es dir hier herunter: " + ChatColor.BLUE + "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/");
+                    } else if (SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.DISABLED && !vers.equalsIgnoreCase(version)){
+                        Bukkit.getLogger().info(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Challenge-Plugin" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Es ist ein neues Update des Challenge-Plugins verfügbar bitte lade es dir hier herunter: " + ChatColor.BLUE + "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/");
+                    }
+                }, 0, Utils.TimeToTicks(0, 30, 0));
+            });
+        }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS) == SettingsItems.ItemState.ENABLED) {
+            RandomDrops.start();
+        }
+
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            ScoreboardManager.createScoreboard(pl);
+        }
+
+        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS) == SettingsItems.ItemState.ENABLED) {
+            AllDeathMessages.start();
+        }
     }
 
     @Override
@@ -233,6 +279,7 @@ public final class Main extends JavaPlugin {
         this.getCommand("backup").setExecutor(new BackupCommand());
         this.getCommand("skipitem").setExecutor(new SkipitemCommand());
         this.getCommand("mobs").setExecutor(new MobsCommand());
+        this.getCommand("moboverview").setExecutor(new MobsCommand());
     }
 
     private void TabCompleterRegistration() {

@@ -1,6 +1,7 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.utils.ScoreboardManager;
 import me.aaron.timer.utils.*;
 import org.bukkit.Bukkit;
@@ -52,6 +53,9 @@ public class JoinListener implements Listener {
             p.sendMessage(Main.getPrefix("Timer", "§9INFORMATION: §7Der Timer läuft nicht.\nVerwende §9/timer resume"));
         }
 
-        //p.teleport(loc);
+        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS) == SettingsItems.ItemState.ENABLED) {
+            AllDeathMessages.addPlayer(p);
+        }
+
     }
 }

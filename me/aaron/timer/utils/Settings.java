@@ -75,6 +75,8 @@ public class Settings {
         Utils.fillWithGlass(inv);
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
+        inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_DROPS, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS)));
+        inv.setItem(12, SettingsItems.getMenuItem(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER)));
 
         inv.setItem(27, Back());
 
@@ -149,9 +151,11 @@ public class Settings {
 
         inv.setItem(1, Backpack());
         inv.setItem(2, Stats());
+        inv.setItem(3, Update_Checker());
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.BACKPACK, SettingsModes.settings.get(SettingsItems.ItemType.BACKPACK)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.STATS, SettingsModes.settings.get(SettingsItems.ItemType.STATS)));
+        inv.setItem(12, SettingsItems.getMenuItem(SettingsItems.ItemType.UPDATE_CHECKER, SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER)));
 
         inv.setItem(18, Back());
 
@@ -186,6 +190,7 @@ public class Settings {
 
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
+        inv.setItem(12, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_DEATHS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS)));
 
         inv.setItem(27, Back());
 
@@ -279,6 +284,25 @@ public class Settings {
         itemLore.add("§9Beschreibung:");
         itemLore.add("§7Wenn ein Spieler AFK ist,");
         itemLore.add("§7steht AFK neben seinem Namen.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Klick§8] §7An / Aus");
+        itemLore.add(" ");
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Update_Checker() {
+        ItemStack itemStack = new ItemStack(Material.GHAST_TEAR);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§6Update Checker");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Das Plugin prüft automatisch, ob");
+        itemLore.add("§7die neuste Version installiert ist.");
         itemLore.add(" ");
         itemLore.add("§8[§9Klick§8] §7An / Aus");
         itemLore.add(" ");
@@ -528,12 +552,33 @@ public class Settings {
     }
 
     public static ItemStack Next() {
-        ItemStack itemStack = new ItemStack(Material.ARROW);
+        ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.WOOD_ARROW_RIGHT));
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
         itemMeta.setDisplayName("§6Weiter");
         itemLore.add(" ");
         itemLore.add("§7Bringt dich auf die nächste Seite.");
+        itemLore.add(" ");
+
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Exit() {
+        ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.WOOD_EXIT));
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§6Schließen");
+        itemLore.add(" ");
+        itemLore.add("§7Schließt das Menü.");
         itemLore.add(" ");
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -884,7 +929,7 @@ public class Settings {
 
     public static ItemStack Back() {
 
-        ItemStack Back = new ItemStack(Material.ARROW);
+        ItemStack Back = Utils.getHead(Heads.getValue(Heads.Head.WOOD_ARROW_LEFT));
         ItemMeta BackMeta = Back.getItemMeta();
         ArrayList<String> BackLore = new ArrayList<>();
         BackMeta.setDisplayName("§6Zurück");

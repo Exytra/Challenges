@@ -1,11 +1,16 @@
 package me.aaron.timer.projects;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.utils.Heads;
 import me.aaron.timer.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
@@ -50,11 +55,53 @@ public class AllMobs {
                 pl.playSound(pl.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 30, 1);
             }
             for (EntityType entType : EntityType.values()) {
-                if (entType.isAlive() && entType != EntityType.ARMOR_STAND && entType != EntityType.PLAYER && entType != EntityType.GIANT) {
+                if (entType.isAlive() && entType != EntityType.ARMOR_STAND && entType != EntityType.PLAYER && entType != EntityType.GIANT && entType != EntityType.ZOMBIE_HORSE && entType != EntityType.ILLUSIONER) {
                     entities.add(entType);
                     mobnames.add(entType.name());
                 }
             }
+        }
+    }
+
+    public static ItemStack isFound(EntityType entityType) {
+        if (entities.contains(entityType)) {
+            ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.valueOf(entityType.name())));
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            ArrayList<String> itemLore = new ArrayList<>();
+            itemMeta.setDisplayName("§6" + Utils.firstLatterCapitalized(entityType.name().replace("_", " ")));
+            itemLore.add(" ");
+            itemLore.add("§7Dieses Mob muss noch getötet werden.");
+            itemLore.add(" ");
+
+            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+            itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            itemMeta.setLore(itemLore);
+            itemStack.setItemMeta(itemMeta);
+
+            return itemStack;
+        } else {
+            ItemStack itemStack = new ItemStack(Material.LIME_STAINED_GLASS);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            ArrayList<String> itemLore = new ArrayList<>();
+            itemMeta.setDisplayName("§a" + Utils.firstLatterCapitalized(entityType.name().replace("_", " ")));
+            itemLore.add(" ");
+            itemLore.add("§7Dieses Mob wurde getötet.");
+            itemLore.add(" ");
+
+            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+            itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            itemMeta.setLore(itemLore);
+            itemStack.setItemMeta(itemMeta);
+
+            return itemStack;
         }
     }
 

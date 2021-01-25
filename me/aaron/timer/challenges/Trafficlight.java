@@ -126,14 +126,6 @@ public class Trafficlight {
         bossBar.addPlayer(p);
     }
 
-    public void removePlayer(Player p) {
-        bossBar.removePlayer(p);
-    }
-
-    public BossBar getBossBar() {
-        return bossBar;
-    }
-
 
     public enum TrafficLightState {
         GREEN,

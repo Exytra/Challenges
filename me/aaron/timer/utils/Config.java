@@ -2,7 +2,9 @@ package me.aaron.timer.utils;
 
 import javafx.geometry.Pos;
 import me.aaron.timer.Main;
+import me.aaron.timer.challenges.RandomDrops;
 import me.aaron.timer.commands.BackpackCommand;
+import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import org.bukkit.Bukkit;
@@ -13,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Config {
 
@@ -87,6 +90,7 @@ public class Config {
 
     public static boolean saveConfig() {
         try {
+            config.set("dev.debugmode", Main.debug);
             config.set("timer.currenttime", SettingsModes.currentTime);
             config.set("timer.reverse", SettingsModes.timer.get(SettingsItems.ItemType.REVERSE).name());
             config.set("timer.starttime", SettingsModes.startTime);
@@ -109,8 +113,9 @@ public class Config {
             config.set("settings.backuptimer", Backup.timertime);
             config.set("settings.afk", SettingsModes.settings.get(SettingsItems.ItemType.AFK).name());
             config.set("settings.stats", SettingsModes.settings.get(SettingsItems.ItemType.STATS).name());
+            config.set("settings.update-checker", SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER).name());
             config.set("scoreboard.tabhp", SettingsModes.scoreboard.get(SettingsItems.ItemType.TABHP).name());
-            config.set("gamerule.natrualregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.NATURALREGENERATION).name());
+            config.set("gamerule.naturalregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.NATURALREGENERATION).name());
             config.set("gamerule.otherregeneration", SettingsModes.gamerule.get(SettingsItems.ItemType.OTHERREGENERATION).name());
             config.set("gamerule.pvp", SettingsModes.gamerule.get(SettingsItems.ItemType.PVP).name());
             config.set("gamerule.keepinventory", SettingsModes.gamerule.get(SettingsItems.ItemType.KEEP_INVENTORY).name());
@@ -134,6 +139,8 @@ public class Config {
             config.set("challenge.no_trading", SettingsModes.challenge.get(SettingsItems.ItemType.NO_TRADING).name());
             config.set("challenge.forceheight", SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT).name());
             config.set("challenge.forcebiome", SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME).name());
+            config.set("challenge.random_drops", SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS).name());
+            config.set("challenge.disappearing_blocks", SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER).name());
 
             //projects
             config.set("project.allitems.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS).name());
@@ -149,13 +156,29 @@ public class Config {
                 config.set("project.allmobs.mobs", AllMobs.mobnames);
             }
 
+            config.set("project.alldeaths.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS).name());
+            if (AllDeathMessages.deathMessages.size() != 0) {
+                config.set("project.alldeaths.messages", AllDeathMessages.deathMessages);
+            }
+            if (AllDeathMessages.currentDeathMessage != null) {
+                config.set("project.alldeaths.current", AllDeathMessages.currentDeathMessage);
+            }
+
             for (int i = 0; i < BackpackCommand.inventory.getSize(); i ++) {
                 config.set("backpack." + i + ".type", BackpackCommand.inventory.getItem(i) == null ? "AIR" : BackpackCommand.inventory.getItem(i).getType().name());
                 config.set("backpack." + i + ".amount", BackpackCommand.inventory.getItem(i) == null ? 0 : BackpackCommand.inventory.getItem(i).getAmount());
             }
+
+            if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS) == SettingsItems.ItemState.ENABLED) {
+                for (int i = 0; i < Material.values().length; i ++) {
+                    try {
+                        config.set("random_drops.drops." + Material.values()[i].name(), RandomDrops.drops.get(RandomDrops.makeToItemStack(Material.values()[i])).getType().name());
+                    } catch (Exception ignored) { }
+                }
+            }
             config.save(file);
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             resetConfig();
             return false;
         }
@@ -164,9 +187,9 @@ public class Config {
     public static boolean loadConfig() {
         if (Config.file.exists()) {
             try {
-                Main.debug = Config.getBoolean("debugmode");
+                Main.debug = Config.getBoolean("dev.debugmode");
             } catch (Exception e) {
-                resetSingle("debugmode", "false");
+                resetSingle("dev.debugmode", "false");
             }
             try {
                 SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.valueOf(Config.getString("timer.reverse")));
@@ -211,7 +234,7 @@ public class Config {
             try {
                 SettingsModes.settings.put(SettingsItems.ItemType.DMGALERT, SettingsItems.ItemState.valueOf(Config.getString("settings.dmgalert")));
             } catch (Exception e) {
-                resetSingle("settings.dmgaltert", "DISABLED");
+                resetSingle("settings.dmgalert", "ENABLED");
             }
             try {
                 SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.valueOf(Config.getString("settings.timer")));
@@ -280,12 +303,17 @@ public class Config {
                 resetSingle("settings.stats", "ENABLED");
             }
             try {
-                SettingsModes.scoreboard.put(SettingsItems.ItemType.TABHP, SettingsItems.ItemState.valueOf(Config.getString("scoreboard.tabhp")));
+                SettingsModes.settings.put(SettingsItems.ItemType.UPDATE_CHECKER, SettingsItems.ItemState.valueOf(Config.getString("settings.update-checker")));
             } catch (Exception e) {
-                resetSingle("scoreboard,tabhp", "ENABLED");
+                resetSingle("settings.update-checker", "ENABLED");
             }
             try {
-                SettingsModes.gamerule.put(SettingsItems.ItemType.NATURALREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.natrualregeneration")));
+                SettingsModes.scoreboard.put(SettingsItems.ItemType.TABHP, SettingsItems.ItemState.valueOf(Config.getString("scoreboard.tabhp")));
+            } catch (Exception e) {
+                resetSingle("scoreboard.tabhp", "ENABLED");
+            }
+            try {
+                SettingsModes.gamerule.put(SettingsItems.ItemType.NATURALREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.naturalregeneration")));
             } catch (Exception e) {
                 resetSingle("gamerule.naturalregeneration", "ENABLED");
             }
@@ -393,8 +421,18 @@ public class Config {
             } catch (Exception e) {
                 resetSingle("challenge.forcebiome", "DISABLED");
             }
+            try {
+                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_DROPS, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_drops")));
+            } catch (Exception e) {
+                resetSingle("challenge.random_drops", "DISABLED");
+            }
+            try {
+                SettingsModes.challenge.put(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsItems.ItemState.valueOf(Config.getString("challenge.disappearing_blocks")));
+            } catch (Exception e) {
+                resetSingle("challenge.disappearing_blocks", "DISABLED");
+            }
 
-            //projects
+            //lists
             try {
                 SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.valueOf(Config.getString("project.allitems.state")));
             } catch (Exception e) {
@@ -415,6 +453,24 @@ public class Config {
             if (contains("project.allmobs.mobs")) {
                 AllMobs.mobnames = getArrayList("project.allmobs.mobs");
             }
+            if (contains("random_drops.drops")) {
+                for (int i = 0; i < Material.values().length; i ++) {
+                    try {
+                        RandomDrops.drops.put(RandomDrops.makeToItemStack(Material.values()[i]), RandomDrops.makeToItemStack(Material.valueOf(Config.getString("random_drops.drops." + Material.values()[i].name()))));
+                    } catch (Exception ignored) { }
+                }
+            }
+            try {
+                SettingsModes.projects.put(SettingsItems.ItemType.ALL_DEATHS, SettingsItems.ItemState.valueOf(Config.getString("project.alldeaths.state")));
+            } catch (Exception e) {
+                resetSingle("project.alldeaths.state", "DISABLED");
+            }
+            if (contains("project.alldeaths.messages")) {
+                AllDeathMessages.deathMessages = getArrayList("project.alldeaths.messages");
+            }
+            if (contains("project.alldeaths.current")) {
+                AllDeathMessages.currentDeathMessage = Config.getString("project.alldeaths.current");
+            }
         } else {
             resetConfig();
         }
@@ -422,7 +478,7 @@ public class Config {
     }
 
     public static boolean resetConfig() {
-        config.set("debugmode: ", false);
+        config.set("dev.debugmode", false);
         config.set("timer.currenttime", 0);
         config.set("timer.reverse", "DISABLED");
         config.set("timer.starttime", 0);
@@ -445,8 +501,9 @@ public class Config {
         config.set("settings.backuptimer", 0);
         config.set("settings.afk", "ENABLED");
         config.set("settings.stats", "ENABLED");
+        config.set("settings.update-checker", "ENABLED");
         config.set("scoreboard.tabhp", "ENABLED");
-        config.set("gamerule.natrualregeneration", "ENABLED");
+        config.set("gamerule.naturalregeneration", "ENABLED");
         config.set("gamerule.otherregeneration", "ENABLED");
         config.set("gamerule.pvp", "ENABLED");
         config.set("gamerule.keepinventory", "DISABLED");
@@ -470,14 +527,22 @@ public class Config {
         config.set("challenge.no_trading", "DISABLED");
         config.set("challenge.forceheight", "DISABLED");
         config.set("challenge.forcebiome", "DISABLED");
+        config.set("challenge.random_drops", "DISABLED");
+        config.set("challenge.disappearing_blocks", "DISABLED");
 
-        //projects
+        //lists
         config.set("project.allitems.state", "DISABLED");
         config.set("project.allitems.items", null);
         config.set("project.allitems.current", null);
 
         config.set("project.allmobs.state", "DISABLED");
         config.set("project.allmobs.mobs", null);
+
+        config.set("project.alldeaths.state", "DISABLED");
+        config.set("project.alldeaths.messages", null);
+        config.set("project.alldeaths.current", null);
+
+        config.set("random_drops.drops.", null);
 
         //backpack
         config.set("backpack", null);
@@ -522,7 +587,55 @@ public class Config {
                             AllMobs.mobnames.add(entType.name());
                         }
                     }
+                case ALL_DEATHS:
+                    AllDeathMessages.deathMessages.clear();
+                    AllDeathMessages.deathMessages.add("<Player> was shot by [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> was pricked to death");
+                    AllDeathMessages.deathMessages.add("<Player> drowned");
+                    AllDeathMessages.deathMessages.add("<Player> experienced kinetic energy");
+                    AllDeathMessages.deathMessages.add("<Player> blew up");
+                    AllDeathMessages.deathMessages.add("<Player> was blown up by [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> was killed by [Intentional Game Design]");
+                    AllDeathMessages.deathMessages.add("<Player> hit the ground too hard");
+                    AllDeathMessages.deathMessages.add("<Player> fell from a high place");
+                    AllDeathMessages.deathMessages.add("<Player> fell off a ladder");
+                    AllDeathMessages.deathMessages.add("<Player> fell off some vines");
+                    AllDeathMessages.deathMessages.add("<Player> fell off some weeping vines");
+                    AllDeathMessages.deathMessages.add("<Player> fell off some twisting vines");
+                    AllDeathMessages.deathMessages.add("<Player> fell off scaffolding");
+                    AllDeathMessages.deathMessages.add("<Player> fell while climbing");
+                    AllDeathMessages.deathMessages.add("<Player> was squashed by anvil");
+                    AllDeathMessages.deathMessages.add("<Player> went up in flames");
+                    AllDeathMessages.deathMessages.add("<Player> burned to death");
+                    AllDeathMessages.deathMessages.add("<Player> went off with a bang");
+                    AllDeathMessages.deathMessages.add("<Player> tried to swim in lava");
+                    AllDeathMessages.deathMessages.add("<Player> was struck down by lightning");
+                    AllDeathMessages.deathMessages.add("<Player> discovered the floor was lava");
+                    AllDeathMessages.deathMessages.add("<Player> was killed by magic");
+                    AllDeathMessages.deathMessages.add("<Player> was slain by [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> was fireballed by [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> was stung to death");
+                    AllDeathMessages.deathMessages.add("<Player> suffocated in a wall");
+                    AllDeathMessages.deathMessages.add("<Player> was poked to death by a sweet berry bush");
+                    AllDeathMessages.deathMessages.add("<Player> was killed trying to hurt [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> was impaled by [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> fell out of the world");
+                    AllDeathMessages.deathMessages.add("<Player> withered away");
+                    AllDeathMessages.deathMessages.add("<Player> was roasted in dragon breath");
+                    AllDeathMessages.deathMessages.add("<Player> was shot by a skull from [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> walked into fire whilst fighting [Mob]");
+                    AllDeathMessages.deathMessages.add("<Player> walked into a cactus whilst trying to escape [Mob]");
+                    Random random = new Random();
+                    AllDeathMessages.currentDeathMessage = AllDeathMessages.deathMessages.get(random.nextInt(AllDeathMessages.deathMessages.size()));
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setToNull(String path) {
+        try {
+            Config.set(path, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

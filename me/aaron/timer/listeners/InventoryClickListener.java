@@ -2,6 +2,8 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.*;
+import me.aaron.timer.commands.MobsCommand;
+import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.utils.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -31,7 +33,7 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:") || e.getView().getTitle().contains("zurücksetzen?")) {
+        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:") || e.getView().getTitle().contains("zurücksetzen?") || e.getView().getTitle().contains("Moboverview")) {
             e.setCancelled(true);
             String title = e.getView().getTitle();
             if(e.getCurrentItem().isSimilar(Settings.Health())) { p.openInventory(Settings.getHealthMenu()); }
@@ -333,6 +335,33 @@ public class InventoryClickListener implements Listener {
                             forceBiome.start();
                         }
                         break;
+                    case 11:
+                        if (e.getClick().isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_DROPS, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_DROPS, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS)));
+                                Utils.sendChange("§6Random Drops", "§7wurde §cdeaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_DROPS, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_DROPS, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS)));
+                                Utils.sendChange("§6Random Drops", "§7wurde §aaktiviert");
+                                RandomDrops.start();
+                            }
+                        } else if (e.getClick().isRightClick()) {
+                            p.openInventory(Settings.resetPrompt("Random Drops"));
+                        }
+                        break;
+                    case 12:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER)));
+                            Utils.sendTitle("§6Verschwinde Blöcke", "§7wurde §cdeaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER)));
+                            Utils.sendTitle("§6Verschwinde Blöcke", "§7wurde §aaktiviert");
+                        }
+                        break;
                     case 27:
                         p.openInventory(Settings.getChallengesMenu());
                         break;
@@ -595,6 +624,17 @@ public class InventoryClickListener implements Listener {
                             Utils.sendChange("§6Stats", "§7wurden §cdeaktiviert");
                         }
                         break;
+                    case 12:
+                        if (SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.settings.put(SettingsItems.ItemType.UPDATE_CHECKER, SettingsItems.ItemState.DISABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.UPDATE_CHECKER, SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER)));
+                            Utils.sendChange("§6Update Checker", "§7wurde §cdeaktiviert");
+                        } else {
+                            SettingsModes.settings.put(SettingsItems.ItemType.UPDATE_CHECKER, SettingsItems.ItemState.ENABLED);
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.UPDATE_CHECKER, SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER)));
+                            Utils.sendChange("§6Update Checker", "§7wurde §aaktiviert");
+                        }
+                        break;
                     case 18:
                         p.openInventory(Settings.getOtherMenu2());
                         break;
@@ -783,10 +823,27 @@ public class InventoryClickListener implements Listener {
                             p.openInventory(Settings.resetPrompt("Alle Mobs"));
                         }
                         break;
+                    case 12:
+                        if (e.getClick().isLeftClick()) {
+                            if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.projects.put(SettingsItems.ItemType.ALL_DEATHS, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_DEATHS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS)));
+                                Utils.sendChange("§6Alle Todesnachrichten", "§7wurde §cdeaktiviert");
+                            } else {
+                                SettingsModes.projects.put(SettingsItems.ItemType.ALL_DEATHS, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_DEATHS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS)));
+                                Utils.sendChange("§6Alle Todesnachrichten", "§7wurde §aaktiviert");
+                                AllDeathMessages.start();
+                            }
+                        } else if (e.getClick().isRightClick()) {
+                            p.openInventory(Settings.resetPrompt("Alle Tode"));
+                        }
+                        break;
                     case 27:
                         p.openInventory(Settings.getMenu());
                         break;
                 }
+                //ResetPrompt
             } else if (e.getView().getTitle().contains("zurücksetzen?")) {
                 switch (slot) {
                     case 11:
@@ -796,11 +853,39 @@ public class InventoryClickListener implements Listener {
                         } else if (title.contains("Alle Mobs")) {
                             Config.resetProject(SettingsItems.ItemType.ALL_MOBS);
                             Utils.sendChange("§6Alle Mobs töten", "§7wurde §czurückgesetzt");
+                        } else if (title.contains("Random Drops")) {
+                            Config.setToNull("random_drops.drops");
+                            RandomDrops.drops.clear();
+                            RandomDrops.start();
+                            Utils.sendChange("§6Random Drops", "§7wurde §czurückgesetzt");
+                        } else if (title.contains("Alle Tode")) {
+                            Config.setToNull("alldeaths.messages");
+                            Config.setToNull("alldeaths.current");
+                            Config.resetProject(SettingsItems.ItemType.ALL_DEATHS);
+                            Utils.sendTitle("§6Alle Todesnachrichten", "§7wurde §czurückgesetzt");
                         }
                         p.closeInventory();
                         break;
                     case 15:
-                        p.openInventory(Settings.ProjectMenu());
+                        if (title.contains("Alle Items") || title.contains("Alle Mobs") || title.contains("Alle Tode")) {
+                            p.openInventory(Settings.ProjectMenu());
+                        } else if (title.contains("Random Drops")) {
+                            p.openInventory(Settings.getChallengesMenu2());
+                        }
+                }
+            }
+            //Moboverview
+            else if (e.getView().getTitle().equalsIgnoreCase("Moboverview §7» §8Seite 1")) {
+                switch (slot) {
+                    case 45:
+                        p.closeInventory();
+                        break;
+                    case 53:
+                        p.openInventory(MobsCommand.Moboverview2());
+                }
+            } else if (e.getView().getTitle().equalsIgnoreCase("Moboverview §7» §8Seite 2")) {
+                if (slot == 45) {
+                    p.openInventory(MobsCommand.Moboverview());
                 }
             }
         }

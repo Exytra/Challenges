@@ -331,22 +331,35 @@ public class SettingsItems {
             }
             itemLore.add(" ");
         } else if (type == ItemType.TRAFFICLIGHT) {
-            itemStack.setType(Material.SLIME_BALL);
-            itemMeta.setDisplayName("§6Ampel Challenge");
-            itemLore.add(" ");
-            itemLore.add("§9Beschreibung:");
-            itemLore.add("§7Am oberen Bildschrimrand");
-            itemLore.add("§7ist eine Ampel, die vorgibt, ob");
-            itemLore.add("§7sich die Spieler bewegen dürfen.");
-            itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
-            itemLore.add(" ");
+            ItemStack trafficLight = Utils.getHead(Heads.getValue(Heads.Head.TRAFFIC_LIGHT));
+            ItemMeta trafficMeta = trafficLight.getItemMeta();
+            ArrayList<String> trafficLore = new ArrayList<>();
+            trafficMeta.setDisplayName("§6Ampel Challenge");
+            trafficLore.add(" ");
+            trafficLore.add("§9Beschreibung:");
+            trafficLore.add("§7Am oberen Bildschrimrand");
+            trafficLore.add("§7ist eine Ampel, die vorgibt, ob");
+            trafficLore.add("§7sich die Spieler bewegen dürfen.");
+            trafficLore.add(" ");
+            trafficLore.add("§8[§9Klick§8] §7An / Aus");
+            trafficLore.add(" ");
             if (state == ItemState.DISABLED) {
-                itemLore.add("§8[§4Inaktiv§8]");
+                trafficLore.add("§8[§4Inaktiv§8]");
             } else {
-                itemLore.add("§8[§2Aktiv§8]");
+                trafficLore.add("§8[§2Aktiv§8]");
             }
-            itemLore.add(" ");
+            trafficLore.add(" ");
+
+            trafficMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            trafficMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+            trafficMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            trafficMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+            trafficMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            trafficMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            trafficMeta.setLore(trafficLore);
+            trafficLight.setItemMeta(trafficMeta);
+
+            return trafficLight;
         } else if (type == ItemType.ONEBLOCKONEHEART) {
             itemStack.setType(Material.GRASS_BLOCK);
             itemMeta.setDisplayName("§61 Block = 1 Herz Schaden");
@@ -533,7 +546,8 @@ public class SettingsItems {
             itemStack.setType(Material.BEACON);
             itemMeta.setDisplayName("§6Alle Items");
             itemLore.add(" ");
-            itemLore.add("§7Du musst alle Items in Minecraft");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Ihr müsst alle Items in Minecraft");
             itemLore.add("§7in einer vorgegebenen Reihenfolge sammeln.");
             itemLore.add(" ");
             itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
@@ -598,6 +612,7 @@ public class SettingsItems {
             itemStack.setType(Material.ZOMBIE_HEAD);
             itemMeta.setDisplayName("§6Alle Mobs");
             itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
             itemLore.add("§7Die Spieler müssen alle Mobs töten,");
             itemLore.add("§7die es in Minecraft gibt.");
             itemLore.add(" ");
@@ -676,6 +691,88 @@ public class SettingsItems {
                 itemLore.add("§8[§2Aktiv§8]");
             }
             itemLore.add(" ");
+        } else if (type == ItemType.UPDATE_CHECKER) {
+            itemMeta.setDisplayName("§6Update Checker");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Das Plugin prüft automatisch, ob");
+            itemLore.add("§7die neuste Version installiert ist.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemStack.setType(Material.RED_DYE);
+                itemLore.add("§8[§4Inaktiv§8] (§7Nicht Empfohlen§8)");
+            } else {
+                itemStack.setType(Material.LIME_DYE);
+                itemLore.add("§8[§2Aktiv§8] (§7Empfohlen§8)");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.RANDOM_DROPS) {
+            itemStack.setType(Material.CORNFLOWER);
+            itemMeta.setDisplayName("§6Random Drops");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Alle Drops sind zufälling.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Zurücksetzen");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.ALL_DEATHS) {
+            ItemStack skullStack = Utils.getHead(Heads.getValue(Heads.Head.SKULL));
+            ItemMeta skullMeta = skullStack.getItemMeta();
+            ArrayList<String> skullLore = new ArrayList<>();
+            skullMeta.setDisplayName("§6Alle Todesnachrichten");
+            skullLore.add(" ");
+            skullLore.add("§9Beschreibung:");
+            skullLore.add("§7Am oberen Bildschrimrand wird");
+            skullLore.add("§7vorgegeben, welche Todesnachricht");
+            skullLore.add("§7der Spieler als nächstes bekommen muss.");
+            skullLore.add(" ");
+            skullLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            skullLore.add("§8[§9Rechts-Klick§8] §7Zurücksetzen");
+            skullLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                skullLore.add("§8[§4Inaktiv§8]");
+            } else {
+                skullLore.add("§8[§2Aktiv§8]");
+            }
+            skullLore.add(" ");
+
+            skullMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            skullMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+            skullMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            skullMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+            skullMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            skullMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            skullMeta.setLore(skullLore);
+            skullStack.setItemMeta(skullMeta);
+
+            return skullStack;
+        } else if (type == ItemType.BLOCKS_WITH_PLAYER) {
+            itemStack.setType(Material.SCAFFOLDING);
+            itemMeta.setDisplayName("§6Alle Blöcke, auf denen ein Spieler steht, verschwinden");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Alle Blöcke, des Typs auf dem ein");
+            itemLore.add("§7Spieler steht, verschwinden in dem");
+            itemLore.add("§7Chunk in dem er steht. Der Block");
+            itemLore.add("§7auf dem er steht wird mit Glas ersetzt.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -708,6 +805,7 @@ public class SettingsItems {
         BACKUP,
         AFK,
         STATS,
+        UPDATE_CHECKER,
 
         // timer
         RESUME,
@@ -741,7 +839,7 @@ public class SettingsItems {
         FORCE_BIOME,
         FORCE_HEIGHT,
         FORCE_COORDINATES,
-        ANVI_LCRUSHER,
+        ANVIL_CRUSHER,
         BIOM_TIMER,
         RANDOM_DROPS,
         RANDOM_MOB_SPAWNS,
@@ -774,7 +872,7 @@ public class SettingsItems {
         NO_TOOLS,
         SYNC_PLAYERS,
         EXPLODE_NEAR_ENTITIES,
-        DISAPPEARING_BLOCKS,
+        BLOCKS_WITH_PLAYER,
 
         //projects
         ALL_DEATHS,

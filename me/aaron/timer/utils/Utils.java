@@ -2,6 +2,8 @@ package me.aaron.timer.utils;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import me.aaron.timer.Main;
 import net.dv8tion.jda.api.JDA;
 import net.minecraft.server.v1_16_R3.MinecraftServer;
@@ -15,11 +17,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class Utils {
     public static Inventory fillWithGlass(Inventory inv) {
@@ -73,7 +78,7 @@ public class Utils {
         }
     }
 
-    public static ItemStack getHead(String id) {
+    /*public static ItemStack getHead(String id) {
         net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(new ItemStack(Material.PLAYER_HEAD, 1));
         NBTTagCompound tag;
         if (item.hasTag()) {
@@ -86,7 +91,7 @@ public class Utils {
         NBTTagList textures = new NBTTagList();
         NBTTagCompound texture = new NBTTagCompound();
 
-        texture.setString("Value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19");
+        texture.setString("Value", id);
         textures.add(texture);
         properties.set("textures", textures);
         skullOwner.set("Properties", properties);
@@ -94,6 +99,27 @@ public class Utils {
 
         item.setTag(tag);
         return CraftItemStack.asBukkitCopy(item);
+    }*/
+
+    public static ItemStack getHead(String textureURL) {
+        ItemStack skullItem = new ItemStack(Material.PLAYER_HEAD);
+
+        if (textureURL.isEmpty()) {
+            return skullItem;
+        }
+
+        SkullMeta skullMeta = (SkullMeta) skullItem.getItemMeta();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", textureURL));
+        try {
+            Field profileField = skullMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(skullMeta, profile);
+        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        skullItem.setItemMeta(skullMeta);
+        return skullItem;
     }
 
     public static String firstLatterCapitalized(String string) {
