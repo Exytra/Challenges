@@ -17,9 +17,7 @@ public class HealListener implements Listener {
 
             if (SettingsModes.settings.get(SettingsItems.ItemType.GEITEILTEHERZEN) == SettingsItems.ItemState.ENABLED) {
                 for (Player pl : Bukkit.getOnlinePlayers()) {
-                    if(!p.getName().equals(pl.getName())) {
-                        pl.setHealth(p.getHealth());
-                    }
+                    pl.setHealth(p.getHealth());
                 }
             }
             if (SettingsModes.gamerule.get(SettingsItems.ItemType.OTHERREGENERATION) == SettingsItems.ItemState.DISABLED || Timer.state == Timer.TimerState.PAUSED) {

@@ -25,10 +25,14 @@ public class ForceBiome {
     public int neededtime;
     public int currenttime;
     public static Biome forcedbiome;
+    public static int FreeTimeMin;
+    public static int FreeTimeMax;
+    public static int SearchTimeMin;
+    public static int SearchTimeMax;
 
     public void start() {
         forcedbiome = null;
-        neededtime = Utils.getRandomInt(180, 540);
+        neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
         currenttime = 0;
         bossBar = Bukkit.createBossBar("Der Timer ist pausiert.", BarColor.WHITE, BarStyle.SOLID);
         bossBar.setVisible(true);
@@ -59,7 +63,7 @@ public class ForceBiome {
                     } else {
                         if (forcedbiome == null) {
                             forcedbiome = randomBiome();
-                            neededtime = Utils.getRandomInt(45, 300);
+                            neededtime = Utils.getRandomInt(SearchTimeMin, SearchTimeMax);
                             currenttime = 0;
                             bossBar.setTitle("§7Biom: §9" + Utils.firstLatterCapitalized(forcedbiome.toString().replace("_", " ")) + " §8| §7Zeit: " + Timer.ConvertTimerTime((neededtime - currenttime), "§9"));
                             Utils.sendTitle("§9Neues Biom", "§7Finde §9" + Utils.firstLatterCapitalized(forcedbiome.toString().replace("_", " ")));
@@ -70,7 +74,7 @@ public class ForceBiome {
                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                 pl.setHealth(0);
                             }
-                            neededtime = Utils.getRandomInt(180, 540);
+                            neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
                             currenttime = 0;
                             forcedbiome = null;
                         }

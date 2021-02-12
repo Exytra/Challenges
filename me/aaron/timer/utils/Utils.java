@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.aaron.timer.Main;
 import net.dv8tion.jda.api.JDA;
+import net.minecraft.server.v1_16_R3.Enchantment;
 import net.minecraft.server.v1_16_R3.MinecraftServer;
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import net.minecraft.server.v1_16_R3.NBTTagList;
@@ -77,29 +78,6 @@ public class Utils {
             return current * bossbarfactor;
         }
     }
-
-    /*public static ItemStack getHead(String id) {
-        net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(new ItemStack(Material.PLAYER_HEAD, 1));
-        NBTTagCompound tag;
-        if (item.hasTag()) {
-            tag = item.getTag();
-        } else {
-            tag = new NBTTagCompound();
-        }
-        NBTTagCompound skullOwner = new NBTTagCompound();
-        NBTTagCompound properties = new NBTTagCompound();
-        NBTTagList textures = new NBTTagList();
-        NBTTagCompound texture = new NBTTagCompound();
-
-        texture.setString("Value", id);
-        textures.add(texture);
-        properties.set("textures", textures);
-        skullOwner.set("Properties", properties);
-        tag.set("SkullOwner", skullOwner);
-
-        item.setTag(tag);
-        return CraftItemStack.asBukkitCopy(item);
-    }*/
 
     public static ItemStack getHead(String textureURL) {
         ItemStack skullItem = new ItemStack(Material.PLAYER_HEAD);

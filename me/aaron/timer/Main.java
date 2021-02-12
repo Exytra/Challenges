@@ -50,7 +50,7 @@ public final class Main extends JavaPlugin {
 
     public static boolean debug = false;
 
-    public static final String version = "2.5";
+    public static final String version = "2.6";
 
     public Trafficlight trafficlight;
 
@@ -90,12 +90,8 @@ public final class Main extends JavaPlugin {
         Timer.firststart = true;
         Config config = new Config();
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        if (!config.getFile().exists()) {
-            Config.resetConfig();
-        } else {
-            Config.loadConfig();
-            Bukkit.getLogger().info("§aDas Plugin §8[§6Challenges§8]§a wurde erfolgreich gestartet.");
-        }
+        Config.resetConfig();
+        Bukkit.getLogger().info("§aDas Plugin §8[§6Challenges§8]§a wurde erfolgreich gestartet.");
         for (World wl : Bukkit.getWorlds()) {
             wl.setGameRule(GameRule.KEEP_INVENTORY, SettingsModes.gamerule.get(SettingsItems.ItemType.KEEP_INVENTORY) == SettingsItems.ItemState.ENABLED);
             wl.setPVP(SettingsModes.gamerule.get(SettingsItems.ItemType.PVP) == SettingsItems.ItemState.ENABLED);
@@ -174,19 +170,17 @@ public final class Main extends JavaPlugin {
 
 
         if (SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.ENABLED) {
-            new UpdateChecker(this, 86023).Check(vers -> {
-                Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-                    if (!vers.equalsIgnoreCase(version) && SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.ENABLED) {
-                        for (Player pl : Bukkit.getOnlinePlayers()) {
-                            pl.sendMessage(Main.getPrefix("Challenge-Plugin", "Es ist ein neues Update des Challenge-Plugins verfügbar §8(§9" + version + " §8» §9" + vers + "§8)§7. Bitte lade es hier herunter:"));
-                            pl.spigot().sendMessage(component);
-                        }
-                        Bukkit.getLogger().info(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Challenge-Plugin" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Es ist ein neues Update des Challenge-Plugins verfügbar bitte lade es dir hier herunter: " + ChatColor.BLUE + "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/");
-                    } else if (SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.DISABLED && !vers.equalsIgnoreCase(version)){
-                        Bukkit.getLogger().info(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Challenge-Plugin" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Es ist ein neues Update des Challenge-Plugins verfügbar bitte lade es dir hier herunter: " + ChatColor.BLUE + "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/");
+            new UpdateChecker(this, 86023).Check(vers -> Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                if (!vers.equalsIgnoreCase(version) && SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.ENABLED) {
+                    for (Player pl : Bukkit.getOnlinePlayers()) {
+                        pl.sendMessage(Main.getPrefix("Challenge-Plugin", "Es ist ein neues Update des Challenge-Plugins verfügbar §8(§9" + version + " §8» §9" + vers + "§8)§7. Bitte lade es hier herunter:"));
+                        pl.spigot().sendMessage(component);
                     }
-                }, 0, Utils.TimeToTicks(0, 30, 0));
-            });
+                    Bukkit.getLogger().info(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Challenge-Plugin" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Es ist ein neues Update des Challenge-Plugins verfügbar bitte lade es dir hier herunter: " + ChatColor.BLUE + "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/");
+                } else if (SettingsModes.settings.get(SettingsItems.ItemType.UPDATE_CHECKER) == SettingsItems.ItemState.DISABLED && !vers.equalsIgnoreCase(version)){
+                    Bukkit.getLogger().info(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Challenge-Plugin" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Es ist ein neues Update des Challenge-Plugins verfügbar bitte lade es dir hier herunter: " + ChatColor.BLUE + "https://www.spigotmc.org/resources/bastighg-challenge-plugin.86023/");
+                }
+            }, 0, Utils.TimeToTicks(0, 30, 0)));
         }
 
         if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS) == SettingsItems.ItemState.ENABLED) {
@@ -264,6 +258,7 @@ public final class Main extends JavaPlugin {
         this.getCommand("rain").setExecutor(new RainCommand());
         this.getCommand("thunder").setExecutor(new ThunderCommand());
         this.getCommand("settings").setExecutor(new SettingsCommand());
+        this.getCommand("challenges").setExecutor(new SettingsCommand());
         this.getCommand("trash").setExecutor(new TrashCommand());
         this.getCommand("seed").setExecutor(new SeedCommand());
         this.getCommand("l").setExecutor(new HubCommand());

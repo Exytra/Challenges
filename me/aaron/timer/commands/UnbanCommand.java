@@ -4,6 +4,7 @@ import me.aaron.timer.Main;
 import me.aaron.timer.utils.Permissions;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,9 +16,14 @@ public class UnbanCommand implements CommandExecutor {
         if (!(sender instanceof Player) || Permissions.hasPermission((Player) sender, Permissions.Rank.ADMIN)) {
             if (args.length == 1) {
                 BanList banList = Bukkit.getBanList(BanList.Type.NAME);
+                OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
                 try {
-                    banList.pardon(args[0]);
-                    sender.sendMessage(Main.getPrefix("Unban", "Der Spieler §9" + args[0] + " §7wurde entbannt."));
+                    if (p.isBanned()) {
+                        banList.pardon(args[0]);
+                        sender.sendMessage(Main.getPrefix("Unban", "Der Spieler §9" + p.getName() + " §7wurde entbannt."));
+                    } else {
+                        sender.sendMessage(Main.getPrefix("Unban", "Der Spieler §9" + p.getName() + " §7ist nicht gebannt."));
+                    }
                 } catch (Exception e) {
                     sender.sendMessage(Main.getPrefix("Unban", "Der Spieler §9" + args[0] + " §7konnte nicht gefunden werden."));
                 }

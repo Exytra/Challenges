@@ -25,8 +25,7 @@ public class JoinListener implements Listener {
 
         e.setJoinMessage("§a» §f" + Permissions.getPrefix(Permissions.getRank(p)) + "§f" + p.getName());
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SettingsModes.maxHP);
-        p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-        p.setHealthScale(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+        p.setHealthScale(SettingsModes.maxHP);
 
         if (SettingsModes.timer.get(SettingsItems.ItemType.AUTOSTART) == SettingsItems.ItemState.ENABLED) {
             if (Bukkit.getOnlinePlayers().size() == 1) {

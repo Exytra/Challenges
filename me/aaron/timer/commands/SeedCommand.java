@@ -16,28 +16,23 @@ public class SeedCommand implements CommandExecutor {
     Config config = new Config();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cKein Konsolenbefehl");
-            return false;
-        }
-        Player p = (Player) sender;
-        if (p.hasPermission("challenges.seed")) {
+        if (!(sender instanceof Player) || sender.hasPermission("challenges.seed")) {
 
             seed = Bukkit.getWorld("world").getSeed();
 
             if (args.length == 0) {
-                p.sendMessage("§8[§6Seed§8] §a" + seed);
+                sender.sendMessage("§8[§6Seed§8] §a" + seed);
             } else if (args.length == 1) {
                 name = args[0];
                 try {
                     config.set("seeds." + name, seed);
-                    p.sendMessage("§8[§6Seed§8] §7Der Seed §9" + seed + " §7wurde unter dem Namen §9" + name + " §7gespeichert.");
+                    sender.sendMessage("§8[§6Seed§8] §7Der Seed §9" + seed + " §7wurde unter dem Namen §9" + name + " §7gespeichert.");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         } else {
-            p.sendMessage(Main.getPrefix("Seed", "Du hast hierfür §ckeine Berechtigung"));
+            sender.sendMessage(Main.getPrefix("Seed", "Du hast hierfür §ckeine Berechtigung"));
         }
 
 

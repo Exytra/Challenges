@@ -17,8 +17,8 @@ public class DamageByEntityListener implements Listener {
             if (SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR) == SettingsItems.ItemState.ENABLED) {
                 if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
                     if (!(e.getEntity() instanceof Player)) {
-                        int number = Utils.getRandomInt(0, 1);
-                        if (number == 1) {
+                        int number = Utils.getRandomInt(1, 100);
+                        if (number <= SettingsModes.probabilityToMirrorDamage) {
                             p.damage(e.getDamage());
                             e.setCancelled(true);
                         }

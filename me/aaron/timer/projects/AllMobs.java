@@ -19,7 +19,7 @@ public class AllMobs {
     public static ArrayList<EntityType> entities = new ArrayList<>();
 
     public static void start() {
-        if (mobnames.size() == 0) {
+        if (entities.size() == 0) {
             for (EntityType entityType : EntityType.values()) {
                 if (entityType.isAlive() && entityType != EntityType.ARMOR_STAND && entityType != EntityType.PLAYER && entityType != EntityType.GIANT) {
                     entities.add(entityType);

@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 public class MoveListener implements Listener {
     public static HashMap<Player, Long> lastMovement = new HashMap<>();
+    private static HashMap<Player, Location> position = new HashMap<>();
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
@@ -32,7 +33,7 @@ public class MoveListener implements Listener {
             }
         }
         if (SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT) == SettingsItems.ItemState.ENABLED) {
-            if (e.getFrom() != e.getTo()) {
+            if (e.getFrom().getBlock().getLocation() != e.getTo().getBlock().getLocation()) {
                 if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
                     if (Trafficlight.currentstate == Trafficlight.TrafficLightState.RED || Trafficlight.currentstate == Trafficlight.TrafficLightState.YELLOW_RED) {
                         for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -46,7 +47,15 @@ public class MoveListener implements Listener {
         if (SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART) == SettingsItems.ItemState.ENABLED) {
             if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
                 if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-                    p.damage(2);
+                    if (position.get(p) == null) {
+                        position.put(p, p.getLocation());
+                    }
+                    if (position.get(p).distance(p.getLocation()) >= SettingsModes.distanceToGetDamaged) {
+                        position.put(p, p.getLocation());
+                        p.damage(0.001);
+                        //p.setHealth(p.getHealth() - new Location(p.getWorld(), e.getFrom().getBlockX(), 0, e.getFrom().getBlockZ()).distance(new Location(p.getWorld(), e.getTo().getBlockX(), 0, e.getTo().getBlockZ())) * 2);
+                        p.setHealth(p.getHealth() - 2);
+                    }
                 }
             }
         }
@@ -65,7 +74,7 @@ public class MoveListener implements Listener {
                                     }
                                 }
                             }
-                        }, 200);
+                        }, SettingsModes.BedrockDelay * 20L);
                     }
                 }
             }
@@ -84,10 +93,10 @@ public class MoveListener implements Listener {
                                     bb.setType(Material.LAVA);
                                     Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> {
                                         bb.setType(bt);
-                                    }, 400);
-                                }, 100);
+                                    }, SettingsModes.ResetTime * 20L);
+                                }, SettingsModes.LavaTime * 20L);
                             }
-                        }, 10);
+                        }, SettingsModes.MagmaTime * 20L);
                     }
                 }
             }
@@ -108,7 +117,7 @@ public class MoveListener implements Listener {
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 if (pl.getLocation().getBlock().getBiome() == ForceBiome.forcedbiome) {
                     ForceBiome forceBiome = new ForceBiome();
-                    forceBiome.neededtime = Utils.getRandomInt(180, 540);
+                    forceBiome.neededtime = Utils.getRandomInt(ForceBiome.FreeTimeMin, ForceBiome.FreeTimeMax);
                     forceBiome.currenttime = 0;
                     for (Player pl2 : Bukkit.getOnlinePlayers()) {
                         pl2.sendMessage(Main.getPrefix("Force Biome", "§aGeschafft! §7Das Biom §9" + Utils.firstLatterCapitalized(ForceBiome.forcedbiome.toString().replace("_", " ")) + " §7wurde von §9" + p.getName() + " §7gefunden."));

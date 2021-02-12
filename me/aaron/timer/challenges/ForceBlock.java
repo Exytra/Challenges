@@ -26,6 +26,10 @@ public class ForceBlock {
     private int lefttime;
     String BlockNameWithDash;
     String BlockName;
+    public static int FreeTimeMin;
+    public static int FreeTimeMax;
+    public static int SearchTimeMin;
+    public static int SearchTimeMax;
 
     public ForceBlock(Main plugin) {
         this.plugin = plugin;
@@ -33,7 +37,7 @@ public class ForceBlock {
 
     public void start() {
         forcedBlock = null;
-        neededtime = Utils.getRandomInt(180, 360);
+        neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
         currenttime = 0;
         bossBar = Bukkit.createBossBar("Der Timer ist pausiert.", BarColor.WHITE, BarStyle.SOLID);
         bossBar.setVisible(true);
@@ -65,7 +69,7 @@ public class ForceBlock {
                     } else {
                         if (forcedBlock == null) {
                             forcedBlock = getRandomBlock();
-                            neededtime = Utils.getRandomInt(180, 360);
+                            neededtime = Utils.getRandomInt(SearchTimeMin, SearchTimeMax);
                             currenttime = 0;
                             BlockNameWithDash = forcedBlock.name();
                             BlockName = BlockNameWithDash.replace("_", " ");
@@ -96,7 +100,7 @@ public class ForceBlock {
                                     }
                                 }
                                 forcedBlock = null;
-                                neededtime = Utils.getRandomInt(180, 360);
+                                neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
                                 currenttime = 0;
                                 bossBar.setTitle("Warten auf neue §9Anweisung ...");
                                 bossBar.setProgress(1);

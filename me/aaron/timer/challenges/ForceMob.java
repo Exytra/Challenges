@@ -29,6 +29,10 @@ public class ForceMob implements Listener {
     private int lefttime;
     String MobNameWithDash;
     String MobName;
+    public static int FreeTimeMin;
+    public static int FreeTimeMax;
+    public static int SearchTimeMin;
+    public static int SearchTimeMax;
 
     public ForceMob (Main plugin) {
         this.plugin = plugin;
@@ -36,7 +40,7 @@ public class ForceMob implements Listener {
 
     public void start() {
         forcedMob = null;
-        neededtime = Utils.getRandomInt(180, 360);
+        neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
         currenttime = 0;
         bossBar = Bukkit.createBossBar("Der Timer ist pausiert.", BarColor.WHITE, BarStyle.SOLID);
         bossBar.setVisible(true);
@@ -69,7 +73,7 @@ public class ForceMob implements Listener {
                     } else {
                         if (forcedMob == null) {
                             forcedMob = getRandomEntity();
-                            neededtime = Utils.getRandomInt(240, 420);
+                            neededtime = Utils.getRandomInt(SearchTimeMin, SearchTimeMax);
                             currenttime = 0;
                             MobNameWithDash = forcedMob.toString();
                             MobName = MobNameWithDash.replace("_", " ");
@@ -128,7 +132,7 @@ public class ForceMob implements Listener {
                     for (Player pl : Bukkit.getOnlinePlayers()) {
                         pl.sendMessage(Main.getPrefix("Force-Mob", "Das vorgegebene Mob wurde getötet."));
                     }
-                    neededtime = Utils.getRandomInt(180, 360);
+                    neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
                     currenttime = 0;
                     forcedMob = null;
                 }

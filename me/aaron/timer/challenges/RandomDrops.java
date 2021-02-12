@@ -9,6 +9,7 @@ public class RandomDrops {
     public static HashMap<ItemStack, ItemStack> drops = new HashMap<>();
     public static ArrayList<Material> mats = new ArrayList<>();
     public static ArrayList<Material> available = new ArrayList<>();
+    public static boolean allRandom = false;
     public static void start() {
         Random random = new Random();
         if (drops.isEmpty()) {

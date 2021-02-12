@@ -4,6 +4,8 @@ import me.aaron.timer.Main;
 import me.aaron.timer.challenges.*;
 import me.aaron.timer.commands.MobsCommand;
 import me.aaron.timer.projects.AllDeathMessages;
+import me.aaron.timer.projects.AllItems;
+import me.aaron.timer.projects.AllMobs;
 import me.aaron.timer.utils.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,19 +23,24 @@ public class InventoryClickListener implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         int slot = e.getRawSlot();
 
+        boolean isLeftClick = e.getClick() == ClickType.LEFT;
+        boolean isRightClick = e.getClick() == ClickType.RIGHT;
+        boolean isShiftLeftClick = e.getClick() == ClickType.SHIFT_LEFT;
+        boolean isShiftRightClick = e.getClick() == ClickType.SHIFT_RIGHT;
+
         Player p = (Player) e.getWhoClicked();
 
         if (!e.getWhoClicked().getType().equals(EntityType.PLAYER)) {
             return;
         }
-        if(e.getClickedInventory() == null) {
+        if (e.getClickedInventory() == null) {
             return;
         }
-        if(e.getCurrentItem() == null) {
+        if (e.getCurrentItem() == null) {
             return;
         }
 
-        if(e.getView().getTitle().equalsIgnoreCase(Settings.getMenuName()) || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:") || e.getView().getTitle().contains("zurücksetzen?") || e.getView().getTitle().contains("Moboverview")) {
+        if (e.getView().getTitle().contains("Settings") || e.getView().getTitle().equalsIgnoreCase("Lebenseinstellungen") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 1") || e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase(Settings.getOtherMenuName()) || e.getView().getTitle().equalsIgnoreCase("Timer Einstellungen") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 2") || e.getView().getTitle().equalsIgnoreCase("Restliche Einstellungen §7» §8Seite 3") || e.getView().getTitle().equalsIgnoreCase("Projekte") || e.getView().getTitle().contains("InvSee:") || e.getView().getTitle().contains("zurücksetzen?") || e.getView().getTitle().contains("Moboverview")) {
             e.setCancelled(true);
             String title = e.getView().getTitle();
             if(e.getCurrentItem().isSimilar(Settings.Health())) { p.openInventory(Settings.getHealthMenu()); }
@@ -93,24 +100,24 @@ public class InventoryClickListener implements Listener {
                         }
                     case 14:
                         if (e.getClick().equals(ClickType.RIGHT)) {
-                            SettingsModes.maxHP -= 1;
-                            e.getClickedInventory().setItem(5, Settings.MaxHealth());
+                            if (SettingsModes.maxHP > 1) {
+                                SettingsModes.maxHP -= 1;
+                            }
                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                 pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SettingsModes.maxHP);
                                 pl.setHealth(pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
                                 pl.setHealthScale(pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
                             }
-                            break;
                         } else {
                             SettingsModes.maxHP += 1;
-                            e.getClickedInventory().setItem(5, Settings.MaxHealth());
                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                 pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SettingsModes.maxHP);
                                 pl.setHealth(pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
                                 pl.setHealthScale(pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
                             }
-                            break;
                         }
+                        e.getClickedInventory().setItem(slot, Settings.MaxHealthButton());
+                        break;
                     case 15:
                         if (e.getCurrentItem().getType() == Material.LIME_DYE) {
                             SettingsModes.settings.put(SettingsItems.ItemType.NATURALREGENERATION, SettingsItems.ItemState.DISABLED);
@@ -158,14 +165,18 @@ public class InventoryClickListener implements Listener {
                         }
                         break;
                     case 11:
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.SPEED) == SettingsItems.ItemState.ENABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.SPEED, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.SPEED, SettingsModes.challenge.get(SettingsItems.ItemType.SPEED)));
-                            Utils.sendChange("§6Speed 30", "§7wurde §cdeaktiviert");
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.SPEED, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.SPEED, SettingsModes.challenge.get(SettingsItems.ItemType.SPEED)));
-                            Utils.sendChange("§6Speed 30", "§7wurde §aaktiviert");
+                        if (e.getClick().isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.SPEED) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.SPEED, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.SPEED, SettingsModes.challenge.get(SettingsItems.ItemType.SPEED)));
+                                Utils.sendChange("§6Speed", "§7wurde §cdeaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.SPEED, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.SPEED, SettingsModes.challenge.get(SettingsItems.ItemType.SPEED)));
+                                Utils.sendChange("§6Speed", "§7wurde §aaktiviert");
+                            }
+                        } else if (e.getClick().isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.SPEED));
                         }
                         break;
                     case 12:
@@ -191,87 +202,114 @@ public class InventoryClickListener implements Listener {
                         }
                         break;
                     case 14:
-                        Trafficlight trafficlight = new Trafficlight(Main.getInstance());
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.TRAFFICLIGHT, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.TRAFFICLIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT)));
-                            Utils.sendChange("§6Ampel-Challenge", "§7wurde §aaktiviert");
-                            trafficlight.start();
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.TRAFFICLIGHT, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.TRAFFICLIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT)));
-                            Utils.sendChange("§6Ampel-Challenge", "§7wurde §cdeaktiviert");
-                            //trafficlight.stop();
+                        if (e.isLeftClick()) {
+                            Trafficlight trafficlight = new Trafficlight(Main.getInstance());
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.TRAFFICLIGHT, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.TRAFFICLIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT)));
+                                Utils.sendChange("§6Ampel-Challenge", "§7wurde §aaktiviert");
+                                trafficlight.start();
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.TRAFFICLIGHT, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.TRAFFICLIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.TRAFFICLIGHT)));
+                                Utils.sendChange("§6Ampel-Challenge", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.TRAFFICLIGHT));
                         }
                         break;
                     case 15:
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART)));
-                            Utils.sendChange("§61 Block = 1 Herz Schaden", "§7wurde §aaktiviert");
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART)));
-                            Utils.sendChange("§61 Block = 1 Herz Schaden", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART)));
+                                Utils.sendChange("§61 Block = 1 Herz Schaden", "§7wurde §aaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsModes.challenge.get(SettingsItems.ItemType.ONEBLOCKONEHEART)));
+                                Utils.sendChange("§61 Block = 1 Herz Schaden", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.ONEBLOCKONEHEART));
                         }
                         break;
                     case 16:
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.DAMAGEMIRROR, SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR)));
-                            Utils.sendChange("§6Gespiegelter Schaden", "§7wurde §aaktiviert");
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.DAMAGEMIRROR, SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR)));
-                            Utils.sendChange("§6Gespiegelter Schaden", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.DAMAGEMIRROR, SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR)));
+                                Utils.sendChange("§6Gespiegelter Schaden", "§7wurde §aaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.DAMAGEMIRROR, SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGEMIRROR)));
+                                Utils.sendChange("§6Gespiegelter Schaden", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.DAMAGEMIRROR));
                         }
                         break;
                     case 19:
-                        ForceBlock forceBlock = new ForceBlock(Main.getInstance());
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEBLOCK, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK)));
-                            Utils.sendChange("§6Force-Block", "§7wurde §aaktiviert");
-                            forceBlock.start();
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEBLOCK, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK)));
-                            Utils.sendChange("§6Force-Block", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            ForceBlock forceBlock = new ForceBlock(Main.getInstance());
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEBLOCK, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK)));
+                                Utils.sendChange("§6Force-Block", "§7wurde §aaktiviert");
+                                forceBlock.start();
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEBLOCK, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEBLOCK)));
+                                Utils.sendChange("§6Force-Block", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.FORCEBLOCK));
                         }
                         break;
                     case 20:
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
-                            Utils.sendChange("§6Bedrock-Wand", "§7wurde §aaktiviert");
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
-                            Utils.sendChange("§6Bedrock-Wand", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
+                                Utils.sendChange("§6Bedrock-Wand", "§7wurde §aaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.BEDROCKWALL, SettingsModes.challenge.get(SettingsItems.ItemType.BEDROCKWALL)));
+                                Utils.sendChange("§6Bedrock-Wand", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.BEDROCKWALL));
                         }
                         break;
                     case 21:
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
-                            Utils.sendChange("§6Der Boden ist Lava", "§7wurde §aaktiviert");
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
-                            Utils.sendChange("§6Der Boden ist Lava", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
+                                Utils.sendChange("§6Der Boden ist Lava", "§7wurde §aaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.THEFLOORISLAVA, SettingsModes.challenge.get(SettingsItems.ItemType.THEFLOORISLAVA)));
+                                Utils.sendChange("§6Der Boden ist Lava", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.THEFLOORISLAVA));
                         }
                         break;
                     case 22:
-                        ForceMob forceMob = new ForceMob(Main.getInstance());
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
-                            Utils.sendChange("§6Force-Mob", "§7wurde §aaktiviert");
-                            forceMob.start();
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
-                            Utils.sendChange("§6Force-Mob", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            ForceMob forceMob = new ForceMob(Main.getInstance());
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
+                                Utils.sendChange("§6Force Mob", "§7wurde §aaktiviert");
+                                forceMob.start();
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCEMOB, SettingsModes.challenge.get(SettingsItems.ItemType.FORCEMOB)));
+                                Utils.sendChange("§6Force Mob", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.FORCEMOB));
                         }
                         break;
                     case 23:
@@ -297,16 +335,20 @@ public class InventoryClickListener implements Listener {
                         }
                         break;
                     case 25:
-                        ForceHeight forceHeight = new ForceHeight();
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT) == SettingsItems.ItemState.DISABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
-                            forceHeight.start();
-                            Utils.sendChange("§6Force Height", "§7wurde §aaktiviert");
-                        } else {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
-                            Utils.sendChange("§6Force Height", "§7wurde §cdeaktiviert");
+                        if (e.isLeftClick()) {
+                            ForceHeight forceHeight = new ForceHeight();
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT) == SettingsItems.ItemState.DISABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
+                                forceHeight.start();
+                                Utils.sendChange("§6Force Height", "§7wurde §aaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_HEIGHT, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_HEIGHT)));
+                                Utils.sendChange("§6Force Height", "§7wurde §cdeaktiviert");
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.FORCE_HEIGHT));
                         }
                         break;
 
@@ -323,16 +365,20 @@ public class InventoryClickListener implements Listener {
             else if (e.getView().getTitle().equalsIgnoreCase("Challenges §7» §8Seite 2")) {
                 switch (slot) {
                     case 10:
-                        if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME) == SettingsItems.ItemState.ENABLED) {
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.DISABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
-                            Utils.sendChange("§6Force Biome", "§7wurde §cdeaktiviert");
-                        } else {
-                            ForceBiome forceBiome = new ForceBiome();
-                            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.ENABLED);
-                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
-                            Utils.sendChange("§6Force Biome", "§7wurde §aaktiviert");
-                            forceBiome.start();
+                        if (e.isLeftClick()) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.DISABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
+                                Utils.sendChange("§6Force Biome", "§7wurde §cdeaktiviert");
+                            } else {
+                                ForceBiome forceBiome = new ForceBiome();
+                                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.ENABLED);
+                                e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
+                                Utils.sendChange("§6Force Biome", "§7wurde §aaktiviert");
+                                forceBiome.start();
+                            }
+                        } else if (e.isRightClick()) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.FORCE_BIOME));
                         }
                         break;
                     case 11:
@@ -348,7 +394,7 @@ public class InventoryClickListener implements Listener {
                                 RandomDrops.start();
                             }
                         } else if (e.getClick().isRightClick()) {
-                            p.openInventory(Settings.resetPrompt("Random Drops"));
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.RANDOM_DROPS));
                         }
                         break;
                     case 12:
@@ -374,14 +420,15 @@ public class InventoryClickListener implements Listener {
                         p.openInventory(Settings.TimerMenu());
                         break;
                     case 10:
-                        if (e.getClick() == ClickType.SHIFT_LEFT) {
+                        if (e.getClick().isRightClick()) {
                             p.openInventory(Settings.TimerMenu());
                             break;
-                        } else {
+                        } else if (e.getClick().isLeftClick()) {
                             if (SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.ENABLED) {
                                 SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.DISABLED);
                                 e.getClickedInventory().setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.TIMER, SettingsModes.settings.get(SettingsItems.ItemType.TIMER)));
                                 Utils.sendChange("§6Der Timer", "§cwurde deaktiviert");
+                                Timer.pause(false);
                                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(" "));
                             } else {
                                 SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.ENABLED);
@@ -699,9 +746,13 @@ public class InventoryClickListener implements Listener {
                         break;
                     case 29:
                         if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() - 3600 < 0)) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 3600);
+                            if (Timer.getCurrentTime() - 3600 >= 0) {
+                                Timer.setCurrentTime(Timer.getCurrentTime() - 3600);
+                            }
                         } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() - 3600 * 10 < 0)) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 3600 * 10);
+                            if (Timer.getCurrentTime() - 3600 * 10 >= 0) {
+                                Timer.setCurrentTime(Timer.getCurrentTime() - 3600 * 10);
+                            }
                         }
                         Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
                         Timer.firststart = false;
@@ -717,9 +768,13 @@ public class InventoryClickListener implements Listener {
                         break;
                     case 31:
                         if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() - 60 < 0)) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 60);
+                            if (Timer.getCurrentTime() - 60 >= 0) {
+                                Timer.setCurrentTime(Timer.getCurrentTime() - 60);
+                            }
                         } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() - 60 * 10 < 0)) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 60 * 10);
+                            if (Timer.getCurrentTime() - 60 * 10 >= 0) {
+                                Timer.setCurrentTime(Timer.getCurrentTime() - 60 * 10);
+                            }
                         }
                         Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
                         Timer.firststart = false;
@@ -735,9 +790,13 @@ public class InventoryClickListener implements Listener {
                         break;
                     case 33:
                         if (e.getClick() == ClickType.LEFT && !(Timer.getCurrentTime() - 1 < 0)) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 1);
+                            if (Timer.getCurrentTime() - 1 >= 0) {
+                                Timer.setCurrentTime(Timer.getCurrentTime() - 1);
+                            }
                         } else if (e.getClick() == ClickType.SHIFT_LEFT && !(Timer.getCurrentTime() - 10 < 0)) {
-                            Timer.setCurrentTime(Timer.getCurrentTime() - 10);
+                            if (Timer.getCurrentTime() - 10 >= 0) {
+                                Timer.setCurrentTime(Timer.getCurrentTime() - 10);
+                            }
                         }
                         Utils.sendChange("§6Der Timer", "§7wurde auf " + Timer.ConvertTimerTime(Timer.getCurrentTime(), "§6") + "§7 gesetzt");
                         Timer.firststart = false;
@@ -803,6 +862,7 @@ public class InventoryClickListener implements Listener {
                                 SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.ENABLED);
                                 e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
                                 Utils.sendChange("§6Alle Items", "§7wurde §aaktiviert");
+                                AllItems.start();
                             }
                         } else if (e.getClick() == ClickType.RIGHT) {
                             p.openInventory(Settings.resetPrompt("Alle Items"));
@@ -818,6 +878,7 @@ public class InventoryClickListener implements Listener {
                                 SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.ENABLED);
                                 e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
                                 Utils.sendChange("§6Alle Mobs", "§7wurde §aaktiviert");
+                                AllMobs.start();
                             }
                         } else if (e.getClick() == ClickType.RIGHT) {
                             p.openInventory(Settings.resetPrompt("Alle Mobs"));
@@ -870,8 +931,9 @@ public class InventoryClickListener implements Listener {
                         if (title.contains("Alle Items") || title.contains("Alle Mobs") || title.contains("Alle Tode")) {
                             p.openInventory(Settings.ProjectMenu());
                         } else if (title.contains("Random Drops")) {
-                            p.openInventory(Settings.getChallengesMenu2());
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.RANDOM_DROPS));
                         }
+                        break;
                 }
             }
             //Moboverview
@@ -886,6 +948,314 @@ public class InventoryClickListener implements Listener {
             } else if (e.getView().getTitle().equalsIgnoreCase("Moboverview §7» §8Seite 2")) {
                 if (slot == 45) {
                     p.openInventory(MobsCommand.Moboverview());
+                }
+            }
+
+            //Challenge Settings
+            else if (e.getView().getTitle().contains("Settings: §c")) {
+                String type = e.getView().getTitle().replace("§8Settings: §c", "");
+                switch (slot) {
+                    case 11:
+                        if (type.equalsIgnoreCase("Ampel-Challenge")) {
+                            if (e.isLeftClick()) {
+                                Trafficlight.min_green += 60;
+                            } else if (e.isRightClick()) {
+                                if (Trafficlight.min_green > 60) {
+                                    Trafficlight.min_green -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Grünzeit", "\n§9Beschreibung:\nDie minimale Zeit, die die Ampel grün bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n \nMomentan: §6" + Trafficlight.min_green / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Zufällige Drops")) {
+                            RandomDrops.allRandom = !RandomDrops.allRandom;
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Alle Drops Random", "\n§9Beschreibung:\nJeder Block gibt einen unterschiedlichen Drop.\n\n§8[§9Klick§8] §7An / Aus\n\nMomentan: §6" + (!RandomDrops.allRandom ? "§8[§4Inaktiv§8]" : "§8[§2Aktiv§8]")));
+                        } else if (type.equalsIgnoreCase("Force Block")) {
+                            if (e.isLeftClick()) {
+                                ForceBlock.FreeTimeMin += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceBlock.FreeTimeMin > 60) {
+                                    ForceBlock.FreeTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.FreeTimeMin / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Der Boden ist Lava")) {
+                            if (e.isLeftClick()) {
+                                SettingsModes.MagmaTime ++;
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.MagmaTime > 0) {
+                                    SettingsModes.MagmaTime --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.MAGMA_BLOCK, "§6Magma", "\n§9Beschreibung:\nDie Zeit, bis der Boden zu Magma wird.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + SettingsModes.MagmaTime + " Sekunden"));
+                        } else if (type.equalsIgnoreCase("Force Mob")) {
+                            if (e.isLeftClick()) {
+                                ForceMob.FreeTimeMin += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceMob.FreeTimeMin > 60) {
+                                    ForceMob.FreeTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.FreeTimeMin / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Height")) {
+                            if (e.isLeftClick()) {
+                                ForceHeight.FreeTimeMin += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceHeight.FreeTimeMin > 60) {
+                                    ForceHeight.FreeTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.FreeTimeMin / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Biome")) {
+                            if (isLeftClick) {
+                                ForceBiome.FreeTimeMin += 60;
+                            } else if (isRightClick) {
+                                if (ForceBiome.FreeTimeMin > 60) {
+                                    ForceBiome.FreeTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.FreeTimeMin / 60 + " Minuten"));
+                        }
+                        break;
+                    case 13:
+                        if (type.equalsIgnoreCase("Speed")) {
+                            if (e.isLeftClick()) {
+                                SettingsModes.speed ++;
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.speed > 1) {
+                                    SettingsModes.speed --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Speed", "\n§9Beschreibung:\nDie Geschwindigkeit, die alle Spieler und Mobs haben werden.\n \n§8[§9Links-Klick§8] §7 + 1\n§8[§9Rechts-Klick§8] §7 - 1\n \n§7Momentan: §6" + SettingsModes.speed));
+                        } else if (type.equalsIgnoreCase("Ampel-Challenge")) {
+                            if (e.isLeftClick()) {
+                                Trafficlight.min_yellow ++;
+                            } else if (e.isRightClick()) {
+                                if (Trafficlight.min_yellow > 1) {
+                                    Trafficlight.min_yellow --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.YELLOW_CONCRETE, "§6Minimale Gelbzeit", "\n§9Beschreibung:\nDie minimale Zeit, die die Ampel gelb bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.min_yellow + " Sekunden"));
+                        } else if (type.equalsIgnoreCase("Laufen = Schaden")) {
+                            if (e.isLeftClick()) {
+                                SettingsModes.distanceToGetDamaged ++;
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.distanceToGetDamaged > 1) {
+                                    SettingsModes.distanceToGetDamaged --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Blöcke", "\n§9Beschreibung:\nDie Blöcke, die ein Spieler gehen muss, um Schaden zu bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + SettingsModes.distanceToGetDamaged + " §7Blöcke"));
+                        } else if (type.equalsIgnoreCase("Gespiegelter Schaden")) {
+                            if (e.isLeftClick()) {
+                                if (SettingsModes.probabilityToMirrorDamage < 100) {
+                                    SettingsModes.probabilityToMirrorDamage += 10;
+                                }
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.probabilityToMirrorDamage > 10) {
+                                    SettingsModes.probabilityToMirrorDamage -= 10;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Wahrscheinlichkeit", "\n§9Beschreibung:\nDie Wahrscheinlichkeit, dass der Schaden gespiegelt wird.\n\n§8[§9Links-Klick§8] §7+ 10%\n§8[§9Rechts-Klick§8] §7- 10%\n\nMomentan: §6" + SettingsModes.probabilityToMirrorDamage + "%"));
+                        } else if (type.equalsIgnoreCase("Bedrock-Wand")) {
+                            if (e.isLeftClick()) {
+                                SettingsModes.BedrockDelay ++;
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.BedrockDelay > 1) {
+                                     SettingsModes.BedrockDelay --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BEDROCK, "§6Verzögerung", "\n§9Beschreibung:\nDie Verzögerung, die die Bedrock zu den Spielern hat.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n\nMomentan: §6" + SettingsModes.BedrockDelay + " Sekunden"));
+                        } else if (type.equalsIgnoreCase("Der Boden ist Lava")) {
+                            if (e.isLeftClick()) {
+                                SettingsModes.LavaTime ++;
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.LavaTime > 0) {
+                                    SettingsModes.LavaTime --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.LAVA_BUCKET, "§6Lava", "\n§9Beschreibung:\nDie Zeit, bis der Boden zu Lava wird.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + SettingsModes.LavaTime + " Sekunden"));
+                        }
+                        break;
+                    case 15:
+                        if (type.equalsIgnoreCase("Ampel-Challenge")) {
+                            if (e.isLeftClick()) {
+                                Trafficlight.min_red ++;
+                            } else if (e.isRightClick()) {
+                                if (Trafficlight.min_red > 1) {
+                                    Trafficlight.min_red --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.RED_CONCRETE, "§6Minimale Rotzeit", "\n§9Beschreibung:\nDie minimale Zeit, die die Ampel rot belibt.\n\n§8[§9Links-Klick§8] §7 + 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.min_red + " Sekunden"));
+                        } else if (type.equalsIgnoreCase("Zufällige Drops")) {
+                            p.openInventory(Settings.resetPrompt("Random Drops"));
+                        } else if (type.equalsIgnoreCase("Force Block")) {
+                            if (e.isLeftClick()) {
+                                ForceBlock.SearchTimeMin += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceBlock.SearchTimeMin > 60) {
+                                    ForceBlock.SearchTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.SearchTimeMin / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Der Boden ist Lava")) {
+                            if (e.isLeftClick()) {
+                                SettingsModes.ResetTime ++;
+                            } else if (e.isRightClick()) {
+                                if (SettingsModes.ResetTime > 0) {
+                                    SettingsModes.ResetTime --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GRASS_BLOCK, "§6Reset", "\n§9Beschreibung:\nDie Zeit, bis der Boden wieder zum orginalen Block zurückgesetzt wird.\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + SettingsModes.ResetTime + " Sekunden"));
+                        } else if (type.equalsIgnoreCase("Force Mob")) {
+                            if (e.isLeftClick()) {
+                                ForceMob.SearchTimeMin += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceMob.SearchTimeMin > 60) {
+                                    ForceMob.SearchTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.SearchTimeMin / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Height")) {
+                            if (e.isLeftClick()) {
+                                ForceHeight.SearchTimeMin += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceHeight.SearchTimeMin > 60) {
+                                    ForceHeight.SearchTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.SearchTimeMin / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Biome")) {
+                            if (isLeftClick) {
+                                ForceBiome.SearchTimeMin += 60;
+                            } else if (isRightClick) {
+                                if (ForceBiome.SearchTimeMin > 60) {
+                                    ForceBiome.SearchTimeMin -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.SearchTimeMin / 60 + " Minuten"));
+                        }
+                        break;
+                    case 18:
+                        if (type.equalsIgnoreCase("Speed") || type.equalsIgnoreCase("Laufen = Schaden") || type.equalsIgnoreCase("Gespiegelter Schaden") || type.equalsIgnoreCase("Bedrock-Wand") || type.equalsIgnoreCase("Der Boden ist Lava")) {
+                            p.openInventory(Settings.getChallengesMenu());
+                        } else if (type.equalsIgnoreCase("Zufällige Drops")) {
+                            p.openInventory(Settings.getChallengesMenu2());
+                        }
+                        break;
+                    case 20:
+                        if (type.equalsIgnoreCase("Ampel-Challenge")) {
+                            if (e.isLeftClick()) {
+                                Trafficlight.max_green += 60;
+                            } else if (e.isRightClick()) {
+                                if (Trafficlight.max_green > 60) {
+                                    Trafficlight.max_green -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Grünzeit", "\n§9Beschreibung:\nDie maximale Zeit, die die Ampel grün bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n \nMomentan: §6" + Trafficlight.max_green / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Block")) {
+                            if (e.isLeftClick()) {
+                                ForceBlock.FreeTimeMax += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceBlock.FreeTimeMax > 60) {
+                                    ForceBlock.FreeTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.FreeTimeMax / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Mob")) {
+                            if (e.isLeftClick()) {
+                                ForceMob.FreeTimeMax += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceMob.FreeTimeMax > 60) {
+                                    ForceMob.FreeTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.FreeTimeMax / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Height")) {
+                            if (e.isLeftClick()) {
+                                ForceHeight.FreeTimeMax += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceHeight.FreeTimeMax > 60) {
+                                    ForceHeight.FreeTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.FreeTimeMax / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Biome")) {
+                            if (isLeftClick) {
+                                ForceBiome.FreeTimeMax += 60;
+                            } else if (isRightClick) {
+                                if (ForceBiome.FreeTimeMax > 60) {
+                                    ForceBiome.FreeTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.FreeTimeMax / 60 + " Minuten"));
+                        }
+                        break;
+                    case 22:
+                        if (type.equalsIgnoreCase("Ampel-Challenge")) {
+                            if (e.isLeftClick()) {
+                                Trafficlight.max_yellow ++;
+                            } else if (e.isRightClick()) {
+                                if (Trafficlight.max_yellow > 1) {
+                                    Trafficlight.max_yellow --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.YELLOW_CONCRETE, "§6Maximale Gelbzeit", "\n§9Beschreibung:\nDie maximale Zeit, die die Ampel gelb bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.max_yellow + " Sekunden"));
+                        }
+                        break;
+                    case 24:
+                        if (type.equalsIgnoreCase("Ampel-Challenge")) {
+                            if (e.isLeftClick()) {
+                                Trafficlight.max_red ++;
+                            } else if (e.isRightClick()) {
+                                if (Trafficlight.max_red > 1) {
+                                    Trafficlight.max_red --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.RED_CONCRETE, "§6Maximale Rotzeit", "\n§9Beschreibung:\nDie maximale Zeit, die die Ampel rot bleibt.\n\n§8[§9Links-Klick§8] §7 + 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.max_red + " Sekunden"));
+                        } else if (type.equalsIgnoreCase("Force Block")) {
+                            if (e.isLeftClick()) {
+                                ForceBlock.SearchTimeMax += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceBlock.SearchTimeMax > 60) {
+                                    ForceBlock.SearchTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.SearchTimeMax / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Mob")) {
+                            if (e.isLeftClick()) {
+                                ForceMob.SearchTimeMax += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceMob.SearchTimeMax > 60) {
+                                    ForceMob.SearchTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.SearchTimeMax / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Height")) {
+                            if (e.isLeftClick()) {
+                                ForceHeight.SearchTimeMax += 60;
+                            } else if (e.isRightClick()) {
+                                if (ForceHeight.SearchTimeMax > 60) {
+                                    ForceHeight.SearchTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.SearchTimeMax / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Force Biome")) {
+                            if (isLeftClick) {
+                                ForceBiome.SearchTimeMax += 60;
+                            } else if (isRightClick) {
+                                if (ForceBiome.SearchTimeMax > 60) {
+                                    ForceBiome.SearchTimeMax -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.SearchTimeMax / 60 + " Minuten"));
+                        }
+                        break;
+                    case 27:
+                        if (type.equalsIgnoreCase("Ampel-Challenge") || type.equalsIgnoreCase("Force Block") || type.equalsIgnoreCase("Force Mob") || type.equalsIgnoreCase("Force Height")) {
+                            p.openInventory(Settings.getChallengesMenu());
+                            break;
+                        } else if (type.equalsIgnoreCase("Force Biome")) {
+                            p.openInventory(Settings.getChallengesMenu2());
+                            break;
+                        }
                 }
             }
         }

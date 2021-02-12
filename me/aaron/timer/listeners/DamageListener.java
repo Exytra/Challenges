@@ -20,13 +20,7 @@ public class DamageListener implements Listener {
             Player p = (Player) e.getEntity();
             if (SettingsModes.settings.get(SettingsItems.ItemType.GEITEILTEHERZEN) == SettingsItems.ItemState.ENABLED) {
                 for (Player pl : Bukkit.getOnlinePlayers()) {
-                    if (SettingsModes.settings.get(SettingsItems.ItemType.ONELIFE) == SettingsItems.ItemState.ENABLED) {
-                        if (p.getHealth() != 0) {
-                            pl.setHealth(p.getHealth());
-                        }
-                    } else {
-                        pl.setHealth(p.getHealth());
-                    }
+                    pl.setHealth(p.getHealth());
                 }
             }
             if (Timer.state == Timer.TimerState.PAUSED && SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.ENABLED) {

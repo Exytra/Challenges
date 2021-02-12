@@ -26,13 +26,13 @@ public class TempBanCommand implements CommandExecutor {
                     try {
                         bantime = Integer.parseInt(args[1].substring(0, args[1].length() - 1));
                         Bukkit.broadcastMessage(Main.getPrefix("Ban", "§9" + args[0] + " §7wurde für " + Timer.ConvertTimerTime(bantime, "§6") + " §7gebannt."));
-                        if (args.length == 3) {
+                        if (args.length >= 3) {
                             reason = args[2];
                         }
                     } catch (Exception e) {
-                        Bukkit.broadcastMessage("ERROR");
+                        sender.sendMessage("§6/tempban-Command:\n§9/tempban §5<Spielername> <Zeit §8(§7z.B. 10s, 14d, 6m, 1y§8)§5> <Grund §8(§7Optional§8)");
                     }
-                } else if (args.length >= 3 && args[2].equalsIgnoreCase("s")) {
+                /*} else if (args.length >= 3 && args[2].equalsIgnoreCase("s")) {
                     try {
                         bantime = Integer.parseInt(args[1]);
                         Bukkit.broadcastMessage(Main.getPrefix("Ban", "§9" + args[0] + " §7wurde für " + Timer.ConvertTimerTime(bantime, "§6") + " §7gebannt."));
@@ -41,7 +41,7 @@ public class TempBanCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         Bukkit.broadcastMessage("ERROR");
-                    }
+                    }*/
                 } else if (args[1].substring(args[1].length() - 1).equalsIgnoreCase("h")) {
                     try {
                         bantime = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 3600;
@@ -50,9 +50,9 @@ public class TempBanCommand implements CommandExecutor {
                             reason = args[2];
                         }
                     } catch (Exception e) {
-                        Bukkit.broadcastMessage("ERROR");
+                        sender.sendMessage("§6/tempban-Command:\n§9/tempban §5<Spielername> <Zeit §8(§7z.B. 10s, 14d, 6m, 1y§8)§5> <Grund §8(§7Optional§8)");
                     }
-                } else if (args.length >= 3 && args[2].equalsIgnoreCase("h")) {
+                /*} else if (args.length >= 3 && args[2].equalsIgnoreCase("h")) {
                     try {
                         bantime = Integer.parseInt(args[1]) * 3600;
                         Bukkit.broadcastMessage(Main.getPrefix("Ban", "§9" + args[0] + " §7wurde für " + Timer.ConvertTimerTime(bantime, "§6") + " §7gebannt."));
@@ -61,7 +61,7 @@ public class TempBanCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         Bukkit.broadcastMessage("ERROR");
-                    }
+                    }*/
                 } else if (args[1].substring(args[1].length() - 1).equalsIgnoreCase("d")) {
                     try {
                         bantime = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 86400;
@@ -70,9 +70,9 @@ public class TempBanCommand implements CommandExecutor {
                             reason = args[2];
                         }
                     } catch (Exception e) {
-                        Bukkit.broadcastMessage("ERROR");
+                        sender.sendMessage("§6/tempban-Command:\n§9/tempban §5<Spielername> <Zeit §8(§7z.B. 10s, 14d, 6m, 1y§8)§5> <Grund §8(§7Optional§8)");
                     }
-                } else if (args.length >= 3 && args[2].equalsIgnoreCase("d")) {
+                /*} else if (args.length >= 3 && args[2].equalsIgnoreCase("d")) {
                     try {
                         bantime = Integer.parseInt(args[1]) * 86400;
                         Bukkit.broadcastMessage(Main.getPrefix("Ban", "§9" + args[0] + " §7wurde für " + Timer.ConvertTimerTime(bantime, "§6") + " §7gebannt."));
@@ -81,7 +81,7 @@ public class TempBanCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         Bukkit.broadcastMessage("ERROR");
-                    }
+                    }*/
                 } else if (args[1].substring(args[1].length() - 1).equalsIgnoreCase("m")) {
                     try {
                         bantime = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 2592000;
@@ -90,9 +90,9 @@ public class TempBanCommand implements CommandExecutor {
                             reason = args[2];
                         }
                     } catch (Exception e) {
-                        Bukkit.broadcastMessage("ERROR");
+                        sender.sendMessage("§6/tempban-Command:\n§9/tempban §5<Spielername> <Zeit §8(§7z.B. 10s, 14d, 6m, 1y§8)§5> <Grund §8(§7Optional§8)");;
                     }
-                } else if (args.length >= 3 && args[2].equalsIgnoreCase("m")) {
+                /*} else if (args.length >= 3 && args[2].equalsIgnoreCase("m")) {
                     try {
                         bantime = Integer.parseInt(args[1]) * 2592000;
                         Bukkit.broadcastMessage(Main.getPrefix("Ban", "§9" + args[0] + " §7wurde für " + Timer.ConvertTimerTime(bantime, "§6") + " §7gebannt."));
@@ -101,7 +101,7 @@ public class TempBanCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         Bukkit.broadcastMessage("ERROR");
-                    }
+                    }*/
                 } else if (args[1].substring(args[1].length() - 1).equalsIgnoreCase("y")) {
                     try {
                         bantime = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 31104000;
@@ -110,9 +110,9 @@ public class TempBanCommand implements CommandExecutor {
                             reason = args[2];
                         }
                     } catch (Exception e) {
-                        Bukkit.broadcastMessage("ERROR");
+                        sender.sendMessage("§6/tempban-Command:\n§9/tempban §5<Spielername> <Zeit §8(§7z.B. 10s, 14d, 6m, 1y§8)§5> <Grund §8(§7Optional§8)");
                     }
-                } else if (args.length >= 3 && args[2].equalsIgnoreCase("y")) {
+                /*} else if (args.length >= 3 && args[2].equalsIgnoreCase("y")) {
                     try {
                         bantime = Integer.parseInt(args[1]) * 31104000;
                         Bukkit.broadcastMessage(Main.getPrefix("Ban", "§9" + args[0] + " §7wurde für " + Timer.ConvertTimerTime(bantime, "§6") + " §7gebannt."));
@@ -121,9 +121,9 @@ public class TempBanCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         Bukkit.broadcastMessage("ERROR");
-                    }
+                    }*/
                 } else {
-                    Bukkit.broadcastMessage("");
+                    sender.sendMessage("§6/tempban-Command:\n§9/tempban §5<Spielername> <Zeit §8(§7z.B. 10s, 14d, 6m, 1y§8)§5> <Grund §8(§7Optional§8)");
                 }
             }
             if (bantime != 0) {

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class Position {
     public static ArrayList<String> positionlist = new ArrayList<>();
-    PositionTabCompleter TabCompleter = new PositionTabCompleter();
     Config config = new Config();
     public void pos(String name, Player p) {
         if (!name.equalsIgnoreCase("list")) {
@@ -83,6 +82,7 @@ public class Position {
                 e.printStackTrace();
             }
             positionlist.remove(name);
+            PositionTabCompleter.positions.remove(name);
             p.sendMessage(Main.getPrefix("Position", "Die Position §c" + name + " §7wurde §cerfolgreich gelöscht."));
         } else {
             p.sendMessage(Main.getPrefix("Position", "Die Position §9" + name + " §7existiert nicht."));
@@ -90,6 +90,7 @@ public class Position {
     }
 
     public void list(Player p) {
+        positionlist.removeIf(str -> str.contains("share") || str.contains("list") || str.contains("remove"));
         if (positionlist.size() != 0) {
             p.sendMessage(Main.getPrefix("Position", "Verfügbare Positionen: §e" + positionlist.toString().replace("[", "").replace("]", "")));
         } else {

@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Settings {
     public static Inventory getMenu() {
@@ -32,7 +31,7 @@ public class Settings {
         HealthSettings.setItem(2, AllowRespawn());
         HealthSettings.setItem(3, EinLebenFurAlle());
         HealthSettings.setItem(5, MaxHealth());
-        HealthSettings.setItem(6, NatrualRegeneration());
+        HealthSettings.setItem(6, NaturalRegeneration());
         HealthSettings.setItem(7, OtherRegeneration());
         HealthSettings.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.GEITEILTEHERZEN, SettingsModes.settings.get(SettingsItems.ItemType.GEITEILTEHERZEN)));
         HealthSettings.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.RESPAWN, SettingsModes.settings.get(SettingsItems.ItemType.RESPAWN)));
@@ -209,6 +208,22 @@ public class Settings {
         itemLore.add("§7an, wenn man TAB drückt");
         itemLore.add(" ");
         itemLore.add("§8[§9Klick§8] §7An / Aus");
+        itemLore.add(" ");
+
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    public static ItemStack Accept() {
+        ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.GREEN_CHECKMARK));
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+
+        itemMeta.setDisplayName("§9Bestätigen");
+        itemLore.add(" ");
+        itemLore.add("§aÄnderungen speichern");
         itemLore.add(" ");
 
         itemMeta.setLore(itemLore);
@@ -621,8 +636,8 @@ public class Settings {
         itemMeta.setDisplayName("§6Keep Inventory");
         itemLore.add(" ");
         itemLore.add("§9Beschreibung:");
-        itemLore.add("§7Erlaubt den Spielern nach dem");
-        itemLore.add("§7Tod ihr Inventar zu behalten.");
+        itemLore.add("§7Erlaubt den Spielern, nach dem");
+        itemLore.add("§7Tod, ihr Inventar zu behalten.");
         itemLore.add(" ");
         itemLore.add("§8[§9Klick§8] §7An / Aus");
         itemLore.add(" ");
@@ -737,7 +752,7 @@ public class Settings {
         ArrayList<String> ChallengesLore = new ArrayList<>();
         ChallengesMeta.setDisplayName("§9Challenges");
         ChallengesLore.add(" ");
-        ChallengesLore.add("§7Öffnet die §9Einstellungen §7für die §9Challenges");
+        ChallengesLore.add("§7Öffnet die §9Einstellungen §7für die §9Challenges§7.");
         ChallengesLore.add(" ");
 
         ChallengesMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -753,46 +768,53 @@ public class Settings {
     }
 
     public static ItemStack MaxHealth() {
-        ItemStack Challenges = new ItemStack(Material.RED_DYE);
-        ItemMeta ChallengesMeta = Challenges.getItemMeta();
-        ArrayList<String> ChallengesLore = new ArrayList<>();
-        ChallengesMeta.setDisplayName("§9Maximale Leben");
-        ChallengesLore.add(" ");
-        ChallengesLore.add("§7Derzeit: §6" + SettingsModes.maxHP + " HP");
-        ChallengesLore.add(" ");
+        ItemStack itemStack = new ItemStack(Material.RED_DYE);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§6Maximale Leben");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Die maximalen Leben, die die Spieler");
+        itemLore.add("§7haben können.");
+        itemLore.add(" ");
 
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        ChallengesMeta.setLore(ChallengesLore);
-        Challenges.setItemMeta(ChallengesMeta);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
 
-        return Challenges;
+        return itemStack;
     }
 
     public static ItemStack MaxHealthButton() {
-        ItemStack Challenges = new ItemStack(Material.STONE_BUTTON);
-        ItemMeta ChallengesMeta = Challenges.getItemMeta();
-        ArrayList<String> ChallengesLore = new ArrayList<>();
-        ChallengesMeta.setDisplayName("§9Maximale Leben");
-        ChallengesLore.add(" ");
-        ChallengesLore.add("§8[§6Rechts-Klick§8] §7 - 1");
-        ChallengesLore.add("§8[§6Links-Klick§8] §7 + 1");
-        ChallengesLore.add(" ");
+        ItemStack itemStack = new ItemStack(Material.STONE_BUTTON);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§6Maximale Leben");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Die maximalen Leben, die die Spieler");
+        itemLore.add("§7haben können.");
+        itemLore.add(" ");
+        itemLore.add("§8[§9Links-Klick§8] §7+ 1 HP");
+        itemLore.add("§8[§9Rechts-Klcik§8] §7- 1 HP");
+        itemLore.add(" ");
+        itemLore.add("§7Momentan: §6" + SettingsModes.maxHP + "HP/ " + SettingsModes.maxHP / 2D + "❤");
 
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        ChallengesMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        ChallengesMeta.setLore(ChallengesLore);
-        Challenges.setItemMeta(ChallengesMeta);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
 
-        return Challenges;
+        return itemStack;
     }
 
     public static ItemStack Health() {
@@ -801,7 +823,7 @@ public class Settings {
         ArrayList<String> HealthLore = new ArrayList<>();
         HealthMeta.setDisplayName("§9Lebensanzeige");
         HealthLore.add(" ");
-        HealthLore.add("§7Öffnet die §9Lebenseinstellungen.");
+        HealthLore.add("§7Öffnet die §9Lebenseinstellungen§7.");
         HealthLore.add(" ");
 
         HealthMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -822,7 +844,7 @@ public class Settings {
         ArrayList<String> itemLore = new ArrayList<>();
         itemMeta.setDisplayName("§9Projekte");
         itemLore.add(" ");
-        itemLore.add("§7Öffnet die Einstellungen für Projekte");
+        itemLore.add("§7Öffnet die Einstellungen für Projekte,");
         itemLore.add("§7wie zum Beispiel §9Alle Achievements,");
         itemLore.add("§9Alle Items, Alle Tode §7und weitere ...");
         itemLore.add(" ");
@@ -845,7 +867,7 @@ public class Settings {
         ArrayList<String> OtherLore = new ArrayList<>();
         OtherMeta.setDisplayName("§9Andere Einstellungen");
         OtherLore.add(" ");
-        OtherLore.add("§7Öffnet §9restliche Einstellungen.");
+        OtherLore.add("§7Öffnet §9restliche Einstellungen§7.");
         OtherLore.add(" ");
 
         OtherMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -862,34 +884,38 @@ public class Settings {
 
     public static ItemStack GeteilteHerzen() {
 
-        ItemStack GeteilteHerzen = new ItemStack(Material.GLISTERING_MELON_SLICE);
-        ItemMeta GeteilteHerzenMeta = GeteilteHerzen.getItemMeta();
-        ArrayList<String> GeteilteHerzenLore = new ArrayList<>();
-        GeteilteHerzenMeta.setDisplayName("§6Geteilte Herzen");
-        GeteilteHerzenLore.add(" ");
-        GeteilteHerzenLore.add("§cAlle Spieler teilen ihre Herzen.");
-        GeteilteHerzenLore.add(" ");
+        ItemStack itemStack = new ItemStack(Material.GLISTERING_MELON_SLICE);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§6Geteilte Herzen");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Die Spieler teilen sich ihre");
+        itemLore.add("§7Herzen.");
+        itemLore.add(" ");
 
-        GeteilteHerzenMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        GeteilteHerzenMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        GeteilteHerzenMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        GeteilteHerzenMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        GeteilteHerzenMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        GeteilteHerzenMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        GeteilteHerzenMeta.setLore(GeteilteHerzenLore);
-        GeteilteHerzen.setItemMeta(GeteilteHerzenMeta);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
 
-        return GeteilteHerzen;
+        return itemStack;
     }
 
-    public static ItemStack NatrualRegeneration() {
+    public static ItemStack NaturalRegeneration() {
 
         ItemStack itemStack = new ItemStack(Material.GOLDEN_APPLE);
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
         itemMeta.setDisplayName("§6Natürliche Regeneration");
         itemLore.add(" ");
-        itemLore.add("§cErlaubt die natürliche Regeneration.");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Spieler können auf natürliche");
+        itemLore.add("§7Art regenerieren");
         itemLore.add(" ");
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -911,7 +937,9 @@ public class Settings {
         ArrayList<String> itemLore = new ArrayList<>();
         itemMeta.setDisplayName("§6Restliche Regeneration");
         itemLore.add(" ");
-        itemLore.add("§cErlaubt die unnatürliche Regeneration.");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Erlaubt den Spielern unnatürlich");
+        itemLore.add("§7zu regenerieren.");
         itemLore.add(" ");
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -950,46 +978,79 @@ public class Settings {
     }
 
     public static ItemStack AllowRespawn() {
-        ItemStack AllowRespawn = new ItemStack(Material.TOTEM_OF_UNDYING);
-        ItemMeta AllowRespawnMeta = AllowRespawn.getItemMeta();
-        ArrayList<String> AllowRespawnLore = new ArrayList<>();
-        AllowRespawnMeta.setDisplayName("§6Respawn");
-        AllowRespawnLore.add(" ");
-        AllowRespawnLore.add("§cErlaubt den Spielern nach einem Tod zu respawnen.");
-        AllowRespawnLore.add(" ");
+        ItemStack itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§6Respawn");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Die Spieler können nach einem");
+        itemLore.add("§7Tod respawnen.");
+        itemLore.add(" ");
+        itemLore.add("§8§oÜberschreibt Ein Leben für Alle");
+        itemLore.add(" ");
 
-        AllowRespawnMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        AllowRespawnMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        AllowRespawnMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        AllowRespawnMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        AllowRespawnMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        AllowRespawnMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        AllowRespawnMeta.setLore(AllowRespawnLore);
-        AllowRespawn.setItemMeta(AllowRespawnMeta);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
 
-        return AllowRespawn;
+        return itemStack;
     }
 
     public static ItemStack EinLebenFurAlle() {
-        ItemStack EinLebenFurAlle = new ItemStack(Material.POPPY);
-        ItemMeta EinLebenFurAlleMeta = EinLebenFurAlle.getItemMeta();
-        ArrayList<String> EinLebenFurAlleLore = new ArrayList<>();
-        EinLebenFurAlleMeta.setDisplayName("§6Ein Leben für alle");
-        EinLebenFurAlleLore.add(" ");
-        EinLebenFurAlleLore.add("§cStirbt ein Spieler, ist der Run vorbei.");
-        EinLebenFurAlleLore.add(" ");
-        EinLebenFurAlleLore.add("§cÜberschreibt §6Respawn");
-        EinLebenFurAlleLore.add(" ");
+        ItemStack itemStack = new ItemStack(Material.POPPY);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> itemLore = new ArrayList<>();
+        itemMeta.setDisplayName("§6Ein Leben für alle");
+        itemLore.add(" ");
+        itemLore.add("§9Beschreibung:");
+        itemLore.add("§7Stirbt ein Spieler, ist die");
+        itemLore.add("§7Challenge vorbei.");
+        itemLore.add(" ");
+        itemLore.add("§8§oÜberschreibt Respawn");
+        itemLore.add(" ");
 
-        EinLebenFurAlleMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        EinLebenFurAlleMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        EinLebenFurAlleMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        EinLebenFurAlleMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        EinLebenFurAlleMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        EinLebenFurAlleMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        EinLebenFurAlleMeta.setLore(EinLebenFurAlleLore);
-        EinLebenFurAlle.setItemMeta(EinLebenFurAlleMeta);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setLore(itemLore);
+        itemStack.setItemMeta(itemMeta);
 
-        return EinLebenFurAlle;
+        return itemStack;
+    }
+
+    public static ItemStack createItemStack(Material type, String name, String lore) {
+        ItemStack itemStack = new ItemStack(type);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(name);
+        itemMeta.setLore(stringToLoreList(lore));
+        itemStack.setItemMeta(itemMeta);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+        return itemStack;
+    }
+
+    public static ArrayList<String> stringToLoreList(String string) {
+        ArrayList<String> lore = new ArrayList<>();
+        string += "\n";
+        string = string.replaceAll("(.{1,35})\\s", "$1\n");
+        String[] lines = string.split("\n");
+        for (String line : lines) {
+            lore.add("§7" + line);
+        }
+        return lore;
     }
 }

@@ -25,7 +25,7 @@ public class TimerCommand implements CommandExecutor {
                         if (Timer.state == Timer.TimerState.RUNNING) {
                             Timer.pause(true);
                         } else if (Timer.state == Timer.TimerState.PAUSED) {
-                            p.sendMessage("§8[§6Timer§8] §c Der Timer ist bereits pausiert.");
+                            p.sendMessage("§8[§6Timer§8] §7Der Timer ist bereits §cpausiert.");
                         }
                     } else {
                         p.sendMessage(Main.getPrefix("Timer", "Der Timer ist deaktiviert, du kannst ihn in §9/settings §7aktivieren."));
@@ -39,7 +39,7 @@ public class TimerCommand implements CommandExecutor {
                         if (Timer.state == Timer.TimerState.PAUSED) {
                             Timer.resume(true);
                         } else if (Timer.state == Timer.TimerState.RUNNING) {
-                            p.sendMessage("§8[§6Timer§8] §cDer Timer läuft bereits.");
+                            p.sendMessage("§8[§6Timer§8] §7Der Timer §cläuft bereits.");
                         }
                     } else {
                         p.sendMessage(Main.getPrefix("Timer", "Der Timer ist deaktiviert, du kannst ihn in §9/settings §7aktivieren."));
@@ -47,7 +47,7 @@ public class TimerCommand implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("reset")) {
                     if (SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.ENABLED) {
                         Timer.reset();
-                        p.sendMessage("§8[§6Timer§8] §fDer Timer wurde §czurückgesetzt");
+                        p.sendMessage("§8[§6Timer§8] §7Der Timer wurde §czurückgesetzt");
                     } else {
                         p.sendMessage(Main.getPrefix("Timer", "Der Timer ist deaktiviert, du kannst ihn in §9/settings §7aktivieren."));
                     }

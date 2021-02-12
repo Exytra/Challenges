@@ -1,6 +1,10 @@
 package me.aaron.timer.utils;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.challenges.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -8,6 +12,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class SettingsItems {
     public static ItemStack getMenuItem(ItemType type, ItemState state) {
@@ -26,7 +31,6 @@ public class SettingsItems {
                 itemLore.add("§8[§9Klick§8] §7An / Aus");
                 itemLore.add(" ");
                 itemLore.add("§8[§4Inaktiv§8]");
-                itemLore.add(" ");
             } else {
                 itemStack.setType(Material.LIME_DYE);
                 itemMeta.setDisplayName("§6Schaden im Chat");
@@ -38,32 +42,63 @@ public class SettingsItems {
                 itemLore.add("§8[§9Klick§8] §7An / Aus");
                 itemLore.add(" ");
                 itemLore.add("§8[§2Aktiv§8]");
-                itemLore.add(" ");
             }
+            itemLore.add(" ");
         } else if (type == ItemType.GEITEILTEHERZEN) {
+            itemMeta.setDisplayName("§6Geteilte Herzen");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler teilen sich ihre");
+            itemLore.add("§7Herzen.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemStack.setType(Material.RED_DYE);
-                itemMeta.setDisplayName("§8[§4Inaktiv§8]");
-            } else if (state == ItemState.ENABLED){
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
                 itemStack.setType(Material.LIME_DYE);
-                itemMeta.setDisplayName("§8[§2Aktiv§8]");
+                itemLore.add("§8[§2Aktiv§8]");
             }
+            itemLore.add(" ");
         } else if (type == ItemType.RESPAWN) {
+            itemMeta.setDisplayName("§6Respawn");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler können nach einem");
+            itemLore.add("§7Tod respawnen.");
+            itemLore.add(" ");
+            itemLore.add("§8§oÜberschreibt Ein Leben für Alle");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemStack.setType(Material.RED_DYE);
-                itemMeta.setDisplayName("§8[§4Nicht erlaubt§8]");
+                itemLore.add("§8[§4Inaktiv§8]");
             } else {
                 itemStack.setType(Material.LIME_DYE);
-                itemMeta.setDisplayName("§8[§2Erlaubt§8]");
+                itemLore.add("§8[§2Aktiv§8]");
             }
+            itemLore.add(" ");
         } else if (type == ItemType.ONELIFE) {
+            itemMeta.setDisplayName("§6Ein Leben für alle");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Stirbt ein Spieler, ist die");
+            itemLore.add("§7Challenge vorbei.");
+            itemLore.add(" ");
+            itemLore.add("§8§oÜberschreibt Respawn");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemStack.setType(Material.RED_DYE);
-                itemMeta.setDisplayName("§8[§4Inaktiv§8]");
+                itemLore.add("§8[§4Inaktiv§8]");
             } else {
                 itemStack.setType(Material.LIME_DYE);
-                itemMeta.setDisplayName("§8[§2Aktiv§8]");
+                itemLore.add("§8[§2Aktiv§8]");
             }
+            itemLore.add(" ");
         } else if (type == ItemType.FLYONDAMAGE) {
             itemStack.setType(Material.FEATHER);
             itemMeta.setDisplayName("§6Bei Schaden in die Luft fliegen");
@@ -89,13 +124,22 @@ public class SettingsItems {
                 itemLore.add(" ");
             }
         } else if (type == ItemType.NATURALREGENERATION) {
+            itemMeta.setDisplayName("§6Natürliche Regeneration");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Spieler können auf natürliche");
+            itemLore.add("§7Art regenerieren");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemStack.setType(Material.RED_DYE);
-                itemMeta.setDisplayName("§8[§4Deaktiviert§8]");
+                itemLore.add("§8[§4Inaktiv§8]");
             } else {
                 itemStack.setType(Material.LIME_DYE);
-                itemMeta.setDisplayName("§8[§2Aktiviert§8]");
+                itemLore.add("§8[§2Aktiv§8]");
             }
+            itemLore.add(" ");
         } else if (type == ItemType.TIMER) {
             itemMeta.setDisplayName("§6Timer");
             itemLore.add(" ");
@@ -103,7 +147,8 @@ public class SettingsItems {
             itemLore.add("§7Zeigt am unteren Bildschirmrand");
             itemLore.add("§7einen §9Timer §7an.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemStack.setType(Material.RED_DYE);
@@ -167,12 +212,13 @@ public class SettingsItems {
             itemLore.add(" ");
         } else if (type == ItemType.SPEED) {
             itemStack.setType(Material.DIAMOND_BOOTS);
-            itemMeta.setDisplayName("§6Speed 30");
+            itemMeta.setDisplayName("§6Speed");
             itemLore.add(" ");
             itemLore.add("§9Beschreibung:");
-            itemLore.add("§7Gibt allen Entitäten Speed 30.");
+            itemLore.add("§7Gibt allen Entitäten Speed.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -183,7 +229,9 @@ public class SettingsItems {
         } else if (type == ItemType.OTHERREGENERATION) {
             itemMeta.setDisplayName("§6Restliche Regeneration");
             itemLore.add(" ");
-            itemLore.add("§cErlaubt die unnatürliche Regeneration.");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Erlaubt den Spielern unnatürlich");
+            itemLore.add("§7zu regenerieren.");
             itemLore.add(" ");
             itemLore.add("§8[§9Klick§8] §7An / Aus");
             itemLore.add(" ");
@@ -199,8 +247,8 @@ public class SettingsItems {
             itemMeta.setDisplayName("§6Keep Inventory");
             itemLore.add(" ");
             itemLore.add("§9Beschreibung:");
-            itemLore.add("§7Erlaubt den Spielern nach dem");
-            itemLore.add("§7Tod ihr Inventar zu behalten.");
+            itemLore.add("§7Erlaubt den Spielern, nach dem");
+            itemLore.add("§7Tod, ihr Inventar zu behalten.");
             itemLore.add(" ");
             itemLore.add("§8[§9Klick§8] §7An / Aus");
             itemLore.add(" ");
@@ -341,7 +389,8 @@ public class SettingsItems {
             trafficLore.add("§7ist eine Ampel, die vorgibt, ob");
             trafficLore.add("§7sich die Spieler bewegen dürfen.");
             trafficLore.add(" ");
-            trafficLore.add("§8[§9Klick§8] §7An / Aus");
+            trafficLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            trafficLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             trafficLore.add(" ");
             if (state == ItemState.DISABLED) {
                 trafficLore.add("§8[§4Inaktiv§8]");
@@ -362,13 +411,14 @@ public class SettingsItems {
             return trafficLight;
         } else if (type == ItemType.ONEBLOCKONEHEART) {
             itemStack.setType(Material.GRASS_BLOCK);
-            itemMeta.setDisplayName("§61 Block = 1 Herz Schaden");
+            itemMeta.setDisplayName("§6Laufen = Schaden");
             itemLore.add(" ");
             itemLore.add("§9Beschreibung:");
-            itemLore.add("§7Wenn sich ein Spieler 1 Block");
-            itemLore.add("§7bewegt, bekommt er 1 Herz Schaden.");
+            itemLore.add("§7Wenn sich ein Spieler die angegebene");
+            itemLore.add("§7Blockzahl bewegt, bekommt er 1 Herz Schaden.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -386,7 +436,8 @@ public class SettingsItems {
             itemLore.add("§7wird der Schaden, den ein Spieler");
             itemLore.add("§7einem Mob zufügt, gespiegelt.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -442,7 +493,8 @@ public class SettingsItems {
             itemLore.add("§7auf welchem Block sie als");
             itemLore.add("§7nächstes stehen müssen.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -480,7 +532,8 @@ public class SettingsItems {
             itemLore.add("§7Eine §a10 Sekunden §7verzögerte");
             itemLore.add("§7Bedrock-Wand verfolgt alle Spieler.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -497,7 +550,8 @@ public class SettingsItems {
             itemLore.add("§7werden erst mit Magmablöcken und dann");
             itemLore.add("§7mit Lava ersetzt.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -513,7 +567,8 @@ public class SettingsItems {
             itemLore.add("§7Die Spieler müssen in einer bestimmten");
             itemLore.add("§7Zeit ein Mob vorgegebenes Mob töten.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -650,7 +705,8 @@ public class SettingsItems {
             itemLore.add("§7Die Spieler müssen zu einer vorgegebenen");
             itemLore.add("§7Zeit auf einer vorgegebenen Höhe sein.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -666,7 +722,8 @@ public class SettingsItems {
             itemLore.add("§7Die Spieler müssen zu einer vorgegebenen");
             itemLore.add("§7Zeit in einem vorgegebenen Biom stehen.");
             itemLore.add(" ");
-            itemLore.add("§8[§9Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Eistellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -716,7 +773,7 @@ public class SettingsItems {
             itemLore.add("§7Alle Drops sind zufälling.");
             itemLore.add(" ");
             itemLore.add("§8[§9Links-Klick§8] §7An / Aus");
-            itemLore.add("§8[§9Rechts-Klick§8] §7Zurücksetzen");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Einstellungen");
             itemLore.add(" ");
             if (state == ItemState.DISABLED) {
                 itemLore.add("§8[§4Inaktiv§8]");
@@ -784,6 +841,99 @@ public class SettingsItems {
         itemMeta.setLore(itemLore);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    public static Inventory getMenuInv(ItemType type) {
+        if (type == ItemType.SPEED) {
+            Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cSpeed");
+            Utils.fillWithGlass(inv);
+            inv.setItem(13, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Speed", "\n§9Beschreibung:\nDie Geschwindigkeit, die alle Spieler und Mobs haben werden.\n \n§8[§9Links-Klick§8] §7+ 1\n§8[§9Rechts-Klick§8] §7- 1\n \nMomentan: §6" + SettingsModes.speed));
+            inv.setItem(18, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.TRAFFICLIGHT) {
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cAmpel-Challenge");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Grünzeit", "\n§9Beschreibung:\nDie minimale Zeit, die die Ampel grün bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + Trafficlight.min_green / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Grünzeit", "\n§9Beschreibung:\nDie maximale Zeit, die die Ampel grün bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + Trafficlight.max_green / 60 + " Minuten"));
+            inv.setItem(13, Settings.createItemStack(Material.YELLOW_CONCRETE, "§6Minimale Gelbzeit", "\n§9Beschreibung:\nDie minimale Zeit, die die Ampel gelb bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.min_yellow + " Sekunden"));
+            inv.setItem(22, Settings.createItemStack(Material.YELLOW_CONCRETE, "§6Maximale Gelbzeit", "\n§9Beschreibung:\nDie maximale Zeit, die die Ampel gelb bleibt.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.max_yellow + " Sekunden"));
+            inv.setItem(15, Settings.createItemStack(Material.RED_CONCRETE, "§6Minimale Rotzeit", "\n§9Beschreibung:\nDie minimale Zeit, die die Ampel rot belibt.\n\n§8[§9Links-Klick§8] §7 + 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.min_red + " Sekunden"));
+            inv.setItem(24, Settings.createItemStack(Material.RED_CONCRETE, "§6Maximale Rotzeit", "\n§9Beschreibung:\nDie maximale Zeit, die die Ampel rot bleibt.\n\n§8[§9Links-Klick§8] §7 + 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + Trafficlight.max_red + " Sekunden"));
+            inv.setItem(27, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.ONEBLOCKONEHEART) {
+            Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cLaufen = Schaden");
+            Utils.fillWithGlass(inv);
+            inv.setItem(13, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Blöcke", "\n§9Beschreibung:\nDie Blöcke, die ein Spieler gehen muss, um Schaden zu bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + SettingsModes.distanceToGetDamaged + " §7Blöcke"));
+            inv.setItem(18, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.RANDOM_DROPS) {
+            Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cZufällige Drops");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Alle Drops Random", "\n§9Beschreibung:\nJeder Block gibt einen unterschiedlichen Drop.\n\n§8[§9Klick§8] §7An / Aus\n\nMomentan: §6" + (!RandomDrops.allRandom ? "§8[§4Inaktiv§8]" : "§8[§2Aktiv§8]")));
+            inv.setItem(15, Settings.createItemStack(Material.RED_CONCRETE, "§6Zurücksetzen", "\n§9Beschreibung:\nAlle Drops werden neu gemischt."));
+            inv.setItem(18, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.DAMAGEMIRROR) {
+            Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cGespiegelter Schaden");
+            Utils.fillWithGlass(inv);
+            inv.setItem(13, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Wahrscheinlichkeit", "\n§9Beschreibung:\nDie Wahrscheinlichkeit, dass der Schaden gespiegelt wird.\n\n§8[§9Links-Klick§8] §7+ 10%\n§8[§9Rechts-Klick§8] §7- 10%\n\nMomentan: §6" + SettingsModes.probabilityToMirrorDamage + "%"));
+            inv.setItem(18, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.FORCEBLOCK) {
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cForce Block");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.FreeTimeMin / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.FreeTimeMax / 60 + " Minuten"));
+            inv.setItem(15, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.SearchTimeMin / 60 + " Minuten"));
+            inv.setItem(24, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBlock.SearchTimeMax / 60 + " Minuten"));
+            inv.setItem(27, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.BEDROCKWALL) {
+            Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cBedrock-Wand");
+            Utils.fillWithGlass(inv);
+            inv.setItem(13, Settings.createItemStack(Material.BEDROCK, "§6Verzögerung", "\n§9Beschreibung:\nDie Verzögerung, die die Bedrock zu den Spielern hat.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n\nMomentan: §6" + SettingsModes.BedrockDelay + " Sekunden"));
+            inv.setItem(18, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.THEFLOORISLAVA) {
+            Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cDer Boden ist Lava");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.MAGMA_BLOCK, "§6Magma", "\n§9Beschreibung:\nDie Zeit, bis der Boden zu Magma wird.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + SettingsModes.MagmaTime + " Sekunden"));
+            inv.setItem(13, Settings.createItemStack(Material.LAVA_BUCKET, "§6Lava", "\n§9Beschreibung:\nDie Zeit, bis der Boden zu Lava wird.\n\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[§9Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + SettingsModes.LavaTime + " Sekunden"));
+            inv.setItem(15, Settings.createItemStack(Material.GRASS_BLOCK, "§6Reset", "\n§9Beschreibung:\nDie Zeit, bis der Boden wieder zum orginalen Block zurückgesetzt wird.\n§8[§9Links-Klick§8] §7+ 1 Sekunde\n§8[Rechts-Klick§8] §7- 1 Sekunde\n\nMomentan: §6" + SettingsModes.ResetTime + " Sekunden"));
+            inv.setItem(18, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.FORCEMOB) {
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cForce Mob");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.FreeTimeMin / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.FreeTimeMax / 60 + " Minuten"));
+            inv.setItem(15, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.SearchTimeMin / 60 + " Minuten"));
+            inv.setItem(24, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceMob.SearchTimeMax / 60 + " Minuten"));
+            inv.setItem(27, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.FORCE_HEIGHT) {
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cForce Height");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.FreeTimeMin / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.FreeTimeMax / 60 + " Minuten"));
+            inv.setItem(15, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.SearchTimeMin / 60 + " Minuten"));
+            inv.setItem(24, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceHeight.SearchTimeMax / 60 + " Minuten"));
+            inv.setItem(27, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.FORCE_BIOME) {
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cForce Biome");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.FreeTimeMin / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.FreeTimeMax / 60 + " Minuten"));
+            inv.setItem(15, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.SearchTimeMin / 60 + " Minuten"));
+            inv.setItem(24, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.SearchTimeMax / 60 + " Minuten"));
+            inv.setItem(27, Settings.Accept());
+            return inv;
+        }
+        else {
+            return null;
+        }
     }
 
 
@@ -876,7 +1026,7 @@ public class SettingsItems {
 
         //projects
         ALL_DEATHS,
-        ALL_ACHIEVMENTS,
+        ALL_ACHIEVEMENTS,
         ALL_ITEMS,
         RARE_THINGS,
         ALL_MOBS,

@@ -19,11 +19,14 @@ public class ForceHeight {
     private int neededtime;
     private int currenttime;
     public static int forcedheight;
-    private int lefttime;
+    public static int FreeTimeMin;
+    public static int FreeTimeMax;
+    public static int SearchTimeMin;
+    public static int SearchTimeMax;
 
     public void start() {
         forcedheight = 0;
-        neededtime = Utils.getRandomInt(180, 520);
+        neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
         currenttime = 0;
         bossBar = Bukkit.createBossBar("Der Timer ist pausiert.", BarColor.WHITE, BarStyle.SOLID);
         bossBar.setVisible(true);
@@ -54,7 +57,7 @@ public class ForceHeight {
                     } else {
                         if (forcedheight == 0) {
                             forcedheight = Utils.getRandomInt(1, 256);
-                            neededtime = Utils.getRandomInt(45, 300);
+                            neededtime = Utils.getRandomInt(SearchTimeMin, SearchTimeMax);
                             currenttime = 0;
                             bossBar.setTitle("§7Höhe: §9" + forcedheight + " §8| §7Zeit: " + Timer.ConvertTimerTime((neededtime - currenttime), "§9"));
                             for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -77,7 +80,7 @@ public class ForceHeight {
                                     pl.sendMessage(Main.getPrefix("Force Height", "§aAlle Spieler §7befanden sich §aauf der Höhe §9" + forcedheight));
                                 }
                             }
-                            neededtime = Utils.getRandomInt(180, 520);
+                            neededtime = Utils.getRandomInt(FreeTimeMin, FreeTimeMax);
                             currenttime = 0;
                             forcedheight = 0;
                         }

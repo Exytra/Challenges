@@ -1,12 +1,8 @@
 package me.aaron.timer.utils;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.utils.Config;
-import me.aaron.timer.utils.Settings;
 import me.aaron.timer.utils.SettingsItems.ItemState;
 import me.aaron.timer.utils.SettingsItems.ItemType;
-import me.aaron.timer.utils.SettingsModes;
-import me.aaron.timer.utils.Utils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -21,7 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.IOException;
 
 public class Timer {
-    public static int timerSchedular;
+    public static int timerScheduler;
     public static TimerState state = TimerState.STOPPED;
     public static boolean firststart = true;
 
@@ -32,7 +28,7 @@ public class Timer {
         SettingsModes.settings.put(ItemType.TIMER, ItemState.ENABLED);
         SettingsModes.timer.put(ItemType.RESUME, ItemState.ENABLED);
         state = TimerState.RUNNING;
-        timerSchedular = Bukkit.getScheduler().scheduleSyncRepeatingTask(JavaPlugin.getPlugin(Main.class), () -> {
+        timerScheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(JavaPlugin.getPlugin(Main.class), () -> {
             if (SettingsModes.settings.get(ItemType.TIMER) == ItemState.ENABLED) {
                 sendTimer(getCurrentTime());
             }
@@ -42,11 +38,11 @@ public class Timer {
                 if (Config.getString("timer.state").equalsIgnoreCase("RUNNING") && Bukkit.getOnlinePlayers().size() != 0) {
                     resume(false);
                 }
-            } else if (state != TimerState.PAUSED) {
+            } else if (state == TimerState.RUNNING || SettingsModes.settings.get(ItemType.TIMER) == ItemState.DISABLED) {
                 if (SettingsModes.challenge.get(ItemType.SPEED) == ItemState.ENABLED) {
                     for (World wl : Bukkit.getWorlds()) {
                         for (LivingEntity el : wl.getLivingEntities()) {
-                            el.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 21, 30));
+                            el.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 21, SettingsModes.speed - 1));
                         }
                     }
                 }
