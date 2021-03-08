@@ -2,14 +2,21 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.projects.AllMobs;
-import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
+import me.aaron.timer.utils.Timer;
+import me.aaron.timer.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.*;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class EntityDeathListener implements Listener {
     @EventHandler
@@ -50,5 +57,17 @@ public class EntityDeathListener implements Listener {
                 AllMobs.killed(e.getEntityType());
             }
         }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.EVERYTHING_REVERSE) == SettingsItems.ItemState.ENABLED && SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(2)) {
+            if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
+                final Location deathLocation = e.getEntity().getLocation();
+                final EntityType entityType = e.getEntityType();
+                final World world = e.getEntity().getWorld();
+                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
+                    world.spawnEntity(deathLocation, entityType);
+                }, Utils.TimeToTicks(0, 0, SettingsModes.customSettingsInts.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(0)));
+            }
+        }
+
     }
 }

@@ -1,23 +1,20 @@
 package me.aaron.timer.utils;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.utils.SettingsItems;
-import me.aaron.timer.utils.SettingsModes;
-import net.minecraft.server.v1_16_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.*;
-
-import java.util.Arrays;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class ScoreboardManager extends JavaPlugin {
     public static void createScoreboard(Player p) {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(Main.class), () -> {
             if (SettingsModes.settings.get(SettingsItems.ItemType.STATS) == SettingsItems.ItemState.ENABLED) {
-                p.setPlayerListHeader("§8§m                        §8[§9SERVER§8]§m                        §7\n \nWillkommen §9" + p.getName() + " \n §7Spieler Online: §9" + Bukkit.getOnlinePlayers().size() + "\n\n§7 RAM-Auslastung: §9" + Utils.getPercent(Integer.parseInt(Runtime.getRuntime().maxMemory() + ""), Integer.parseInt((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) + "")) + "% §8 | §7TPS: §9" + Utils.getTPS() + "\n");
+                p.setPlayerListHeader("§8§m                        §8[§9SERVER§8]§m                        §7\n \nWillkommen §9" + p.getName() + " \n §7Spieler Online: §9" + Bukkit.getOnlinePlayers().size() + "\n\n§7 RAM-Auslastung: §9" + Utils.getPercent(Runtime.getRuntime().maxMemory(), (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory())) + "% §8 | §7TPS: §9" + Utils.getTPS() + "\n");
             } else {
                 p.setPlayerListHeader("§8§m                        §8[§9SERVER§8]§m                        §7\n \nWillkommen §9" + p.getName() + " \n §7Spieler Online: §9" + Bukkit.getOnlinePlayers().size() + "\n");
             }
@@ -44,10 +41,10 @@ public class ScoreboardManager extends JavaPlugin {
                 }
             } else {
                 try {
-                    if (Bukkit.getOnlinePlayers().size() != 0) {
-                        for (Player pl : Bukkit.getOnlinePlayers()) {
-                            Scoreboard board = pl.getScoreboard();
-                            Objective objective = board.getObjective("showhealth");
+                    for (Player pl : Bukkit.getOnlinePlayers()) {
+                        Scoreboard board = pl.getScoreboard();
+                        Objective objective = board.getObjective("showhealth");
+                        if (objective != null) {
                             objective.unregister();
                         }
                     }

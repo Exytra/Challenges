@@ -13,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
 import java.util.Random;
 
 public class BlockBreakListener implements Listener {
@@ -32,6 +31,9 @@ public class BlockBreakListener implements Listener {
         if (Permissions.getRank(p) == Permissions.Rank.GUEST) {
             e.setCancelled(true);
             p.sendMessage("§7Du hast den Rang §9Guest §7und kannst daher keine Blöcke abbauen. Der Rang kann mit §9/rank <guest | user | op | admin> §7von einem Admin oder der Serverkonsole geupdatet werden.");
+        }
+        if (world.getName().equalsIgnoreCase("MLG-World")) {
+            e.setCancelled(true);
         }
 
         if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS) == SettingsItems.ItemState.ENABLED) {

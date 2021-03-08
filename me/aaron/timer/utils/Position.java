@@ -1,9 +1,13 @@
 package me.aaron.timer.utils;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.tabCompletes.PositionTabCompleter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import me.aaron.timer.tabCompletes.PositionTabCompleter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,8 +23,10 @@ public class Position {
                 int y = (int) config.get("position." + name + ".y");
                 int z = (int) config.get("position." + name + ".z");
                 String world = (String) config.get("position." + name + ".world");
-                String pos = ("§8[§6Position§8] §9" + config.get("position." + name + ".name") + " §8[§6" + x + "§8, §6" + y + "§8, §6" + z + "§8, §6" + world + "§8]");
-                p.sendMessage(pos);
+                net.md_5.bungee.api.chat.TextComponent component = new TextComponent("§8[§6Position§8] §9" + config.get("position." + name + ".name") + " §8[§6" + x + "§8, §6" + y + "§8, §6" + z + "§8, §6" + world + "§8]");
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tppos " + name));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Klicke hier um zur Position §9" + name + " §7teleportiert zu werden!").create()));
+                p.spigot().sendMessage(component);
             } else {
                 try {
                     int x = p.getLocation().getBlockX();

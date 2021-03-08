@@ -1,13 +1,13 @@
 package me.aaron.timer.commands;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
+import me.aaron.timer.utils.Timer;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
 public class TimerCommand implements CommandExecutor {

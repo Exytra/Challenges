@@ -5,8 +5,6 @@ import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.utils.Permissions;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
-import me.aaron.timer.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

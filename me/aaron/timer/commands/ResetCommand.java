@@ -24,7 +24,7 @@ public class ResetCommand implements CommandExecutor {
             if (SettingsModes.settings.get(SettingsItems.ItemType.RESETCONFIRM) == SettingsItems.ItemState.ENABLED) {
                 if (args.length == 0) {
                     if (!attemptonce) {
-                        p.sendMessage(Main.getPrefix("Reset", "Nutze /reset confirm §7um den Reset auszuführen."));
+                        p.sendMessage(Main.getPrefix("Reset", "Nutze §9/reset confirm §7um den Reset auszuführen."));
                         attemptonce = true;
                         waittime = 0;
                         resetSchedular = Bukkit.getScheduler().scheduleSyncRepeatingTask(JavaPlugin.getPlugin(Main.class), () -> {

@@ -15,23 +15,32 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class Timer {
     public static int timerScheduler;
     public static TimerState state = TimerState.STOPPED;
     public static boolean firststart = true;
+    public static int totalPlaytime;
+    public static HashMap<Player, Integer> playtime = new HashMap<>();
 
     public static void run() {
         setCurrentTime(SettingsModes.currentTime);
         setStartTime(SettingsModes.startTime);
         Bukkit.broadcastMessage("§8[§6Timer§8] §aFortgesetzt");
-        SettingsModes.settings.put(ItemType.TIMER, ItemState.ENABLED);
         SettingsModes.timer.put(ItemType.RESUME, ItemState.ENABLED);
         state = TimerState.RUNNING;
         timerScheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(JavaPlugin.getPlugin(Main.class), () -> {
+            if (Bukkit.getOnlinePlayers().size() >= 1) {
+                totalPlaytime ++;
+                for (Player pl : Bukkit.getOnlinePlayers()) {
+                    playtime.putIfAbsent(pl, 0);
+                    int time = playtime.get(pl);
+                    playtime.put(pl, time += 1);
+                }
+            }
             if (SettingsModes.settings.get(ItemType.TIMER) == ItemState.ENABLED) {
                 sendTimer(getCurrentTime());
-            }
             if (Main.started) {
                 Main.started = false;
                 pause(false);
@@ -46,7 +55,7 @@ public class Timer {
                         }
                     }
                 }
-                if(getCurrentTime() == 0 && SettingsModes.timer.get(ItemType.REVERSE) == ItemState.ENABLED) {
+                if (getCurrentTime() == 0 && SettingsModes.timer.get(ItemType.REVERSE) == ItemState.ENABLED) {
                     pause(true);
                     Bukkit.broadcastMessage("§8[§6Game§8] §cDie Zeit ist abgelaufen. Verloren");
                     for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -54,12 +63,13 @@ public class Timer {
                     }
                     SettingsModes.timer.put(ItemType.REVERSE, ItemState.DISABLED);
                 } else {
-                        if (SettingsModes.timer.get(ItemType.REVERSE) == ItemState.ENABLED) {
-                            setCurrentTime(getCurrentTime() - 1);
-                        } else {
-                            setCurrentTime(getCurrentTime() + 1);
-                        }
+                    if (SettingsModes.timer.get(ItemType.REVERSE) == ItemState.ENABLED) {
+                        setCurrentTime(getCurrentTime() - 1);
+                    } else {
+                        setCurrentTime(getCurrentTime() + 1);
+                    }
                 }
+            }
             }
         }, 0, 20);
     }
@@ -107,7 +117,7 @@ public class Timer {
                     pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ConvertTimerTime(message, "§6§l")));
                 }
             } else if (state == TimerState.PAUSED) {
-                pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§6§oDer Timer ist pausiert."));
+                pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§6Der Timer ist pausiert."));
             }
         }
     }

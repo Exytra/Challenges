@@ -1,5 +1,6 @@
 package me.aaron.timer.listeners;
 
+import me.aaron.timer.challenges.MLG;
 import me.aaron.timer.utils.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,9 @@ public class BucketListener implements Listener {
 
         if (Permissions.getRank(p) == Permissions.Rank.GUEST) {
             e.setCancelled(true);
+        }
+        if (e.getBlock().getWorld().getName().equals("MLG-World")) {
+            MLG.waterLocations.add(e.getBlock().getLocation());
         }
     }
 }

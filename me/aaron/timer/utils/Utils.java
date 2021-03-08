@@ -5,15 +5,10 @@ import com.google.common.io.ByteStreams;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.aaron.timer.Main;
-import net.dv8tion.jda.api.JDA;
-import net.minecraft.server.v1_16_R3.Enchantment;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.MinecraftServer;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
-import net.minecraft.server.v1_16_R3.NBTTagList;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.boss.BossBar;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +23,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class Utils {
-    public static Inventory fillWithGlass(Inventory inv) {
+    public static void fillWithGlass(Inventory inv) {
         ItemStack itemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
@@ -36,7 +31,6 @@ public class Utils {
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, itemStack);
         }
-        return inv;
     }
 
     public static void sendChange(String Title, String Subtitle) {
@@ -155,11 +149,28 @@ public class Utils {
     }
 
     public static long getPercent(double max, double current) {
-        double multiplier = 100 / max;
-        return Math.round(current * multiplier);
+        return Math.round(current * 100 / max);
     }
 
     public static int getTPS() {
-        return MinecraftServer.TPS;
+        return Integer.parseInt(Math.round(MinecraftServer.getServer().recentTps[0]) + "");
+    }
+
+    public static String translateColorCodes(String text) {
+        String[] texts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
+        StringBuilder finalText = new StringBuilder();
+        for (int i = 0; i < texts.length; i ++) {
+            if (texts[i].equalsIgnoreCase("&")) {
+                i ++;
+                if (texts[i].charAt(0) == '#') {
+                    finalText.append(net.md_5.bungee.api.ChatColor.of(texts[i].substring(0, 7)) + texts[i].substring(7));
+                } else {
+                    finalText.append(ChatColor.translateAlternateColorCodes('&', "6" + texts[i]));
+                }
+            } else {
+                finalText.append(texts[i]);
+            }
+        }
+        return finalText.toString();
     }
 }

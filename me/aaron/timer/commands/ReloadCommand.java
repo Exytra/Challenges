@@ -2,9 +2,7 @@ package me.aaron.timer.commands;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.utils.Config;
-import me.aaron.timer.utils.Permissions;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

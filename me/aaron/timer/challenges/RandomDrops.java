@@ -3,7 +3,10 @@ package me.aaron.timer.challenges;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Random;
 
 public class RandomDrops {
     public static HashMap<ItemStack, ItemStack> drops = new HashMap<>();

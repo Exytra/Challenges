@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.IOException;
-
 public class BackpackCommand implements CommandExecutor {
     public static Inventory inventory = Bukkit.createInventory(null, 27, "Backpack");
 

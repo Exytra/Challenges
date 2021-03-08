@@ -11,9 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 public class TempBanCommand implements CommandExecutor {
     private int bantime = 0;
     @Override

@@ -1,9 +1,9 @@
 package me.aaron.timer.challenges;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
+import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;

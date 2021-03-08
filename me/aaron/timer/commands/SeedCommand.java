@@ -1,12 +1,12 @@
 package me.aaron.timer.commands;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.aaron.timer.utils.Config;
 
 import java.io.IOException;
 

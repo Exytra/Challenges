@@ -1,6 +1,5 @@
 package me.aaron.timer.listeners;
 
-import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,6 +22,11 @@ public class QuitListener implements Listener {
                 Timer.pause(false);
                 Bukkit.getLogger().info("§cDer Timer wurde pausiert, da sich niemand mehr auf dem Server befindet.");
             }
+        }
+        try {
+            Config.set("playtime.player." + p.getUniqueId().toString(), Timer.playtime.get(p));
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         try {
             Config.set("permissions." + p.getUniqueId(), ranks.get(p).name());

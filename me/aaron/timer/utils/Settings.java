@@ -76,6 +76,9 @@ public class Settings {
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.FORCE_BIOME, SettingsModes.challenge.get(SettingsItems.ItemType.FORCE_BIOME)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_DROPS, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS)));
         inv.setItem(12, SettingsItems.getMenuItem(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER)));
+        inv.setItem(13, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION)));
+        inv.setItem(14, SettingsItems.getMenuItem(SettingsItems.ItemType.EVERYTHING_REVERSE, SettingsModes.challenge.get(SettingsItems.ItemType.EVERYTHING_REVERSE)));
+        inv.setItem(15, SettingsItems.getMenuItem(SettingsItems.ItemType.WATER_MLG, SettingsModes.challenge.get(SettingsItems.ItemType.WATER_MLG)));
 
         inv.setItem(27, Back());
 
@@ -217,7 +220,7 @@ public class Settings {
     }
 
     public static ItemStack Accept() {
-        ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.GREEN_CHECKMARK));
+        ItemStack itemStack = Utils.getHead(Enums.getHeadValue(Enums.Head.GREEN_CHECKMARK));
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
 
@@ -567,7 +570,7 @@ public class Settings {
     }
 
     public static ItemStack Next() {
-        ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.WOOD_ARROW_RIGHT));
+        ItemStack itemStack = Utils.getHead(Enums.getHeadValue(Enums.Head.WOOD_ARROW_RIGHT));
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
         itemMeta.setDisplayName("§6Weiter");
@@ -588,7 +591,7 @@ public class Settings {
     }
 
     public static ItemStack Exit() {
-        ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.WOOD_EXIT));
+        ItemStack itemStack = Utils.getHead(Enums.getHeadValue(Enums.Head.WOOD_EXIT));
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> itemLore = new ArrayList<>();
         itemMeta.setDisplayName("§6Schließen");
@@ -957,7 +960,7 @@ public class Settings {
 
     public static ItemStack Back() {
 
-        ItemStack Back = Utils.getHead(Heads.getValue(Heads.Head.WOOD_ARROW_LEFT));
+        ItemStack Back = Utils.getHead(Enums.getHeadValue(Enums.Head.WOOD_ARROW_LEFT));
         ItemMeta BackMeta = Back.getItemMeta();
         ArrayList<String> BackLore = new ArrayList<>();
         BackMeta.setDisplayName("§6Zurück");
@@ -1052,5 +1055,11 @@ public class Settings {
             lore.add("§7" + line);
         }
         return lore;
+    }
+
+    public static void addThisChallengeCanBeModified(ArrayList<String> arrayList) {
+        arrayList.add("§6§k|§3 Diese Challenge kann mit         §6§k|");
+        arrayList.add("§6§k|§3 Rechtsklick angepasst werden! §6§k|");
+        arrayList.add(" ");
     }
 }

@@ -4,8 +4,6 @@ import me.aaron.timer.Main;
 import me.aaron.timer.utils.Permissions;
 import me.aaron.timer.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

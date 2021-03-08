@@ -1,13 +1,13 @@
 package me.aaron.timer.commands;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.utils.NewWorld;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.aaron.timer.utils.NewWorld;
 
 public class WorldCommand implements CommandExecutor {
     NewWorld world = new NewWorld();

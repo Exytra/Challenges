@@ -2,7 +2,6 @@ package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
 import me.aaron.timer.projects.AllDeathMessages;
-import me.aaron.timer.utils.ScoreboardManager;
 import me.aaron.timer.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
@@ -55,6 +54,8 @@ public class JoinListener implements Listener {
         if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS) == SettingsItems.ItemState.ENABLED) {
             AllDeathMessages.addPlayer(p);
         }
+
+        Timer.playtime.put(p, Config.contains("playtime.player." + p.getUniqueId().toString()) ? Config.getInt("playtime.player." + p.getUniqueId().toString()) : 0);
 
     }
 }

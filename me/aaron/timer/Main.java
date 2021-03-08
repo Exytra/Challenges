@@ -1,17 +1,14 @@
 package me.aaron.timer;
 //import me.aaron.timer.commands.BetterTimerCommand;
+
 import me.aaron.timer.challenges.*;
+import me.aaron.timer.commands.*;
+import me.aaron.timer.listeners.*;
 import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import me.aaron.timer.tabCompletes.*;
-import me.aaron.timer.commands.*;
-import me.aaron.timer.commands.DorfCommand;
-import me.aaron.timer.listeners.*;
-import me.aaron.timer.utils.Position;
-import me.aaron.timer.commands.ReloadCommand;
 import me.aaron.timer.utils.*;
-import me.aaron.timer.commands.ResetCommand;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -21,17 +18,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import me.aaron.timer.commands.HubCommand;
-import me.aaron.timer.commands.WorldCommand;
-import me.aaron.timer.commands.GmCommand;
-import me.aaron.timer.commands.BackpackCommand;
-import me.aaron.timer.commands.PositionCommand;
-import me.aaron.timer.commands.InvseeCommand;
-import me.aaron.timer.commands.HealCommand;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,7 +40,7 @@ public final class Main extends JavaPlugin {
 
     public static boolean debug = false;
 
-    public static final String version = "2.6";
+    public static final String version = "2.7";
 
     public Trafficlight trafficlight;
 
@@ -61,7 +51,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onLoad() {
         Position pos = new Position();
-        if(Config.contains("reset.isReset") && Config.getBoolean("reset.isReset")) {
+        if (Config.contains("reset.isReset") && Config.getBoolean("reset.isReset")) {
             deleteFolder("world");
             deleteFolder("world_nether");
             deleteFolder("world_the_end");
@@ -78,6 +68,8 @@ public final class Main extends JavaPlugin {
                 Config.set("positions.list", null);
                 Config.set("random_drops.drops", null);
                 Config.set("positions.list", null);
+                Config.set("playtime.player", null);
+                Config.set("playtime.total", 0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -87,6 +79,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        MLG.createMLGWorld();
         Timer.firststart = true;
         Config config = new Config();
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -161,6 +154,7 @@ public final class Main extends JavaPlugin {
         }
         AFK.start();
         Permissions.start();
+        MLG.start();
 
         TextComponent component = new TextComponent(" Download");
         component.setColor(ChatColor.BLUE);
@@ -194,6 +188,10 @@ public final class Main extends JavaPlugin {
         if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS) == SettingsItems.ItemState.ENABLED) {
             AllDeathMessages.start();
         }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION) == SettingsItems.ItemState.ENABLED) {
+            RandomChunkGeneration.start();
+        }
     }
 
     @Override
@@ -206,6 +204,11 @@ public final class Main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+        return new CustomChunkGenerator();
     }
 
 
@@ -235,6 +238,8 @@ public final class Main extends JavaPlugin {
         pm.registerEvents(new InteractListener(), this);
         pm.registerEvents(new InteractEntityListener(), this);
         pm.registerEvents(new BucketListener(), this);
+        pm.registerEvents(new ChunkLoadListener(), this);
+        pm.registerEvents(new EntitySpawnListener(), this);
     }
 
     private void commandRegistration() {
@@ -242,7 +247,6 @@ public final class Main extends JavaPlugin {
         this.getCommand("hub").setExecutor(new HubCommand());
         this.getCommand("world").setExecutor(new WorldCommand());
         this.getCommand("gm").setExecutor(new GmCommand());
-        this.getCommand("gamemode").setExecutor(new GmCommand());
         this.getCommand("backpack").setExecutor(new BackpackCommand());
         this.getCommand("bp").setExecutor(new BackpackCommand());
         this.getCommand("position").setExecutor(new PositionCommand());
@@ -275,6 +279,8 @@ public final class Main extends JavaPlugin {
         this.getCommand("skipitem").setExecutor(new SkipitemCommand());
         this.getCommand("mobs").setExecutor(new MobsCommand());
         this.getCommand("moboverview").setExecutor(new MobsCommand());
+        this.getCommand("spielzeit").setExecutor(new PlaytimeCommand());
+        this.getCommand("tppos").setExecutor(new TpposCommand());
     }
 
     private void TabCompleterRegistration() {
@@ -282,7 +288,6 @@ public final class Main extends JavaPlugin {
         this.getCommand("hub").setTabCompleter(new HubTabCompleter());
         this.getCommand("world").setTabCompleter(new WorldTabCompleter());
         this.getCommand("gm").setTabCompleter(new GmTabCompleter());
-        this.getCommand("gamemode").setTabCompleter(new GmTabCompleter());
         this.getCommand("position").setTabCompleter(new PositionTabCompleter());
         this.getCommand("pos").setTabCompleter(new PositionTabCompleter());
         this.getCommand("rank").setTabCompleter(new RankTabCompleter());
@@ -335,7 +340,7 @@ public final class Main extends JavaPlugin {
     }
 
     public static String getPrefix(String name, String Content) {
-        return "§8[§6" + name + "§8] §7" + Content;
+        return "§8[" + "§6" + name + "§8] §7" + Content;
     }
 
     public ArrayList<String> getPermissions(Player p) {

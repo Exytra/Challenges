@@ -1,7 +1,7 @@
 package me.aaron.timer.projects;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.utils.Heads;
+import me.aaron.timer.utils.Enums;
 import me.aaron.timer.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -65,7 +65,7 @@ public class AllMobs {
 
     public static ItemStack isFound(EntityType entityType) {
         if (entities.contains(entityType)) {
-            ItemStack itemStack = Utils.getHead(Heads.getValue(Heads.Head.valueOf(entityType.name())));
+            ItemStack itemStack = Utils.getHead(Enums.getHeadValue(Enums.Head.valueOf(entityType.name())));
             ItemMeta itemMeta = itemStack.getItemMeta();
             ArrayList<String> itemLore = new ArrayList<>();
             itemMeta.setDisplayName("§6" + Utils.firstLatterCapitalized(entityType.name().replace("_", " ")));

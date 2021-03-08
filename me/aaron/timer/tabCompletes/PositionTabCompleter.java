@@ -1,6 +1,5 @@
 package me.aaron.timer.tabCompletes;
 
-import me.aaron.timer.utils.Position;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;

@@ -1,7 +1,6 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.utils.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

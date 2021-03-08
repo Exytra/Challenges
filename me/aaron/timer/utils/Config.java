@@ -1,17 +1,16 @@
 package me.aaron.timer.utils;
 
-import javafx.geometry.Pos;
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.*;
 import me.aaron.timer.commands.BackpackCommand;
 import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
-import me.aaron.timer.tabCompletes.PositionTabCompleter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,21 +24,19 @@ public class Config {
 
     public Config() {
         File dir = new File("./plugins/Challenges");
-        if(!dir.exists()) {
+        if (!dir.exists()) {
             dir.mkdir();
         }
 
         file = new File(dir, "config.yml");
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         config = YamlConfiguration.loadConfiguration(file);
-
     }
 
     public static boolean contains(String path) {
@@ -119,6 +116,10 @@ public class Config {
             config.set("challenge.wither", SettingsModes.challenge.get(SettingsItems.ItemType.WITHER).name());
             config.set("challenge.enderdragon", SettingsModes.challenge.get(SettingsItems.ItemType.ENDER_DRAGON).name());
             config.set("positions.list", Position.positionlist.toArray());
+            config.set("playtime.total", Timer.totalPlaytime);
+            for (Player pl : Bukkit.getOnlinePlayers()) {
+                config.set("playtime.player." + pl.getUniqueId().toString(), Timer.playtime.get(pl));
+            }
 
             //challenges
             config.set("challenge.flyondamage", SettingsModes.challenge.get(SettingsItems.ItemType.FLYONDAMAGE).name());
@@ -168,6 +169,17 @@ public class Config {
             config.set("challenge.random_drops.state", SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS).name());
                 config.set("challenge.random_drops.allrandom", RandomDrops.allRandom);
             config.set("challenge.disappearing_blocks", SettingsModes.challenge.get(SettingsItems.ItemType.BLOCKS_WITH_PLAYER).name());
+            config.set("challenge.random_chunk_generation", SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION).name());
+            config.set("challenge.everything_reverse.state", SettingsModes.challenge.get(SettingsItems.ItemType.EVERYTHING_REVERSE).name());
+                config.set("challenge.everything_reverse.blockbreak", SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(0));
+                config.set("challenge.everything_reverse.blockplace", SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(1));
+                config.set("challenge.everything_reverse.mobkill", SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(2));
+                config.set("challenge.everything_reverse.delay", SettingsModes.customSettingsInts.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(0));
+            config.set("challenge.water_mlg.state", SettingsModes.challenge.get(SettingsItems.ItemType.WATER_MLG).name());
+                config.set("challenge.water_mlg.mintime", MLG.minTime);
+                config.set("challenge.water_mlg.maxtime", MLG.maxTime);
+                config.set("challenge.water_mlg.minheight", MLG.minHeight);
+                config.set("challenge.water_mlg.maxheight", MLG.maxHeight);
 
             //projects
             config.set("project.allitems.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS).name());
@@ -245,6 +257,10 @@ public class Config {
                 if (contains("positions.list")) {
                     Position.positionlist = getArrayList("positions.list");
                 }
+                Timer.totalPlaytime = Config.getInt("playtime.total");
+                for (Player pl : Bukkit.getOnlinePlayers()) {
+                    Timer.playtime.put(pl, Config.getInt("playtime.player." + pl.getUniqueId().toString()));
+                }
 
                 //challenges
                 SettingsModes.challenge.put(SettingsItems.ItemType.FLYONDAMAGE, SettingsItems.ItemState.valueOf(Config.getString("challenge.flyondamage")));
@@ -294,6 +310,17 @@ public class Config {
                 SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_DROPS, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_drops.state")));
                     RandomDrops.allRandom = getBoolean("challenge.random_drops.allrandom");
                 SettingsModes.challenge.put(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsItems.ItemState.valueOf(Config.getString("challenge.disappearing_blocks")));
+                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_chunk_generation")));
+                SettingsModes.challenge.put(SettingsItems.ItemType.EVERYTHING_REVERSE, SettingsItems.ItemState.valueOf(Config.getString("challenge.everything_reverse.state")));
+                    SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, createBooleanList(Config.getBoolean("challenge.everything_reverse.blockbreak")));
+                    SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, addToBooleanList(SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE), Config.getBoolean("challenge.everything_reverse.blockplace")));
+                    SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, addToBooleanList(SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE), Config.getBoolean("challenge.everything_reverse.mobkill")));
+                    SettingsModes.customSettingsInts.put(SettingsItems.ItemType.EVERYTHING_REVERSE, createIntList(Config.getInt("challenge.everything_reverse.delay")));
+                SettingsModes.challenge.put(SettingsItems.ItemType.WATER_MLG, SettingsItems.ItemState.valueOf(Config.getString("challenge.water_mlg.state")));
+                    MLG.minTime = Config.getInt("challenge.water_mlg.mintime");
+                    MLG.maxTime = Config.getInt("challenge.water_mlg.maxtime");
+                    MLG.minHeight = Config.getInt("challenge.water_mlg.minheight");
+                    MLG.maxHeight = Config.getInt("challenge.water_mlg.maxheight");
 
                 //lists
                 SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.valueOf(Config.getString("project.allitems.state")));
@@ -342,6 +369,7 @@ public class Config {
             setIfAbsent("timer.starttime", 0);
             setIfAbsent("timer.autostart", "DISABLED");
             setIfAbsent("timer.state", "PAUSED");
+            setIfAbsent("timer.playtime", 0);
             setIfAbsent("settings.onelife", "DISABLED");
             setIfAbsent("settings.geteilteherzen", "DISABLED");
             setIfAbsent("settings.respawn", "ENABLED");
@@ -368,6 +396,7 @@ public class Config {
             setIfAbsent("challenge.wither", "DISABLED");
             setIfAbsent("challenge.enderdragon", "ENABLED");
             setIfAbsent("positions.list", null);
+            setIfAbsent("playtime.total", 0);
 
             //challenges
             setIfAbsent("challenge.flyondamage", "DISABLED");
@@ -417,6 +446,17 @@ public class Config {
             setIfAbsent("challenge.random_drops.state", "DISABLED");
                 setIfAbsent("challenge.random_drops.allrandom", false);
             setIfAbsent("challenge.disappearing_blocks", "DISABLED");
+            setIfAbsent("challenge.random_chunk_generation", "DISABLED");
+            setIfAbsent("challenge.everything_reverse.state", "DISABLED");
+                setIfAbsent("challenge.everything_reverse.blockplace", true);
+                setIfAbsent("challenge.everything_reverse.blockbreak", true);
+                setIfAbsent("challenge.everything_reverse.mobkill", true);
+                setIfAbsent("challenge.everything_reverse.delay", 5);
+            setIfAbsent("challenge.water_mlg.state", "DISABLED");
+                setIfAbsent("challenge.water_mlg.mintime", 300);
+                setIfAbsent("challenge.water_mlg.maxtime", 600);
+                setIfAbsent("challenge.water_mlg.minheight", 30);
+                setIfAbsent("challenge.water_mlg.maxheight", 50);
 
             //lists
             setIfAbsent("project.allitems.state", "DISABLED");
@@ -529,5 +569,27 @@ public class Config {
         if (!Config.contains(path)) {
             Config.set(path, value);
         }
+    }
+
+    public static ArrayList<Boolean> createBooleanList(Boolean b) {
+        ArrayList<Boolean> arrayList = new ArrayList<>();
+        arrayList.add(b);
+        return arrayList;
+    }
+
+    public static ArrayList<Boolean> addToBooleanList(ArrayList<Boolean> arrayList, Boolean b) {
+        arrayList.add(b);
+        return arrayList;
+    }
+
+    public static ArrayList<Integer> createIntList(Integer i) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        arrayList.add(i);
+        return arrayList;
+    }
+
+    public static ArrayList<Integer> addToIntList(ArrayList<Integer> arrayList, Integer i) {
+        arrayList.add(i);
+        return arrayList;
     }
 }

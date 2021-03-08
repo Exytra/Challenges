@@ -1,16 +1,14 @@
 package me.aaron.timer.listeners;
 
-import me.aaron.timer.utils.Timer;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
+import me.aaron.timer.utils.Timer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.Vector;
-
-import static java.lang.Math.round;
 
 
 public class DamageListener implements Listener {
@@ -27,14 +25,14 @@ public class DamageListener implements Listener {
                 e.setCancelled(true);
             }
             String DamageCause;
-            double Damage = e.getDamage();
+            double Damage = e.getFinalDamage();
 
             if (e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
                 DamageCause = "Explosion";
             } else if (e.getCause() == EntityDamageEvent.DamageCause.CONTACT) {
                 DamageCause = "Kontakt";
             } else if (e.getCause() == EntityDamageEvent.DamageCause.CRAMMING) {
-                DamageCause = "Zerquetschung";
+                DamageCause = "Cramming";
             } else if (e.getCause() == EntityDamageEvent.DamageCause.DRAGON_BREATH) {
                 DamageCause = "Drachenatem";
             } else if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
@@ -90,5 +88,13 @@ public class DamageListener implements Listener {
                 }
             }
         }
+        //Bukkit.broadcastMessage("HI2");
+        /*if (SettingsModes.challenge.get(SettingsItems.ItemType.EVERYTHING_REVERSE) == SettingsItems.ItemState.ENABLED && SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(2) && !e.getEntity().getType().isAlive()) {
+            if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
+                    world.spawnEntity(deathLocation, entityType);
+                }, Utils.TimeToTicks(0, 0, SettingsModes.customSettingsInts.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(0)));
+            }
+        }*/
     }
 }
