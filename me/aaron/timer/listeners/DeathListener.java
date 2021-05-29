@@ -1,7 +1,8 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
-import me.aaron.timer.challenges.MLG;
+import me.aaron.timer.challenges.RandomMLG;
+import me.aaron.timer.challenges.WaterMLG;
 import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
@@ -75,7 +76,13 @@ public class DeathListener implements Listener {
 
         if (SettingsModes.challenge.get(SettingsItems.ItemType.WATER_MLG) == SettingsItems.ItemState.ENABLED) {
             if (e.getEntity().getLocation().getWorld().getName().equalsIgnoreCase("MLG-World")) {
-                MLG.deadPlayers.add(e.getEntity().getPlayer());
+                WaterMLG.deadPlayers.add(e.getEntity().getPlayer());
+            }
+        }
+
+        if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_MLG) == SettingsItems.ItemState.ENABLED) {
+            if (e.getEntity().getLocation().getWorld().getName().equalsIgnoreCase("MLG-World")) {
+                RandomMLG.deadPlayers.add(e.getEntity().getPlayer());
             }
         }
     }

@@ -1,5 +1,6 @@
 package me.aaron.timer.listeners;
 
+import me.aaron.timer.Main;
 import me.aaron.timer.utils.SettingsItems;
 import me.aaron.timer.utils.SettingsModes;
 import me.aaron.timer.utils.Timer;
@@ -85,6 +86,13 @@ public class DamageListener implements Listener {
                         p.setVelocity(new Vector(0, 3, 0));
                         p.damage(e.getDamage());
                     }
+                }
+            }
+
+            if (SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY) == SettingsItems.ItemState.ENABLED) {
+                if (Timer.state == Timer.TimerState.RUNNING || SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.DISABLED) {
+                    p.getInventory().clear();
+                    p.sendMessage(Main.getPrefix("Damage clears inventory", "Du hast §cSchaden §7genommen und dein Inventory wurde §cgecleart§7! §aY§ci§ek§9e§ds"));
                 }
             }
         }

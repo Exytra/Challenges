@@ -15,7 +15,7 @@ public class QuitListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        e.setQuitMessage("§c« §f" + Permissions.getPrefix(Permissions.getRank(p)) + "§f" + p.getName());
+        e.setQuitMessage("§c« §f" + Permissions.getPrefix(Permissions.getRank(p)) + "§7" + p.getName());
         MoveListener.lastMovement.remove(p);
         if (Bukkit.getOnlinePlayers().size() == 1) {
             if (Timer.state == Timer.TimerState.RUNNING && SettingsModes.settings.get(SettingsItems.ItemType.TIMER) == SettingsItems.ItemState.ENABLED) {

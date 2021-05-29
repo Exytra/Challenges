@@ -40,7 +40,7 @@ public final class Main extends JavaPlugin {
 
     public static boolean debug = false;
 
-    public static final String version = "2.7";
+    public static final String version = "2.8";
 
     public Trafficlight trafficlight;
 
@@ -79,7 +79,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        MLG.createMLGWorld();
+        WaterMLG.createMLGWorld();
         Timer.firststart = true;
         Config config = new Config();
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -154,7 +154,8 @@ public final class Main extends JavaPlugin {
         }
         AFK.start();
         Permissions.start();
-        MLG.start();
+        WaterMLG.start();
+        RandomMLG.start();
 
         TextComponent component = new TextComponent(" Download");
         component.setColor(ChatColor.BLUE);
@@ -192,6 +193,7 @@ public final class Main extends JavaPlugin {
         if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION) == SettingsItems.ItemState.ENABLED) {
             RandomChunkGeneration.start();
         }
+        Medusa.start();
     }
 
     @Override

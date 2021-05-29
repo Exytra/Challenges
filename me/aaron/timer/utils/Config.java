@@ -1,13 +1,17 @@
 package me.aaron.timer.utils;
 
+import jdk.management.resource.internal.ResourceNatives;
 import me.aaron.timer.Main;
 import me.aaron.timer.challenges.*;
 import me.aaron.timer.commands.BackpackCommand;
+import me.aaron.timer.projects.AllAchievements;
 import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.projects.AllItems;
 import me.aaron.timer.projects.AllMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -176,10 +180,17 @@ public class Config {
                 config.set("challenge.everything_reverse.mobkill", SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(2));
                 config.set("challenge.everything_reverse.delay", SettingsModes.customSettingsInts.get(SettingsItems.ItemType.EVERYTHING_REVERSE).get(0));
             config.set("challenge.water_mlg.state", SettingsModes.challenge.get(SettingsItems.ItemType.WATER_MLG).name());
-                config.set("challenge.water_mlg.mintime", MLG.minTime);
-                config.set("challenge.water_mlg.maxtime", MLG.maxTime);
-                config.set("challenge.water_mlg.minheight", MLG.minHeight);
-                config.set("challenge.water_mlg.maxheight", MLG.maxHeight);
+                config.set("challenge.water_mlg.mintime", WaterMLG.minTime);
+                config.set("challenge.water_mlg.maxtime", WaterMLG.maxTime);
+                config.set("challenge.water_mlg.minheight", WaterMLG.minHeight);
+                config.set("challenge.water_mlg.maxheight", WaterMLG.maxHeight);
+            config.set("challenge.medusa", SettingsModes.challenge.get(SettingsItems.ItemType.MEDUSA).name());
+            config.set("challenge.damage_clears_inventory", SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY).name());
+            config.set("challenge.random_mlg.state", SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_MLG).name());
+                config.set("challenge.random_mlg.mintime", RandomMLG.minTime);
+                config.set("challenge.random_mlg.maxtime", RandomMLG.maxTime);
+                config.set("challenge.random_mlg.minheight", RandomMLG.minHeight);
+                config.set("challenge.random_mlg.maxheight", RandomMLG.maxHeight);
 
             //projects
             config.set("project.allitems.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS).name());
@@ -204,6 +215,12 @@ public class Config {
                 config.set("backpack." + i + ".type", BackpackCommand.inventory.getItem(i) == null ? "AIR" : BackpackCommand.inventory.getItem(i).getType().name());
                 config.set("backpack." + i + ".amount", BackpackCommand.inventory.getItem(i) == null ? 0 : BackpackCommand.inventory.getItem(i).getAmount());
             }
+
+            config.set("project.allachievements.state", SettingsModes.projects.get(SettingsItems.ItemType.ALL_ACHIEVEMENTS).name());
+            if (AllAchievements.gottenAchievements.size() != 0) {
+                config.set("project.allachievements.list", AllAchievements.gottenAchievements);
+            }
+
             if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_DROPS) == SettingsItems.ItemState.ENABLED) {
                 for (int i = 0; i < Material.values().length; i ++) {
                     try {
@@ -221,139 +238,147 @@ public class Config {
 
     public static boolean loadConfig() {
         if (Config.file.exists()) {
-            try {
-                Main.debug = Config.getBoolean("dev.debugmode");
-                SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.valueOf(Config.getString("timer.reverse")));
-                SettingsModes.startTime = Config.getInt("timer.starttime");
-                SettingsModes.currentTime = Config.getInt("timer.currenttime");
-                SettingsModes.timer.put(SettingsItems.ItemType.AUTOSTART, SettingsItems.ItemState.valueOf(Config.getString("timer.autostart")));
-                Timer.state = Timer.TimerState.valueOf(Config.getString("timer.state"));
-                SettingsModes.settings.put(SettingsItems.ItemType.ONELIFE, SettingsItems.ItemState.valueOf(Config.getString("settings.onelife")));
-                SettingsModes.settings.put(SettingsItems.ItemType.GEITEILTEHERZEN, SettingsItems.ItemState.valueOf(Config.getString("settings.geteilteherzen")));
-                SettingsModes.settings.put(SettingsItems.ItemType.RESPAWN, SettingsItems.ItemState.valueOf(Config.getString("settings.respawn")));
-                SettingsModes.settings.put(SettingsItems.ItemType.DMGALERT, SettingsItems.ItemState.valueOf(Config.getString("settings.dmgalert")));
-                SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.valueOf(Config.getString("settings.timer")));
-                SettingsModes.settings.put(SettingsItems.ItemType.BACKPACK, SettingsItems.ItemState.valueOf(Config.getString("settings.backpack")));
-                SettingsModes.settings.put(SettingsItems.ItemType.SCOREBOARD, SettingsItems.ItemState.valueOf(Config.getString("settings.scoreboard")));
-                SettingsModes.settings.put(SettingsItems.ItemType.SHOWCOORDSONDEAETH, SettingsItems.ItemState.valueOf(Config.getString("settings.showcoordsondeath")));
-                SettingsModes.maxHP = Config.getDouble("settings.maxhp");
-                SettingsModes.settings.put(SettingsItems.ItemType.SENDTITLE, SettingsItems.ItemState.valueOf(Config.getString("settings.sendtitle")));
-                SettingsModes.settings.put(SettingsItems.ItemType.RESETCONFIRM, SettingsItems.ItemState.valueOf(Config.getString("settings.resetconfirm")));
-                SettingsModes.settings.put(SettingsItems.ItemType.HARDCORE, SettingsItems.ItemState.valueOf(Config.getString("settings.hardcore")));
-                SettingsModes.settings.put(SettingsItems.ItemType.BUNGEECORD, SettingsItems.ItemState.valueOf(Config.getString("settings.bungeecord")));
-                SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, Config.getInt("settings.backup"));
-                SettingsModes.settings.put(SettingsItems.ItemType.BACKUP, (Config.getInt("settings.backup") == 0) ? SettingsItems.ItemState.DISABLED : SettingsItems.ItemState.ENABLED);
-                Backup.timertime = Config.getInt("settings.backuptimer");
-                SettingsModes.settings.put(SettingsItems.ItemType.AFK, SettingsItems.ItemState.valueOf(Config.getString("settings.afk")));
-                SettingsModes.settings.put(SettingsItems.ItemType.STATS, SettingsItems.ItemState.valueOf(Config.getString("settings.stats")));
-                SettingsModes.settings.put(SettingsItems.ItemType.UPDATE_CHECKER, SettingsItems.ItemState.valueOf(Config.getString("settings.update-checker")));
-                SettingsModes.scoreboard.put(SettingsItems.ItemType.TABHP, SettingsItems.ItemState.valueOf(Config.getString("scoreboard.tabhp")));
-                SettingsModes.gamerule.put(SettingsItems.ItemType.NATURALREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.naturalregeneration")));
-                SettingsModes.gamerule.put(SettingsItems.ItemType.OTHERREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.otherregeneration")));
-                SettingsModes.gamerule.put(SettingsItems.ItemType.PVP, SettingsItems.ItemState.valueOf(Config.getString("gamerule.pvp")));
-                SettingsModes.gamerule.put(SettingsItems.ItemType.KEEP_INVENTORY, SettingsItems.ItemState.valueOf(Config.getString("gamerule.keepinventory")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.WITHER, SettingsItems.ItemState.valueOf(Config.getString("challenge.wither")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.ENDER_DRAGON, SettingsItems.ItemState.valueOf(Config.getString("challenge.enderdragon")));
-                if (contains("positions.list")) {
-                    Position.positionlist = getArrayList("positions.list");
-                }
-                Timer.totalPlaytime = Config.getInt("playtime.total");
-                for (Player pl : Bukkit.getOnlinePlayers()) {
-                    Timer.playtime.put(pl, Config.getInt("playtime.player." + pl.getUniqueId().toString()));
-                }
+            Main.debug = Config.getBoolean("dev.debugmode");
+            SettingsModes.timer.put(SettingsItems.ItemType.REVERSE, SettingsItems.ItemState.valueOf(Config.getString("timer.reverse")));
+            SettingsModes.startTime = Config.getInt("timer.starttime");
+            SettingsModes.currentTime = Config.getInt("timer.currenttime");
+            SettingsModes.timer.put(SettingsItems.ItemType.AUTOSTART, SettingsItems.ItemState.valueOf(Config.getString("timer.autostart")));
+            Timer.state = Timer.TimerState.valueOf(Config.getString("timer.state"));
+            SettingsModes.settings.put(SettingsItems.ItemType.ONELIFE, SettingsItems.ItemState.valueOf(Config.getString("settings.onelife")));
+            SettingsModes.settings.put(SettingsItems.ItemType.GEITEILTEHERZEN, SettingsItems.ItemState.valueOf(Config.getString("settings.geteilteherzen")));
+            SettingsModes.settings.put(SettingsItems.ItemType.RESPAWN, SettingsItems.ItemState.valueOf(Config.getString("settings.respawn")));
+            SettingsModes.settings.put(SettingsItems.ItemType.DMGALERT, SettingsItems.ItemState.valueOf(Config.getString("settings.dmgalert")));
+            SettingsModes.settings.put(SettingsItems.ItemType.TIMER, SettingsItems.ItemState.valueOf(Config.getString("settings.timer")));
+            SettingsModes.settings.put(SettingsItems.ItemType.BACKPACK, SettingsItems.ItemState.valueOf(Config.getString("settings.backpack")));
+            SettingsModes.settings.put(SettingsItems.ItemType.SCOREBOARD, SettingsItems.ItemState.valueOf(Config.getString("settings.scoreboard")));
+            SettingsModes.settings.put(SettingsItems.ItemType.SHOWCOORDSONDEAETH, SettingsItems.ItemState.valueOf(Config.getString("settings.showcoordsondeath")));
+            SettingsModes.maxHP = Config.getDouble("settings.maxhp");
+            SettingsModes.settings.put(SettingsItems.ItemType.SENDTITLE, SettingsItems.ItemState.valueOf(Config.getString("settings.sendtitle")));
+            SettingsModes.settings.put(SettingsItems.ItemType.RESETCONFIRM, SettingsItems.ItemState.valueOf(Config.getString("settings.resetconfirm")));
+            SettingsModes.settings.put(SettingsItems.ItemType.HARDCORE, SettingsItems.ItemState.valueOf(Config.getString("settings.hardcore")));
+            SettingsModes.settings.put(SettingsItems.ItemType.BUNGEECORD, SettingsItems.ItemState.valueOf(Config.getString("settings.bungeecord")));
+            SettingsModes.ints.put(SettingsItems.ItemType.BACKUP, Config.getInt("settings.backup"));
+            SettingsModes.settings.put(SettingsItems.ItemType.BACKUP, (Config.getInt("settings.backup") == 0) ? SettingsItems.ItemState.DISABLED : SettingsItems.ItemState.ENABLED);
+            Backup.timertime = Config.getInt("settings.backuptimer");
+            SettingsModes.settings.put(SettingsItems.ItemType.AFK, SettingsItems.ItemState.valueOf(Config.getString("settings.afk")));
+            SettingsModes.settings.put(SettingsItems.ItemType.STATS, SettingsItems.ItemState.valueOf(Config.getString("settings.stats")));
+            SettingsModes.settings.put(SettingsItems.ItemType.UPDATE_CHECKER, SettingsItems.ItemState.valueOf(Config.getString("settings.update-checker")));
+            SettingsModes.scoreboard.put(SettingsItems.ItemType.TABHP, SettingsItems.ItemState.valueOf(Config.getString("scoreboard.tabhp")));
+            SettingsModes.gamerule.put(SettingsItems.ItemType.NATURALREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.naturalregeneration")));
+            SettingsModes.gamerule.put(SettingsItems.ItemType.OTHERREGENERATION, SettingsItems.ItemState.valueOf(Config.getString("gamerule.otherregeneration")));
+            SettingsModes.gamerule.put(SettingsItems.ItemType.PVP, SettingsItems.ItemState.valueOf(Config.getString("gamerule.pvp")));
+            SettingsModes.gamerule.put(SettingsItems.ItemType.KEEP_INVENTORY, SettingsItems.ItemState.valueOf(Config.getString("gamerule.keepinventory")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.WITHER, SettingsItems.ItemState.valueOf(Config.getString("challenge.wither")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.ENDER_DRAGON, SettingsItems.ItemState.valueOf(Config.getString("challenge.enderdragon")));
+            if (contains("positions.list")) {
+                Position.positionlist = getArrayList("positions.list");
+            }
+            Timer.totalPlaytime = Config.getInt("playtime.total");
+            for (Player pl : Bukkit.getOnlinePlayers()) {
+                Timer.playtime.put(pl, Config.getInt("playtime.player." + pl.getUniqueId().toString()));
+            }
 
-                //challenges
-                SettingsModes.challenge.put(SettingsItems.ItemType.FLYONDAMAGE, SettingsItems.ItemState.valueOf(Config.getString("challenge.flyondamage")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.SPEED, SettingsItems.ItemState.valueOf(Config.getString("challenge.speed.state")));
-                    SettingsModes.speed = getInt("challenge.speed.speed");
-                SettingsModes.challenge.put(SettingsItems.ItemType.DIRT, SettingsItems.ItemState.valueOf(Config.getString("challenge.dirt")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.TENHEARTS, SettingsItems.ItemState.valueOf(Config.getString("challenge.tenhearts")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.TRAFFICLIGHT, SettingsItems.ItemState.valueOf(Config.getString("challenge.trafficlight.state")));
-                    Trafficlight.min_green = Config.getInt("challenge.trafficlight.min_green");
-                    Trafficlight.max_green = Config.getInt("challenge.trafficlight.max_green");
-                    Trafficlight.min_yellow = Config.getInt("challenge.trafficlight.min_yellow");
-                    Trafficlight.max_yellow = Config.getInt("challenge.trafficlight.max_yellow");
-                    Trafficlight.min_red = Config.getInt("challenge.trafficlight.min_red");
-                    Trafficlight.max_red = Config.getInt("challenge.trafficlight.max_red");
-                SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.valueOf(Config.getString("challenge.oneblockoneheart.state")));
-                    SettingsModes.distanceToGetDamaged = Config.getInt("challenge.oneblockoneheart.blocks");
-                SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.valueOf(Config.getString("challenge.damagemirror.state")));
-                    SettingsModes.probabilityToMirrorDamage = Config.getInt("challenge.damagemirror.probability");
-                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.valueOf(Config.getString("challenge.forceblock.state")));
-                    ForceBlock.FreeTimeMin = Config.getInt("challenge.forceblock.freetimemin");
-                    ForceBlock.FreeTimeMax = Config.getInt("challenge.forceblock.freetimemax");
-                    ForceBlock.SearchTimeMin = Config.getInt("challenge.forceblock.searchtimemin");
-                    ForceBlock.SearchTimeMax = Config.getInt("challenge.forceblock.searchtimemax");
-                SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.valueOf(Config.getString("challenge.bedrockwall.state")));
-                    SettingsModes.BedrockDelay = Config.getInt("challenge.bedrockwall.delay");
-                SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.valueOf(Config.getString("challenge.thefloorislava.state")));
-                    SettingsModes.MagmaTime = Config.getInt("challenge.thefloorislava.magmatime");
-                    SettingsModes.LavaTime = Config.getInt("challenge.thefloorislava.lavatime");
-                    SettingsModes.ResetTime = Config.getInt("challenge.thefloorislava.resettime");
-                SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.valueOf(Config.getString("challenge.forcemob.state")));
-                    ForceMob.FreeTimeMin = Config.getInt("challenge.forcemob.freetimemin");
-                    ForceMob.FreeTimeMax = Config.getInt("challenge.forcemob.freetimemax");
-                    ForceMob.SearchTimeMin = Config.getInt("challenge.forcemob.searchtimemin");
-                    ForceMob.SearchTimeMax = Config.getInt("challenge.forcemob.searchtimemax");
-                SettingsModes.challenge.put(SettingsItems.ItemType.NO_CRAFTING, SettingsItems.ItemState.valueOf(Config.getString("challenge.no_crafting")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.NO_TRADING, SettingsItems.ItemState.valueOf(Config.getString("challenge.no_trading")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.valueOf(Config.getString("challenge.forceheight.state")));
-                    ForceHeight.FreeTimeMin = Config.getInt("challenge.forceheight.freetimemin");
-                    ForceHeight.FreeTimeMax = Config.getInt("challenge.forceheight.freetimemax");
-                    ForceHeight.SearchTimeMin = Config.getInt("challenge.forceheight.searchtimemin");
-                    ForceHeight.SearchTimeMax = Config.getInt("challenge.forceheight.searchtimemax");
-                SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.valueOf(Config.getString("challenge.forcebiome.state")));
-                    ForceBiome.FreeTimeMin = Config.getInt("challenge.forcebiome.freetimemin");
-                    ForceBiome.FreeTimeMax = Config.getInt("challenge.forcebiome.freetimemax");
-                    ForceBiome.SearchTimeMin = Config.getInt("challenge.forcebiome.searchtimemin");
-                    ForceBiome.SearchTimeMax = Config.getInt("challenge.forcebiome.searchtimemax");
-                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_DROPS, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_drops.state")));
-                    RandomDrops.allRandom = getBoolean("challenge.random_drops.allrandom");
-                SettingsModes.challenge.put(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsItems.ItemState.valueOf(Config.getString("challenge.disappearing_blocks")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_chunk_generation")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.EVERYTHING_REVERSE, SettingsItems.ItemState.valueOf(Config.getString("challenge.everything_reverse.state")));
-                    SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, createBooleanList(Config.getBoolean("challenge.everything_reverse.blockbreak")));
-                    SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, addToBooleanList(SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE), Config.getBoolean("challenge.everything_reverse.blockplace")));
-                    SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, addToBooleanList(SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE), Config.getBoolean("challenge.everything_reverse.mobkill")));
-                    SettingsModes.customSettingsInts.put(SettingsItems.ItemType.EVERYTHING_REVERSE, createIntList(Config.getInt("challenge.everything_reverse.delay")));
-                SettingsModes.challenge.put(SettingsItems.ItemType.WATER_MLG, SettingsItems.ItemState.valueOf(Config.getString("challenge.water_mlg.state")));
-                    MLG.minTime = Config.getInt("challenge.water_mlg.mintime");
-                    MLG.maxTime = Config.getInt("challenge.water_mlg.maxtime");
-                    MLG.minHeight = Config.getInt("challenge.water_mlg.minheight");
-                    MLG.maxHeight = Config.getInt("challenge.water_mlg.maxheight");
+            //challenges
+            SettingsModes.challenge.put(SettingsItems.ItemType.FLYONDAMAGE, SettingsItems.ItemState.valueOf(Config.getString("challenge.flyondamage")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.SPEED, SettingsItems.ItemState.valueOf(Config.getString("challenge.speed.state")));
+            SettingsModes.speed = getInt("challenge.speed.speed");
+            SettingsModes.challenge.put(SettingsItems.ItemType.DIRT, SettingsItems.ItemState.valueOf(Config.getString("challenge.dirt")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.TENHEARTS, SettingsItems.ItemState.valueOf(Config.getString("challenge.tenhearts")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.TRAFFICLIGHT, SettingsItems.ItemState.valueOf(Config.getString("challenge.trafficlight.state")));
+                Trafficlight.min_green = Config.getInt("challenge.trafficlight.min_green");
+                Trafficlight.max_green = Config.getInt("challenge.trafficlight.max_green");
+                Trafficlight.min_yellow = Config.getInt("challenge.trafficlight.min_yellow");
+                Trafficlight.max_yellow = Config.getInt("challenge.trafficlight.max_yellow");
+                Trafficlight.min_red = Config.getInt("challenge.trafficlight.min_red");
+                Trafficlight.max_red = Config.getInt("challenge.trafficlight.max_red");
+            SettingsModes.challenge.put(SettingsItems.ItemType.ONEBLOCKONEHEART, SettingsItems.ItemState.valueOf(Config.getString("challenge.oneblockoneheart.state")));
+                SettingsModes.distanceToGetDamaged = Config.getInt("challenge.oneblockoneheart.blocks");
+            SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGEMIRROR, SettingsItems.ItemState.valueOf(Config.getString("challenge.damagemirror.state")));
+                SettingsModes.probabilityToMirrorDamage = Config.getInt("challenge.damagemirror.probability");
+            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEBLOCK, SettingsItems.ItemState.valueOf(Config.getString("challenge.forceblock.state")));
+                ForceBlock.FreeTimeMin = Config.getInt("challenge.forceblock.freetimemin");
+                ForceBlock.FreeTimeMax = Config.getInt("challenge.forceblock.freetimemax");
+                ForceBlock.SearchTimeMin = Config.getInt("challenge.forceblock.searchtimemin");
+                ForceBlock.SearchTimeMax = Config.getInt("challenge.forceblock.searchtimemax");
+            SettingsModes.challenge.put(SettingsItems.ItemType.BEDROCKWALL, SettingsItems.ItemState.valueOf(Config.getString("challenge.bedrockwall.state")));
+                SettingsModes.BedrockDelay = Config.getInt("challenge.bedrockwall.delay");
+            SettingsModes.challenge.put(SettingsItems.ItemType.THEFLOORISLAVA, SettingsItems.ItemState.valueOf(Config.getString("challenge.thefloorislava.state")));
+                SettingsModes.MagmaTime = Config.getInt("challenge.thefloorislava.magmatime");
+                SettingsModes.LavaTime = Config.getInt("challenge.thefloorislava.lavatime");
+                SettingsModes.ResetTime = Config.getInt("challenge.thefloorislava.resettime");
+            SettingsModes.challenge.put(SettingsItems.ItemType.FORCEMOB, SettingsItems.ItemState.valueOf(Config.getString("challenge.forcemob.state")));
+                ForceMob.FreeTimeMin = Config.getInt("challenge.forcemob.freetimemin");
+                ForceMob.FreeTimeMax = Config.getInt("challenge.forcemob.freetimemax");
+                ForceMob.SearchTimeMin = Config.getInt("challenge.forcemob.searchtimemin");
+                ForceMob.SearchTimeMax = Config.getInt("challenge.forcemob.searchtimemax");
+            SettingsModes.challenge.put(SettingsItems.ItemType.NO_CRAFTING, SettingsItems.ItemState.valueOf(Config.getString("challenge.no_crafting")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.NO_TRADING, SettingsItems.ItemState.valueOf(Config.getString("challenge.no_trading")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_HEIGHT, SettingsItems.ItemState.valueOf(Config.getString("challenge.forceheight.state")));
+                ForceHeight.FreeTimeMin = Config.getInt("challenge.forceheight.freetimemin");
+                ForceHeight.FreeTimeMax = Config.getInt("challenge.forceheight.freetimemax");
+                ForceHeight.SearchTimeMin = Config.getInt("challenge.forceheight.searchtimemin");
+                ForceHeight.SearchTimeMax = Config.getInt("challenge.forceheight.searchtimemax");
+            SettingsModes.challenge.put(SettingsItems.ItemType.FORCE_BIOME, SettingsItems.ItemState.valueOf(Config.getString("challenge.forcebiome.state")));
+                ForceBiome.FreeTimeMin = Config.getInt("challenge.forcebiome.freetimemin");
+                ForceBiome.FreeTimeMax = Config.getInt("challenge.forcebiome.freetimemax");
+                ForceBiome.SearchTimeMin = Config.getInt("challenge.forcebiome.searchtimemin");
+                ForceBiome.SearchTimeMax = Config.getInt("challenge.forcebiome.searchtimemax");
+            SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_DROPS, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_drops.state")));
+                RandomDrops.allRandom = getBoolean("challenge.random_drops.allrandom");
+            SettingsModes.challenge.put(SettingsItems.ItemType.BLOCKS_WITH_PLAYER, SettingsItems.ItemState.valueOf(Config.getString("challenge.disappearing_blocks")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_chunk_generation")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.EVERYTHING_REVERSE, SettingsItems.ItemState.valueOf(Config.getString("challenge.everything_reverse.state")));
+                SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, createBooleanList(Config.getBoolean("challenge.everything_reverse.blockbreak")));
+                SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, addToBooleanList(SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE), Config.getBoolean("challenge.everything_reverse.blockplace")));
+                SettingsModes.customSettingsBooleans.put(SettingsItems.ItemType.EVERYTHING_REVERSE, addToBooleanList(SettingsModes.customSettingsBooleans.get(SettingsItems.ItemType.EVERYTHING_REVERSE), Config.getBoolean("challenge.everything_reverse.mobkill")));
+                SettingsModes.customSettingsInts.put(SettingsItems.ItemType.EVERYTHING_REVERSE, createIntList(Config.getInt("challenge.everything_reverse.delay")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.WATER_MLG, SettingsItems.ItemState.valueOf(Config.getString("challenge.water_mlg.state")));
+                WaterMLG.minTime = Config.getInt("challenge.water_mlg.mintime");
+                WaterMLG.maxTime = Config.getInt("challenge.water_mlg.maxtime");
+                WaterMLG.minHeight = Config.getInt("challenge.water_mlg.minheight");
+                WaterMLG.maxHeight = Config.getInt("challenge.water_mlg.maxheight");
+            SettingsModes.challenge.put(SettingsItems.ItemType.MEDUSA, SettingsItems.ItemState.valueOf(Config.getString("challenge.medusa")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY, SettingsItems.ItemState.valueOf(Config.getString("challenge.damage_clears_inventory")));
+            SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_MLG, SettingsItems.ItemState.valueOf(Config.getString("challenge.random_mlg.state")));
+                RandomMLG.minTime = Config.getInt("challenge.random_mlg.mintime");
+                RandomMLG.maxTime = Config.getInt("challenge.random_mlg.maxtime");
+                RandomMLG.minHeight = Config.getInt("challenge.random_mlg.minheight");
+                RandomMLG.maxHeight = Config.getInt("challenge.random_mlg.maxheight");
 
                 //lists
-                SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.valueOf(Config.getString("project.allitems.state")));
-                if (contains("project.allitems.items")) {
-                    AllItems.items = getArrayList("project.allitems.items");
+            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ITEMS, SettingsItems.ItemState.valueOf(Config.getString("project.allitems.state")));
+            if (contains("project.allitems.items")) {
+                AllItems.items = getArrayList("project.allitems.items");
+            }
+            if (contains("project.allitems.current")) {
+                AllItems.item = Material.valueOf(Config.getString("project.allitems.current"));
+            }
+            SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.valueOf(Config.getString("project.allmobs.state")));
+            if (contains("project.allmobs.mobs")) {
+                AllMobs.mobnames = getArrayList("project.allmobs.mobs");
+                for (String name : AllMobs.mobnames) {
+                    AllMobs.entities.add(EntityType.valueOf(name));
                 }
-                if (contains("project.allitems.current")) {
-                    AllItems.item = Material.valueOf(Config.getString("project.allitems.current"));
-                }
-                SettingsModes.projects.put(SettingsItems.ItemType.ALL_MOBS, SettingsItems.ItemState.valueOf(Config.getString("project.allmobs.state")));
-                if (contains("project.allmobs.mobs")) {
-                    AllMobs.mobnames = getArrayList("project.allmobs.mobs");
-                    for (String name : AllMobs.mobnames) {
-                        AllMobs.entities.add(EntityType.valueOf(name));
+            }
+            if (contains("random_drops.drops")) {
+                for (int i = 0; i < Material.values().length; i++) {
+                    try {
+                        RandomDrops.drops.put(RandomDrops.makeToItemStack(Material.values()[i]), RandomDrops.makeToItemStack(Material.valueOf(Config.getString("random_drops.drops." + Material.values()[i].name()))));
+                    } catch (Exception ignored) {
                     }
                 }
-                if (contains("random_drops.drops")) {
-                    for (int i = 0; i < Material.values().length; i++) {
-                        try {
-                            RandomDrops.drops.put(RandomDrops.makeToItemStack(Material.values()[i]), RandomDrops.makeToItemStack(Material.valueOf(Config.getString("random_drops.drops." + Material.values()[i].name()))));
-                        } catch (Exception ignored) {
-                        }
-                    }
-                }
-                SettingsModes.projects.put(SettingsItems.ItemType.ALL_DEATHS, SettingsItems.ItemState.valueOf(Config.getString("project.alldeaths.state")));
-                if (contains("project.alldeaths.messages")) {
-                    AllDeathMessages.deathMessages = getArrayList("project.alldeaths.messages");
-                }
-                if (contains("project.alldeaths.current")) {
-                    AllDeathMessages.currentDeathMessage = Config.getString("project.alldeaths.current");
-                }
-            } catch (Exception e) {
-                resetConfig();
+            }
+            SettingsModes.projects.put(SettingsItems.ItemType.ALL_DEATHS, SettingsItems.ItemState.valueOf(Config.getString("project.alldeaths.state")));
+            if (contains("project.alldeaths.messages")) {
+                AllDeathMessages.deathMessages = getArrayList("project.alldeaths.messages");
+            }
+            if (contains("project.alldeaths.current")) {
+                AllDeathMessages.currentDeathMessage = Config.getString("project.alldeaths.current");
+            }
+
+            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ACHIEVEMENTS, SettingsItems.ItemState.valueOf(Config.getString("project.allachievements.state")));
+            if (contains("project.allachievements.list")) {
+                AllAchievements.gottenAchievements = Config.getArrayList("project.allachievements.list");
             }
         } else {
             resetConfig();
@@ -457,6 +482,13 @@ public class Config {
                 setIfAbsent("challenge.water_mlg.maxtime", 600);
                 setIfAbsent("challenge.water_mlg.minheight", 30);
                 setIfAbsent("challenge.water_mlg.maxheight", 50);
+            setIfAbsent("challenge.medusa", "DISABLED");
+            setIfAbsent("challenge.damage_clears_inventory", "DISABLED");
+            setIfAbsent("challenge.random_mlg.state", "DISABLED");
+                setIfAbsent("challenge.random_mlg.mintime", 300);
+                setIfAbsent("challenge.random_mlg.maxtime", 600);
+                setIfAbsent("challenge.random_mlg.minheight", 30);
+                setIfAbsent("challenge.random_mlg.maxheight", 50);
 
             //lists
             setIfAbsent("project.allitems.state", "DISABLED");
@@ -469,6 +501,9 @@ public class Config {
             setIfAbsent("project.alldeaths.state", "DISABLED");
             setIfAbsent("project.alldeaths.messages", null);
             setIfAbsent("project.alldeaths.current", null);
+
+            setIfAbsent("project.allachievements.state", "DISABLED");
+            setIfAbsent("project.allachievements.list", null);
 
             setIfAbsent("random_drops.drops", null);
 

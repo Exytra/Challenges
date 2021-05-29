@@ -120,7 +120,6 @@ public class SettingsItems {
                 itemLore.add("§8[§2Aktiv§8]");
                 itemLore.add(" ");
             }
-            Settings.addThisChallengeCanBeModified(itemLore);
         } else if (type == ItemType.NATURALREGENERATION) {
             itemMeta.setDisplayName("§6Natürliche Regeneration");
             itemLore.add(" ");
@@ -847,8 +846,6 @@ public class SettingsItems {
             itemLore.add("§9Beschreibung:");
             itemLore.add("§7Die Ganze Welt wird zufällig");
             itemLore.add("§7generiert.");
-            itemLore.add("§7Chunk in dem er steht. Der Block");
-            itemLore.add("§7auf dem er steht wird mit Glas ersetzt.");
             itemLore.add(" ");
             itemLore.add("§cComing Soon");
             itemLore.add(" ");
@@ -884,6 +881,78 @@ public class SettingsItems {
             }
             itemLore.add(" ");
             Settings.addThisChallengeCanBeModified(itemLore);
+        } else if (type == ItemType.MEDUSA) {
+            itemStack = Utils.getHead(Enums.getHeadValue(Enums.Head.STONE_SLIME));
+            itemMeta = itemStack.getItemMeta();
+            itemMeta.setDisplayName("§6Medusa-Challenge");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Alle Mobs, die ein Spieler anguckt,");
+            itemLore.add("§7werden versteinert.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An/ Aus");
+            itemLore.add(" ");
+            itemLore.add("§cComing Soon!");
+            /*if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }*/
+            itemLore.add(" ");
+        } else if (type == ItemType.DAMAGE_CLEARS_INVENTORY) {
+            itemStack.setType(Material.DISPENSER);
+            itemMeta.setDisplayName("§6Schaden cleart Inventory");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Wenn ein Spieler schaden nimmt");
+            itemLore.add("§7Wird sein Inventory gecleart.");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An/ Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+        } else if (type == ItemType.RANDOM_MLG) {
+            itemStack.setType(Material.SLIME_BLOCK);
+            itemMeta.setDisplayName("§6Random MLG");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Alle paar Minuten werden");
+            itemLore.add("§7alle Spieler auf eine neue");
+            itemLore.add("§7Welt teleportiert und müssen");
+            itemLore.add("§7einen Random MLG schaffen!");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Links-Klick§8] §7An/ Aus");
+            itemLore.add("§8[§9Rechts-Klick§8] §7Einstellungen");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
+            Settings.addThisChallengeCanBeModified(itemLore);
+        } else if (type == ItemType.ALL_ACHIEVEMENTS) {
+            itemStack.setType(Material.SLIME_BLOCK);
+            itemMeta.setDisplayName("§6All Achievements");
+            itemLore.add(" ");
+            itemLore.add("§9Beschreibung:");
+            itemLore.add("§7Die Spieler müssen alle");
+            itemLore.add("§7Achievements bekommen. Bekommt");
+            itemLore.add("§7ein Spieler ein Achievement,");
+            itemLore.add("§7bekommen es alle");
+            itemLore.add(" ");
+            itemLore.add("§8[§9Klick§8] §7An/ Aus");
+            itemLore.add(" ");
+            if (state == ItemState.DISABLED) {
+                itemLore.add("§8[§4Inaktiv§8]");
+            } else {
+                itemLore.add("§8[§2Aktiv§8]");
+            }
+            itemLore.add(" ");
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -918,7 +987,7 @@ public class SettingsItems {
         } else if (type == ItemType.ONEBLOCKONEHEART) {
             Inventory inv = Bukkit.createInventory(null, 27, "§8Settings: §cLaufen = Schaden");
             Utils.fillWithGlass(inv);
-            inv.setItem(13, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Blöcke", "\n§9Beschreibung:\nDie Blöcke, die ein Spieler gehen muss, um Schaden zu bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + SettingsModes.distanceToGetDamaged + " §7Blöcke"));
+            inv.setItem(13, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Blöcke", "\n§9Beschreibung:\nDie Blöcke, die ein Spieler gehen muss, um Schaden zu bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + SettingsModes.distanceToGetDamaged + " §7Blöcke"));
             inv.setItem(18, Settings.Accept());
             return inv;
         } else if (type == ItemType.RANDOM_DROPS) {
@@ -994,12 +1063,21 @@ public class SettingsItems {
             inv.setItem(18, Settings.Accept());
             return inv;
         } else if (type == ItemType.WATER_MLG) {
-            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cWater MLG");
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cWater-MLG");
             Utils.fillWithGlass(inv);
-            inv.setItem(11, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Minimale Zeit bis zum MLG", "\n§9Beschreibung:\nDie minimale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + MLG.minTime / 60 + " Minuten"));
-            inv.setItem(20, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Maximale Zeit bis zum MLG", "\n§9Beschreibung:\nDie maximale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + MLG.maxTime / 60 + " Minuten"));
-            inv.setItem(15, Settings.createItemStack(Material.WATER_BUCKET, "§6Minimale Höhe", "\n§9Beschreibung:\nDie minimale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + MLG.minHeight + " Blöcke"));
-            inv.setItem(24, Settings.createItemStack(Material.WATER_BUCKET, "§6Maximale Höhe", "\n§9Beschreibung:\nDie maximale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + MLG.maxHeight + " Blöcke"));
+            inv.setItem(11, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Minimale Zeit bis zum MLG", "\n§9Beschreibung:\nDie minimale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + WaterMLG.minTime / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Maximale Zeit bis zum MLG", "\n§9Beschreibung:\nDie maximale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + WaterMLG.maxTime / 60 + " Minuten"));
+            inv.setItem(15, Settings.createItemStack(Material.WATER_BUCKET, "§6Minimale Höhe", "\n§9Beschreibung:\nDie minimale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + WaterMLG.minHeight + " Blöcke"));
+            inv.setItem(24, Settings.createItemStack(Material.WATER_BUCKET, "§6Maximale Höhe", "\n§9Beschreibung:\nDie maximale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + WaterMLG.maxHeight + " Blöcke"));
+            inv.setItem(27, Settings.Accept());
+            return inv;
+        } else if (type == ItemType.RANDOM_MLG) {
+            Inventory inv = Bukkit.createInventory(null, 36, "§8Settings: §cRandom-MLG");
+            Utils.fillWithGlass(inv);
+            inv.setItem(11, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Minimale Zeit bis zum MLG", "\n§9Beschreibung:\nDie minimale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + RandomMLG.minTime / 60 + " Minuten"));
+            inv.setItem(20, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Maximale Zeit bis zum MLG", "\n§9Beschreibung:\nDie maximale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + RandomMLG.maxTime / 60 + " Minuten"));
+            inv.setItem(15, Settings.createItemStack(Material.WATER_BUCKET, "§6Minimale Höhe", "\n§9Beschreibung:\nDie minimale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + RandomMLG.minHeight + " Blöcke"));
+            inv.setItem(24, Settings.createItemStack(Material.WATER_BUCKET, "§6Maximale Höhe", "\n§9Beschreibung:\nDie maximale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + RandomMLG.maxHeight + " Blöcke"));
             inv.setItem(27, Settings.Accept());
             return inv;
         }
@@ -1043,9 +1121,11 @@ public class SettingsItems {
         PVP,
         KEEP_INVENTORY,
 
-        // challenges
+        // goals
         WITHER,
         ENDER_DRAGON,
+
+        //challenges
         FLYONDAMAGE,
         SPEED,
         DIRT,
@@ -1073,9 +1153,9 @@ public class SettingsItems {
         ITEM_DECAY,
         WATER_MLG,
         RANDOM_MLG,
-        ITEM_DROP,
+        RANDOM_ITEM_DROPS,
         OTHER_DROP_RATES,
-        FIFTY_PERCENT_CHUNK_DESTRUCTION,
+        HALF_CHUNK_DESTRUCTION,
         EVERY_X_SECONDS_CHUNK_DESTRUCTION,
         JUMP_AND_RUN,
         WORLD_IS_ONE_BIOME,
@@ -1095,7 +1175,11 @@ public class SettingsItems {
         SYNC_PLAYERS,
         EXPLODE_NEAR_ENTITIES,
         BLOCKS_WITH_PLAYER,
+        BROKEN_BLOCKS_GET_REMOVED_FROM_CHUNK,
         EVERYTHING_REVERSE,
+        MEDUSA,
+        NO_EYE_CONTACT,
+        SKYBLOCK,
 
         //projects
         ALL_DEATHS,

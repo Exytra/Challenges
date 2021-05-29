@@ -79,6 +79,9 @@ public class Settings {
         inv.setItem(13, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_CHUNK_GENERATION)));
         inv.setItem(14, SettingsItems.getMenuItem(SettingsItems.ItemType.EVERYTHING_REVERSE, SettingsModes.challenge.get(SettingsItems.ItemType.EVERYTHING_REVERSE)));
         inv.setItem(15, SettingsItems.getMenuItem(SettingsItems.ItemType.WATER_MLG, SettingsModes.challenge.get(SettingsItems.ItemType.WATER_MLG)));
+        inv.setItem(16, SettingsItems.getMenuItem(SettingsItems.ItemType.MEDUSA, SettingsModes.challenge.get(SettingsItems.ItemType.MEDUSA)));
+        inv.setItem(19, SettingsItems.getMenuItem(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY, SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY)));
+        inv.setItem(20, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_MLG, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_MLG)));
 
         inv.setItem(27, Back());
 
@@ -193,6 +196,7 @@ public class Settings {
         inv.setItem(10, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ITEMS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ITEMS)));
         inv.setItem(11, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_MOBS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_MOBS)));
         inv.setItem(12, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_DEATHS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_DEATHS)));
+        inv.setItem(13, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ACHIEVEMENTS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ACHIEVEMENTS)));
 
         inv.setItem(27, Back());
 

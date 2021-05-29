@@ -8,19 +8,23 @@ import me.aaron.timer.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.MinecraftServer;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.util.BlockIterator;
+import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Utils {
     public static void fillWithGlass(Inventory inv) {
@@ -97,7 +101,7 @@ public class Utils {
     public static String firstLatterCapitalized(String string) {
         StringBuilder msg = new StringBuilder();
         boolean nextUpperCase = true;
-        for (int i = 0; i < string.length(); i ++) {
+        for (int i = 0; i < string.length(); i++) {
             String current = string.substring(i, i + 1);
             if (nextUpperCase) {
                 msg.append(current.toUpperCase());
@@ -159,9 +163,9 @@ public class Utils {
     public static String translateColorCodes(String text) {
         String[] texts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
         StringBuilder finalText = new StringBuilder();
-        for (int i = 0; i < texts.length; i ++) {
+        for (int i = 0; i < texts.length; i++) {
             if (texts[i].equalsIgnoreCase("&")) {
-                i ++;
+                i++;
                 if (texts[i].charAt(0) == '#') {
                     finalText.append(net.md_5.bungee.api.ChatColor.of(texts[i].substring(0, 7)) + texts[i].substring(7));
                 } else {
@@ -172,5 +176,38 @@ public class Utils {
             }
         }
         return finalText.toString();
+    }
+
+    public static boolean isLookingOnHead(Player p, LivingEntity e) {
+        List<Entity> nearbyE = p.getNearbyEntities(10, 10, 10);
+        ArrayList<LivingEntity> livingE = new ArrayList<LivingEntity>();
+
+        /*for (Entity e : nearbyE) {
+            if (e instanceof LivingEntity) {
+                livingE.add((LivingEntity) e);
+            }
+        }*/
+
+        BlockIterator bItr = new BlockIterator(p, 50);
+        Block block;
+        Location loc;
+        int bx, by, bz;
+        double ex, ey, ez;
+        while (bItr.hasNext()) {
+            block = bItr.next();
+            bx = block.getX();
+            by = block.getY();
+            bz = block.getZ();
+            //for (LivingEntity e : livingE) {
+                loc = e.getLocation();
+                ex = loc.getX();
+                ey = loc.getY();
+                ez = loc.getZ();
+                if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5)) {
+                    return true;
+                }
+            //}
+        }
+        return false;
     }
 }

@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -447,6 +448,40 @@ public class InventoryClickListener implements Listener {
                             e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.WATER_MLG, SettingsModes.challenge.get(SettingsItems.ItemType.WATER_MLG)));
                         } else if (isRightClick) {
                             p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.WATER_MLG));
+                        }
+                        break;
+                    case 16:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.MEDUSA) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.MEDUSA, SettingsItems.ItemState.DISABLED);
+                            Utils.sendChange("§6Medusa-Challenge", "§7wurde §cdeaktivert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.MEDUSA, SettingsItems.ItemState.ENABLED);
+                            Utils.sendChange("§6Medusa-Challenge", "§7wurde §aaktiviert");
+                        }
+                        e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.MEDUSA, SettingsModes.challenge.get(SettingsItems.ItemType.MEDUSA)));
+                        break;
+                    case 19:
+                        if (SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY, SettingsItems.ItemState.DISABLED);
+                            Utils.sendChange("§6Schaden cleart Inventory", "§7wurde §cdeaktiviert");
+                        } else {
+                            SettingsModes.challenge.put(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY, SettingsItems.ItemState.ENABLED);
+                            Utils.sendChange("§6Schaden cleart Inventory", "§7wurde §aaktiviert");
+                        }
+                        e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY, SettingsModes.challenge.get(SettingsItems.ItemType.DAMAGE_CLEARS_INVENTORY)));
+                        break;
+                    case 20:
+                        if (isLeftClick) {
+                            if (SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_MLG) == SettingsItems.ItemState.ENABLED) {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_MLG, SettingsItems.ItemState.DISABLED);
+                                Utils.sendChange("§6Random MLG", "§7wurde §cdeaktiviert");
+                            } else {
+                                SettingsModes.challenge.put(SettingsItems.ItemType.RANDOM_MLG, SettingsItems.ItemState.ENABLED);
+                                Utils.sendChange("§6Random MLG", "§7wurde §aaktiviert");
+                            }
+                            e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.RANDOM_MLG, SettingsModes.challenge.get(SettingsItems.ItemType.RANDOM_MLG)));
+                        } else if (isRightClick) {
+                            p.openInventory(SettingsItems.getMenuInv(SettingsItems.ItemType.RANDOM_MLG));
                         }
                         break;
                     case 27:
@@ -941,6 +976,16 @@ public class InventoryClickListener implements Listener {
                             p.openInventory(Settings.resetPrompt("Alle Tode"));
                         }
                         break;
+                    case 13:
+                        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_ACHIEVEMENTS) == SettingsItems.ItemState.ENABLED) {
+                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ACHIEVEMENTS, SettingsItems.ItemState.DISABLED);
+                            Utils.sendChange("§6All Achievements", "§7wurde §cdeaktiviert");
+                        } else {
+                            SettingsModes.projects.put(SettingsItems.ItemType.ALL_ACHIEVEMENTS, SettingsItems.ItemState.ENABLED);
+                            Utils.sendChange("§6All Achievements", "§7wurde §aaktiviert");
+                        }
+                        e.getClickedInventory().setItem(slot, SettingsItems.getMenuItem(SettingsItems.ItemType.ALL_ACHIEVEMENTS, SettingsModes.projects.get(SettingsItems.ItemType.ALL_ACHIEVEMENTS)));
+                        break;
                     case 27:
                         p.openInventory(Settings.getMenu());
                         break;
@@ -1060,15 +1105,24 @@ public class InventoryClickListener implements Listener {
                                 }
                             }
                             e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Minimaler Anweisungsintervall", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.FreeTimeMin / 60 + " Minuten"));
-                        } else if (type.equalsIgnoreCase("Water MLG")) {
+                        } else if (type.equalsIgnoreCase("Water-MLG")) {
                             if (isLeftClick) {
-                                MLG.minTime += 60;
+                                WaterMLG.minTime += 60;
                             } else if (isRightClick) {
-                                if (MLG.minTime > 60) {
-                                    MLG.minTime -= 60;
+                                if (WaterMLG.minTime > 60) {
+                                    WaterMLG.minTime -= 60;
                                 }
                             }
-                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Minimale Zeit bis zum MLG", "\n§9Beschreibung:\nDie minimale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + MLG.minTime / 60 + " Minuten"));
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Minimale Zeit bis zum MLG", "\n§9Beschreibung:\nDie minimale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + WaterMLG.minTime / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Random-MLG")) {
+                            if (isLeftClick) {
+                                RandomMLG.minTime += 60;
+                            } else if (isRightClick) {
+                                if (RandomMLG.minTime > 60) {
+                                    RandomMLG.minTime -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Minimale Zeit bis zum MLG", "\n§9Beschreibung:\nDie minimale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + RandomMLG.minTime / 60 + " Minuten"));
                         }
                         break;
                     case 12:
@@ -1104,7 +1158,7 @@ public class InventoryClickListener implements Listener {
                                     SettingsModes.distanceToGetDamaged --;
                                 }
                             }
-                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Blöcke", "\n§9Beschreibung:\nDie Blöcke, die ein Spieler gehen muss, um Schaden zu bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + SettingsModes.distanceToGetDamaged + " §7Blöcke"));
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Blöcke", "\n§9Beschreibung:\nDie Blöcke, die ein Spieler gehen muss, um Schaden zu bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + SettingsModes.distanceToGetDamaged + " §7Blöcke"));
                         } else if (type.equalsIgnoreCase("Gespiegelter Schaden")) {
                             if (e.isLeftClick()) {
                                 if (SettingsModes.probabilityToMirrorDamage < 100) {
@@ -1199,15 +1253,24 @@ public class InventoryClickListener implements Listener {
                                 }
                             }
                             e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Minimale Suchzeit", "\n§9Beschreibung:\nDie minimale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.SearchTimeMin / 60 + " Minuten"));
-                        } else if (type.equalsIgnoreCase("Water MLG")) {
+                        } else if (type.equalsIgnoreCase("Water-MLG")) {
                             if (isLeftClick)  {
-                                MLG.minHeight ++;
+                                WaterMLG.minHeight ++;
                             } else if (isRightClick) {
-                                if (MLG.minHeight > 1) {
-                                    MLG.minHeight --;
+                                if (WaterMLG.minHeight > 1) {
+                                    WaterMLG.minHeight --;
                                 }
                             }
-                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.WATER_BUCKET, "§6Minimale Höhe", "\n§9Beschreibung:\nDie minimale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + MLG.minHeight + " Blöcke"));
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.WATER_BUCKET, "§6Minimale Höhe", "\n§9Beschreibung:\nDie minimale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + WaterMLG.minHeight + " Blöcke"));
+                        } else if (type.equalsIgnoreCase("Random-MLG")) {
+                            if (isLeftClick)  {
+                                RandomMLG.minHeight ++;
+                            } else if (isRightClick) {
+                                if (RandomMLG.minHeight > 1) {
+                                    RandomMLG.minHeight --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.WATER_BUCKET, "§6Minimale Höhe", "\n§9Beschreibung:\nDie minimale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + RandomMLG.minHeight + " Blöcke"));
                         }
                         break;
                     case 16:
@@ -1275,15 +1338,24 @@ public class InventoryClickListener implements Listener {
                                 }
                             }
                             e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.BLUE_CONCRETE, "§6Maximaler Anweisungsintervall", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler keine Anweisung bekommen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.FreeTimeMax / 60 + " Minuten"));
-                        } else if (type.equalsIgnoreCase("Water MLG")) {
+                        } else if (type.equalsIgnoreCase("Water-MLG")) {
                             if (isLeftClick) {
-                                MLG.maxTime += 60;
+                                WaterMLG.maxTime += 60;
                             } else if (isRightClick) {
-                                if (MLG.maxTime > 60) {
-                                    MLG.maxTime -= 60;
+                                if (WaterMLG.maxTime > 60) {
+                                    WaterMLG.maxTime -= 60;
                                 }
                             }
-                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Maximale Zeit bis zum MLG", "\n§9Beschreibung:\nDie maximale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + MLG.maxTime / 60 + " Minuten"));
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Maximale Zeit bis zum MLG", "\n§9Beschreibung:\nDie maximale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + WaterMLG.maxTime / 60 + " Minuten"));
+                        } else if (type.equalsIgnoreCase("Random-MLG")) {
+                            if (isLeftClick) {
+                                RandomMLG.maxTime += 60;
+                            } else if (isRightClick) {
+                                if (RandomMLG.maxTime > 60) {
+                                    RandomMLG.maxTime -= 60;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.END_PORTAL_FRAME, "§6Maximale Zeit bis zum MLG", "\n§9Beschreibung:\nDie maximale Zeit, bis die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + RandomMLG.maxTime / 60 + " Minuten"));
                         }
                         break;
                     case 22:
@@ -1344,22 +1416,31 @@ public class InventoryClickListener implements Listener {
                                 }
                             }
                             e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.GREEN_CONCRETE, "§6Maximale Suchzeit", "\n§9Beschreibung:\nDie maximale Zeit, in der die Spieler die Anweisung ausführen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Minute\n§8[§9Rechts-Klick§8] §7- 1 Minute\n\nMomentan: §6" + ForceBiome.SearchTimeMax / 60 + " Minuten"));
-                        } else if (type.equalsIgnoreCase("Water MLG")) {
+                        } else if (type.equalsIgnoreCase("Water-MLG")) {
                             if (isLeftClick) {
-                                MLG.maxHeight ++;
+                                WaterMLG.maxHeight ++;
                             } else if (isRightClick) {
-                                if (MLG.maxHeight > 1) {
-                                    MLG.maxHeight --;
+                                if (WaterMLG.maxHeight > 1) {
+                                    WaterMLG.maxHeight --;
                                 }
                             }
-                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.WATER_BUCKET, "§6Maximale Höhe", "\n§9Beschreibung:\nDie maximale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + MLG.maxHeight + " Blöcke"));
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.WATER_BUCKET, "§6Maximale Höhe", "\n§9Beschreibung:\nDie maximale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + WaterMLG.maxHeight + " Blöcke"));
+                        } else if (type.equalsIgnoreCase("Random-MLG")) {
+                            if (isLeftClick) {
+                                RandomMLG.maxHeight ++;
+                            } else if (isRightClick) {
+                                if (RandomMLG.maxHeight > 1) {
+                                    RandomMLG.maxHeight --;
+                                }
+                            }
+                            e.getClickedInventory().setItem(slot, Settings.createItemStack(Material.WATER_BUCKET, "§6Maximale Höhe", "\n§9Beschreibung:\nDie maximale Höhe, aus der die Spieler einen MLG machen müssen.\n\n§8[§9Links-Klick§8] §7+ 1 Block\n§8[§9Rechts-Klick§8] §7- 1 Block\n\nMomentan: §6" + RandomMLG.maxHeight + " Blöcke"));
                         }
                         break;
                     case 27:
                         if (type.equalsIgnoreCase("Ampel-Challenge") || type.equalsIgnoreCase("Force Block") || type.equalsIgnoreCase("Force Mob") || type.equalsIgnoreCase("Force Height")) {
                             p.openInventory(Settings.getChallengesMenu());
                             break;
-                        } else if (type.equalsIgnoreCase("Force Biome")) {
+                        } else if (type.equalsIgnoreCase("Force Biome") || type.equalsIgnoreCase("Water-MLG") || type.equalsIgnoreCase("Random-MLG")) {
                             p.openInventory(Settings.getChallengesMenu2());
                             break;
                         }

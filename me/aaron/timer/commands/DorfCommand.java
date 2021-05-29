@@ -17,7 +17,7 @@ public class DorfCommand implements CommandExecutor {
         Player p = (Player) sender;
         World w = p.getWorld();
 
-        if (p.hasPermission("timer.dorfspawn")) {
+        if (p.hasPermission("challenges.dorfspawn")) {
             if (w.getEnvironment().equals(World.Environment.NORMAL)) {
                 Location vil = w.locateNearestStructure(p.getLocation(), StructureType.VILLAGE, 1000, false);
                 if (vil != null) {

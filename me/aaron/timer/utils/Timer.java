@@ -117,7 +117,7 @@ public class Timer {
                     pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ConvertTimerTime(message, "§6§l")));
                 }
             } else if (state == TimerState.PAUSED) {
-                pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§6Der Timer ist pausiert."));
+                pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§6§oDer Timer ist pausiert."));
             }
         }
     }

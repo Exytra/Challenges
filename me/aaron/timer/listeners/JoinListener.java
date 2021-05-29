@@ -1,9 +1,13 @@
 package me.aaron.timer.listeners;
 
 import me.aaron.timer.Main;
+import me.aaron.timer.projects.AllAchievements;
 import me.aaron.timer.projects.AllDeathMessages;
 import me.aaron.timer.utils.*;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +15,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Objects;
 
 public class JoinListener implements Listener {
     @EventHandler
@@ -22,7 +28,7 @@ public class JoinListener implements Listener {
         Permissions.ranks.put(p, rank);
         MoveListener.lastMovement.put(p, System.currentTimeMillis() * 1000);
 
-        e.setJoinMessage("§a» §f" + Permissions.getPrefix(Permissions.getRank(p)) + "§f" + p.getName());
+        e.setJoinMessage("§a» §f" + Permissions.getPrefix(Permissions.getRank(p)) + "§7" + p.getName());
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SettingsModes.maxHP);
         p.setHealthScale(SettingsModes.maxHP);
 
@@ -56,6 +62,18 @@ public class JoinListener implements Listener {
         }
 
         Timer.playtime.put(p, Config.contains("playtime.player." + p.getUniqueId().toString()) ? Config.getInt("playtime.player." + p.getUniqueId().toString()) : 0);
+
+        if (SettingsModes.projects.get(SettingsItems.ItemType.ALL_ACHIEVEMENTS) == SettingsItems.ItemState.ENABLED && AllAchievements.gottenAchievements.size() >= 1) {
+            for (String name : AllAchievements.gottenAchievements) {
+                if (name.contains("story/")) {
+                    NamespacedKey key = NamespacedKey.minecraft(name);
+                    AdvancementProgress progress = p.getAdvancementProgress(Bukkit.getAdvancement(key));
+                    for (String criteria : progress.getRemainingCriteria()) {
+                        progress.awardCriteria(criteria);
+                    }
+                }
+            }
+        }
 
     }
 }
